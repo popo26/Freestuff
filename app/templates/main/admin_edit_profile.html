@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}{{ super() }} Edit Profile {% endblock %}
+{% block category %}{% endblock %}
+
+{% block page_content %}
+<h1>Edit Your Profile</h1>
+
+<form method="POST">
+<!-- {{ form.hidden_tag() }}
+{{ form.name.label }}{{ form.name(id='my-field-id') }}
+{{ form.submit() }} -->
+
+{{ wtf.quick_form(form) }}
+
+</form>
+
+{% endblock %}

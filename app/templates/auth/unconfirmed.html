@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+<h1>Welcome to FreeStuff</h1>
+
+<p>You have not yet confirmed your accounts.</p>
+<br>
+<p>We would love for you to join our community. Before you do, however, you'll need to confirm your account with us first.</p>
+<p>Please check your inbox, and look for an email with a confirmation link.</p>
+<p>If you need a new one, no problem. Just <a href="{{ url_for('auth.resend_confirmation')}}">click here</a> and we'll send you a new one.</p>
+
+{% endblock %}
