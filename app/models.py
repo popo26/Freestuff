@@ -7,6 +7,7 @@ from app import create_app
 import hashlib
 import os
 
+
 # from dotenv import load_dotenv
 
 # load_dotenv()
@@ -81,6 +82,9 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, index = True, default=datetime.utcnow)
     category_type = db.Column(db.Integer)
     giver_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    def __repr__(self):
+        return '<Post:{}>'.format(self.title)
 
 
 

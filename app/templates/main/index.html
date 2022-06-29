@@ -7,7 +7,7 @@
 <div class="index-div">
 <h3>Current posts # {{ posts|length }} </h3>
 
-
+{% if posts %}
 {% for post in posts|sort(reverse=True, attribute='timestamp') %}
 
 
@@ -28,6 +28,9 @@
     </div>
 
 {% endfor %}
+{% else %}
+<p>There is no post.</p>
+{% endif %}
 {% endblock %}
 
 

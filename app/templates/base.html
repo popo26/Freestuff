@@ -92,7 +92,7 @@
       </ul>
     </div>
 
-    <form class="d-flex" method="GET" action="search">
+    <form class="d-flex" method="GET" action="{{ url_for('main.search')}}">
 
         <input class="form-control me-2" name="query" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>

@@ -23,7 +23,13 @@ class Config():
     APP_ADMIN = os.getenv("APP_ADMIN")
     APP_MAIL_SUBJECT_PREFIX = "FreeStuff - "
     APP_MAIL_SENDER = f"FreeStuff Admin <{APP_ADMIN}>"
-    
+
+    MSEARCH_INDEX_NAME = 'msearch'
+    MSEARCH_BACKEND = 'whoosh'
+    MSEARCH_PRIMARY_KEY = 'id'
+    MSEARCH_ENABLE = True
+   
+   
 
     @staticmethod
     def init_app(ap):

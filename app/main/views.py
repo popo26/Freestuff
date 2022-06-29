@@ -9,16 +9,9 @@ from app import db
 from ..decorators import permission_required, admin_required
 from ..models import Permission, Category, Message
 from app import config
-# from flask import current_app as app
-import flask_whooshalchemy3 as wa
+
 
 YEAR = datetime.datetime.now().year
-
-
-# @main.record_once
-# def record_once(state):
-#     wa.whoosh_index(state.app, Post)
-
 
 @main.route("/", methods=['GET', "POST"])
 def index():
@@ -27,10 +20,12 @@ def index():
 
 @main.route("/search")
 def search():
-    # form = SearchForm()
-    # posts = Post.query.whoosh_search(request.args.get('query')).all()
-    posts = Post.query.search(request.args.get('query')).all()
-    return render_template("main/search.html", posts=posts)
+    keyword = request.args.get('query')
+    print(keyword)
+   
+    results = Post.query.msearch(keyword, fields=['title','description']).all()
+    print(results)
+    return render_template('main/search.html', results=results, keyword=keyword)
 
 @main.route("/home-living")
 def home_living():

@@ -1,16 +1,36 @@
 {% extends 'base.html' %}
 
 
-{% block title %}{{super()}}Search {% endblock %}
+{% block title %}{{super()}}Search result{% endblock %}
 
 {% block page_content %}
 
-{% if query %}
-{% for item in query %}
-{{ item }}
+{% if results %}
+<h3>The search result related to "<strong>{{ keyword }}</strong>".</h3>
+{% for result in results %}
+
+<div class="card-deck">
+
+    <div class="card col-sm-3 each-item">
+        <a href="{{ url_for('main.each_item', item_id=result.id)}}">
+            <img class="card-img-top" src="{{url_for('static', filename='images/trademe.jpeg')}}"
+                alt="{{ result.title }}">
+
+            <div class="card-body">
+                <h5 class="card-title">{{ result.title }}</h5>
+        </a>
+        <p class="card-text">{{ result.description }}</p>
+        <p class="card-text"><small class="text-muted">{{ moment(result.timestamp).fromNow() }}</small></p>
+    </div>
+</div>
+
+</div>
+</div>
+
 {% endfor %}
+
 {% else %}
-<h4>There is no result.</h4>
+<p>There is no result related to "<strong>{{ keyword }}</strong>".</p>
 {% endif %}
 
 {% endblock %}

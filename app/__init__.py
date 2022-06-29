@@ -8,8 +8,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_moment import Moment
 from flask_migrate import Migrate
-import flask_whooshalchemy3 as wa
 import flask_sqlalchemy
+from flask_msearch import Search
 
 load_dotenv()
 
@@ -19,7 +19,8 @@ db = SQLAlchemy()
 moment = Moment()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
-# db = flask_sqlalchemy.SQLAlchemy()
+search = Search(db=db)
+
 
 
 def create_app(config_name = "default"):
@@ -36,10 +37,12 @@ def create_app(config_name = "default"):
     login_manager.init_app(app)
     moment.init_app(app)
     migrate.init_app(app, db)
+    search.init_app(app)
 
+    app.app_context().push()
+    
     from app.models import Post
-    # wa.woosh_index(app, Post)
-    wa.search_index(app, Post)
+    search.create_index(Post, update=True)
     
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
