@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{super()}}Messages for {{ current_user.username }}{% endblock %}
+{% block category %}{% endblock %}
+
+{% block page_content %}
+
+{% if messages %}
+{% for message in messages %}
+{% if current_user.message %}
+{{ message }}
+{% endif %}
+{% endfor %} 
+
+{% else %}
+<p>There is no message.</p>
+
+{% endif %}
+
+
+{% endblock %}

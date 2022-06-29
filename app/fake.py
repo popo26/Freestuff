@@ -29,7 +29,8 @@ def posts(count=100):
     user_count = User.query.count()
     for i in range(count):
         u = User.query.offset(randint(0, user_count - 1)).first()
-        p = Post(title = string.capwords(fake.bs()),
+        p = Post(category_type = randint(0, 10),
+                 title = string.capwords(fake.bs()),
                  description = fake.text(),
                  timestamp = fake.past_date(),
                  giver=u)

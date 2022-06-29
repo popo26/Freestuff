@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+{% block title %}{{super()}}Post A New Stuff {% endblock %}
+
+
+{% block page_content %}
+<h1>Let's post a new free stuff,
+    {% if current_user.is_authenticated %}
+    {{ current_user.username }}
+    {%- else %}
+    Anonymous
+    {%- endif %}
+</h1>
+<div>
+    {% if not known %}
+    <p>Mucho gusto! (Nice to meet you!)</p>
+    {% else %}
+    <p>Enjoy your stay.</p>
+    {% endif %}
+</div>
+
+<!-- <h3>Composition # {{ compositions|length }} </h3> -->
+
+<form method="POST">
+    {{ wtf.quick_form(form) }}
+</form>
+<br>
+
+<ul> {# All compositions #}
+    {% for post in posts %}
+
+
+    <li> {# Single composition #}
+    
+            <div class="post-date">{{ moment(post.timestamp).fromNow() }}</div>
+            <div class="post-giver">
+                <a href="{{ url_for('main.user', username=current_user.username) }}">
+                    {{ current_user.username }}
+                </a> 
+            </div>
+            <div class="post-category">
+                {% if post.category == 1 %}
+                <p>Single</p>{% endif %}
+                {% if post.category == 2 %}
+                <p>Extended_Play</p>{% endif %}
+                {% if post.category == 3 %}
+                <p>Album</p>{% endif %}
+                {% if post.category == 3 %}
+                <p>Album</p>{% endif %}
+                {% if post.category == 3 %}
+                <p>Album</p>{% endif %}
+                {% if post.category == 3 %}
+                <p>Album</p>{% endif %}
+                {% if post.category == 3 %}
+                <p>Album</p>{% endif %}
+                {% if post.category == 3 %}
+                <p>Album</p>{% endif %}
+                {% if post.category == 3 %}
+                <p>Album</p>{% endif %}
+                {% if post.category == 3 %}
+                <p>Album</p>{% endif %}
+            
+            </div>
+            <div class="post-title">{{ composition.title }}</div>
+        <div class="post-content">{{ composition.description }}</div>
+    </li>
+    {% endfor %}
+</ul>
+<!-- 
+{% if pagination %}
+<div class="pagination">
+    {{ macros.pagination_widget(pagination, ".index") }}
+</div>
+{% endif %} -->
+
+
+{% endblock %}

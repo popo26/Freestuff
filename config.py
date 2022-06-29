@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -10,6 +11,7 @@ class Config():
     SQLALCHEMY_DATABASE_URI = \
         'sqlite:///' + os.path.join(basedir, "dev.sqlite")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    WHOOSH_BASE = "whoosh"
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587

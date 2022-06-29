@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{super()}}{{item.title}}{% endblock %}
+{% block category %}{% endblock %}
+
+{% block page_content %}
+<div class="item-div">
+    <div class="card-deck">
+        <h3>{{ item.title }} </h3>
+
+        <div class="card col-sm-12 each-item">
+            <img class="card-img-top" src="{{url_for('static', filename='images/trademe.jpeg')}}" alt="">
+            <div class="card-body">
+                <h5 class="card-title">By {{ item.giver.username }}</h5>
+                <p class="card-text">{{ item.description }}</p>
+                <p class="card-text"><small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small></p>
+            </div>
+        </div>
+    </div>
+    <a href="{{ url_for('main.contact_giver', item_id=item.id) }}"><button type="button" class="btn btn-primary">Contact {{ item.giver.username }}</button></a>
+</div>
+
+{% endblock %}

@@ -8,7 +8,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_moment import Moment
 from flask_migrate import Migrate
-
+import flask_whooshalchemy3 as wa
+import flask_sqlalchemy
 
 load_dotenv()
 
@@ -18,11 +19,12 @@ db = SQLAlchemy()
 moment = Moment()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
+# db = flask_sqlalchemy.SQLAlchemy()
 
 
 def create_app(config_name = "default"):
     app = Flask(__name__)
-
+    
     migrate = Migrate(app, db, render_as_batch=True)
     
     app.config.from_object(config[config_name])
@@ -35,6 +37,10 @@ def create_app(config_name = "default"):
     moment.init_app(app)
     migrate.init_app(app, db)
 
+    from app.models import Post
+    # wa.woosh_index(app, Post)
+    wa.search_index(app, Post)
+    
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
     app.register_blueprint(main_blueprint)

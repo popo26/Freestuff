@@ -1,6 +1,34 @@
 {% extends 'base.html' %}
 
+
 {% block title %}{{super()}}Index {% endblock %}
+
+{% block page_content %}
+<div class="index-div">
+<h3>Current posts # {{ posts|length }} </h3>
+
+
+{% for post in posts|sort(reverse=True, attribute='timestamp') %}
+
+
+<div class="card-deck">
+    
+  <div class="card col-sm-3 each-item" >
+    <a href="{{ url_for('main.each_item', item_id=post.id)}}">
+        <img class="card-img-top" src="{{url_for('static', filename='images/trademe.jpeg')}}" alt="{{ post.title }}">
+        
+        <div class="card-body">
+          <h5 class="card-title">{{ post.title }}</h5></a>
+          <p class="card-text">{{ post.description }}</p>
+          <p class="card-text"><small class="text-muted">{{ moment(post.timestamp).fromNow() }}</small></p>
+        </div>
+      </div>
+     
+      </div>
+    </div>
+
+{% endfor %}
+{% endblock %}
 
 
 

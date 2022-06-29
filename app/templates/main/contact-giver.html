@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}{{super()}}Contact giver {% endblock %}
+{% block category %}{% endblock %}
+
+{% block page_content %}
+<div >
+
+   <h1>Hi {{ current_user.username }}! Ask away!</h1> 
+   <h4>This is about {{ item.title }} posted by {{ item.giver.username }}</h4>
+<form method="POST">
+    <!-- sending email work in progress -->
+    <!-- also creating message page -->
+    {{ wtf.quick_form(form) }}
+    </form>
+</div>
+{% endblock %}
+

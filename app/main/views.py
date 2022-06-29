@@ -1,19 +1,88 @@
 import datetime
-from nturl2path import url2pathname
-from flask import render_template, flash, redirect, url_for
+import smtplib
+from flask import render_template, flash, redirect, request, url_for
 from flask_login import login_required, current_user
-from app.main.forms import AdminLevelEditProfileForm, EditProfileForm
+from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, SearchForm
 from . import main
 from app.models import User, Post
 from app import db
 from ..decorators import permission_required, admin_required
+from ..models import Permission, Category, Message
+from app import config
+# from flask import current_app as app
+import flask_whooshalchemy3 as wa
 
 YEAR = datetime.datetime.now().year
 
-@main.route("/")
+
+# @main.record_once
+# def record_once(state):
+#     wa.whoosh_index(state.app, Post)
+
+
+@main.route("/", methods=['GET', "POST"])
 def index():
+    posts = Post.query.all()
+    return render_template("main/index.html", posts=posts)
+
+@main.route("/search")
+def search():
+    # form = SearchForm()
+    # posts = Post.query.whoosh_search(request.args.get('query')).all()
+    posts = Post.query.search(request.args.get('query')).all()
+    return render_template("main/search.html", posts=posts)
+
+@main.route("/home-living")
+def home_living():
+    items = Post.query.filter_by(category_type=Category.HOME_LIVING)
+    #Work in progress. 
+    return render_template("main/home_living.html", items=items)
+
+@main.route("/item/<int:item_id>")
+def each_item(item_id):
+    item = Post.query.filter_by(id=item_id).first()
+    return render_template("main/each-item.html", item=item)
+
+@main.route("/contact-giver/<int:item_id>", methods=["GET", "POST"])
+@login_required
+def contact_giver(item_id):
+    form = ContactGiverForm()
+    item = Post.query.filter_by(id=item_id).first()
+    if form.validate_on_submit():
+        item.title = form.title.data
+        item.description = form.description.data
+        db.session.add(item)
+        db.session.commit()
+        flash("successfully submitted!")
+        #how to send email in progress
+        return redirect(url_for("main.each_item", item_id=item.id))
+    return render_template("main/contact-giver.html", form=form, item=item)
+
+#In progress
+@main.route("/messages/<username>")
+@login_required
+def check_messages(username):
+    messages = Message.query.all()
+    return render_template("main/messages.html", username=current_user, message=messages)
     
-    return render_template("main/index.html")
+    
+
+@main.route("/post-new-item", methods=['GET', "POST"])
+@login_required
+def post_new_item():
+    form = PostForm()
+    if current_user.can(Permission.PUBLISH) \
+        and form.validate_on_submit():
+        post = Post(category_type=form.category.data,
+                    title=form.title.data,
+                    description=form.description.data,
+                    giver=current_user._get_current_object())
+        db.session.add(post)
+        db.session.commit()
+        flash("Thank you for posting a new free stuff!")
+        return redirect(url_for('.index'))
+    # posts = Post.query.order_by(Post.timestamp.desc())
+    return render_template("main/post-new-item.html", form=form)
 
 
 @main.route('/user/<username>')

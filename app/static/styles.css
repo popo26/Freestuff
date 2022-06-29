@@ -3,3 +3,31 @@
     margin: auto;
 }
 
+/* base.html */
+.content-div {
+    text-align: center;
+    width: 90%;
+    margin:auto;
+}
+
+/* index.html */
+.index-div {
+    width:80%;
+    margin:auto;
+}
+
+/* home_living.html */
+.each-item {
+    text-align: center;
+}
+
+/* each-item.html */
+.item-div {
+    width:90%;
+    text-align: center;
+    margin:auto;
+}
+
+.item-table {
+    text-align: center;
+}

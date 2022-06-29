@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from app import create_app
 import hashlib
 import os
+
 # from dotenv import load_dotenv
 
 # load_dotenv()
@@ -23,6 +24,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     posts = db.relationship("Post", backref="giver", lazy="dynamic")
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    message_id = db.Column(db.Integer, db.ForeignKey('messages.id'))
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -31,11 +33,11 @@ class User(UserMixin, db.Model):
         if self.role is None:
             self.role = Role.query.filter_by(default=True).first()
 
-    # VERIFY LATER
-    # def ping(self):
-    #     self.last_seen = datetime.utcnow()
-    #     db.session.add(self)
-    #     db.session.commit()
+    #for last_seen
+    def ping(self):
+        self.last_seen = datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
         
 
     def set_password(self, password):
@@ -57,13 +59,30 @@ class User(UserMixin, db.Model):
     # def email_hash(self):
     #     return hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
 
+class Category:
+    HOME_LIVING = 1
+    KITCHEN = 2
+    BABY = 3
+    BOOKS = 4
+    CRAFT = 5
+    ELECTRONICS = 6
+    PETS = 7
+    CLOTHING = 8
+    BATHROOM = 9
+    TOYS = 10
+    JEWELLERY = 11
+
 class Post(db.Model):
-    __tablename__ = "posts"
+    __tablename__ = 'posts'
+    __searchable__ = ['title', 'description']
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64))
+    title = db.Column(db.String(100))
     description = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index = True, default=datetime.utcnow)
+    category_type = db.Column(db.Integer)
     giver_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -143,6 +162,14 @@ class AnonymousUser(AnonymousUserMixin):
 
     def is_administrator(self):
         return False
+
+class Message(db.Model):
+    __tablename__ = "messages"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(254), unique=True)
+    description = db.Column(db.Text, index=True)
+    timestamp = db.Column(db.DateTime, index = True, default=datetime.utcnow)
+    users = db.relationship("User", backref='message', lazy='dynamic') 
 
 login_manager.anonymous_user = AnonymousUser
 

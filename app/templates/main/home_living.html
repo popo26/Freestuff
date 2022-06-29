@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}{{super()}}Home&Living {% endblock %}
+
+{% block page_content %}
+<div class = "item-div">
+
+  
+{% if items %}
+{% for item in items|sort(reverse=True, attribute='timestamp') %}
+
+<div class="card-deck">
+  <a href="{{ url_for('main.each_item', item_id=item.id)}}">
+<div class="card col-sm-4 each-item" >
+      <img class="card-img-top" src="{{url_for('static', filename='images/trademe.jpeg')}}" alt="">
+      <div class="card-body">
+        <h5 class="card-title">{{ item.title }}</h5>
+        <p class="card-text">{{ item.description }}</p>
+        <p class="card-text"><small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small></p>
+      </div>
+    </div></a>
+   
+    </div>
+  </div>
+
+{% endfor %}
+{% else %}
+<h4>There is no item related to {{ item.category_type }}</h4>
+{% endif %}
+
+</div>
+{% endblock %}

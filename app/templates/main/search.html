@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{super()}}Search {% endblock %}
+
+{% block page_content %}
+
+{% if query %}
+{% for item in query %}
+{{ item }}
+{% endfor %}
+{% else %}
+<h4>There is no result.</h4>
+{% endif %}
+
+{% endblock %}
