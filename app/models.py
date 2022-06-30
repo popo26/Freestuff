@@ -8,10 +8,6 @@ import hashlib
 import os
 
 
-# from dotenv import load_dotenv
-
-# load_dotenv()
-
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -25,7 +21,8 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     posts = db.relationship("Post", backref="giver", lazy="dynamic")
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    message_id = db.Column(db.Integer, db.ForeignKey('messages.id'))
+    messages = db.relationship("Message", backref="asker", lazy="dynamic")
+   
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -87,10 +84,6 @@ class Post(db.Model):
         return '<Post:{}>'.format(self.title)
 
 
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 
 class Permission:
     FOLLOW = 1
@@ -173,7 +166,13 @@ class Message(db.Model):
     title = db.Column(db.String(254), unique=True)
     description = db.Column(db.Text, index=True)
     timestamp = db.Column(db.DateTime, index = True, default=datetime.utcnow)
-    users = db.relationship("User", backref='message', lazy='dynamic') 
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 login_manager.anonymous_user = AnonymousUser
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 

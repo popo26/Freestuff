@@ -40,7 +40,7 @@ def create_app(config_name = "default"):
     search.init_app(app)
 
     app.app_context().push()
-    
+   
     from app.models import Post
     search.create_index(Post, update=True)
     

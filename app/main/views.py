@@ -27,6 +27,13 @@ def search():
     print(results)
     return render_template('main/search.html', results=results, keyword=keyword)
 
+# @main.route('/profile/<username>')
+# @login_required
+# def profile(username):
+#     user = User.query.filter_by(username=username).first()
+#     posts = Post.query.filter_by(giver=user)
+#     return render_template('main/user.html', user=user, posts=posts)
+
 @main.route("/home-living")
 def home_living():
     items = Post.query.filter_by(category_type=Category.HOME_LIVING)
@@ -104,9 +111,8 @@ def contact_giver(item_id):
     form = ContactGiverForm()
     item = Post.query.filter_by(id=item_id).first()
     if form.validate_on_submit():
-        item.title = form.title.data
-        item.description = form.description.data
-        db.session.add(item)
+        message = Message(title=request.form.get("title"),description=request.form.get("description"))
+        db.session.add(message)
         db.session.commit()
         flash("successfully submitted!")
         #how to send email in progress

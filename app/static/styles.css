@@ -84,3 +84,9 @@ footer {
 .post-new-item-div h1 {
     margin-bottom: 3%;
 }
+
+/* contact-giver.html */
+.contact-giver-div h4 {
+    margin-top: 2%;
+    margin-bottom: 4%;
+}
