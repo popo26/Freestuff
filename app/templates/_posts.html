@@ -1,0 +1,24 @@
+<div class="index-div">
+<div class="card-deck">
+    {% if posts %}
+    {% for post in posts %}
+
+    <div class="card col-lg-3 col-md-4 each-item">
+        <a href="{{ url_for('main.each_item', item_id=post.id)}}">
+            <img class="card-img-top item-image" src="{{url_for('static', filename='images/cart.jpg')}}"
+                alt="{{ post.title }}">
+
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title }}</h5>
+        </a>
+
+        <p class="card-text"><small class="text-muted">{{ moment(post.timestamp).fromNow() }}</small></p>
+    </div>
+</div>
+    {% endfor %}
+    {% else %}
+    <h4>There is no item posed yet.</h4>
+    {% endif %}
+
+</div>
+

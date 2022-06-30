@@ -23,7 +23,7 @@ class AdminLevelEditProfileForm(FlaskForm):
 class PostForm(FlaskForm):
     category = SelectField("Category", coerce=int, default=False, validators=[DataRequired()])
     title = StringField('Title', validators=[DataRequired()])
-    description = TextAreaField("Tell us about your free stuff")
+    description = TextAreaField("Tell us about your free stuff", render_kw={'rows':'10'})
     submit = SubmitField("Submit")
 
     def __init__(self, *args, **kwargs):
@@ -42,9 +42,9 @@ class PostForm(FlaskForm):
             (Category.JEWELLERY, 'Jewellery'),
         ]
 
-class SearchForm(FlaskForm):
-    search = StringField("Search here", validators=[DataRequired()])
-    submit = SubmitField("Search", render_kw={'class': 'btn btn-success btn-block'})
+# class SearchForm(FlaskForm):
+#     search = StringField("Search here", validators=[DataRequired()])
+#     submit = SubmitField("Search", render_kw={'class': 'btn btn-success btn-block'})
 
 class ContactGiverForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])

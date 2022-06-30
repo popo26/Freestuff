@@ -2,7 +2,7 @@ import datetime
 import smtplib
 from flask import render_template, flash, redirect, request, url_for
 from flask_login import login_required, current_user
-from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, SearchForm
+from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm
 from . import main
 from app.models import User, Post
 from app import db
@@ -16,7 +16,7 @@ YEAR = datetime.datetime.now().year
 @main.route("/", methods=['GET', "POST"])
 def index():
     posts = Post.query.all()
-    return render_template("main/index.html", posts=posts)
+    return render_template("main/index.html", posts=posts, year=YEAR)
 
 @main.route("/search")
 def search():
@@ -30,8 +30,68 @@ def search():
 @main.route("/home-living")
 def home_living():
     items = Post.query.filter_by(category_type=Category.HOME_LIVING)
-    #Work in progress. 
-    return render_template("main/home_living.html", items=items)
+    category="Home&Living"
+    return render_template("main/per_category.html", items=items, category=category)
+
+@main.route("/kitchen")
+def kitchen():
+    items = Post.query.filter_by(category_type=Category.KITCHEN)
+    category="Kitchen"
+    return render_template("main/per_category.html", items=items, category=category)
+
+@main.route("/baby")
+def baby():
+    items = Post.query.filter_by(category_type=Category.BABY)
+    category="Baby"
+    return render_template("main/per_category.html", items=items, category=category)
+
+@main.route("/books")
+def books():
+    items = Post.query.filter_by(category_type=Category.BOOKS)
+    category="Books"
+    return render_template("main/per_category.html", items=items, category=category)
+
+@main.route("/craft")
+def craft():
+    items = Post.query.filter_by(category_type=Category.CRAFT)
+    category="Craft"
+    return render_template("main/per_category.html", items=items, category=category)
+
+@main.route("/electronics")
+def electronics():
+    items = Post.query.filter_by(category_type=Category.ELECTRONICS)
+    category="Electronics"
+    return render_template("main/per_category.html", items=items, category=category)
+
+@main.route("/pets")
+def pets():
+    items = Post.query.filter_by(category_type=Category.PETS)
+    category="Pets"
+    return render_template("main/per_category.html", items=items, category=category)
+
+@main.route("/clothing")
+def clothing():
+    items = Post.query.filter_by(category_type=Category.CLOTHING)
+    category="clothing"
+    return render_template("main/per_category.html", items=items, category=category)
+
+@main.route("/bathroom")
+def bathroom():
+    items = Post.query.filter_by(category_type=Category.BATHROOM)
+    category="Bathroom"
+    return render_template("main/per_category.html", items=items, category=category)
+
+@main.route("/toys")
+def toys():
+    items = Post.query.filter_by(category_type=Category.TOYS)
+    category="Toys"
+    return render_template("main/per_category.html", items=items, category=category)
+
+@main.route("/jewellery")
+def jewellery():
+    items = Post.query.filter_by(category_type=Category.JEWELLERY)
+    category="Jewellery"
+    return render_template("main/per_category.html", items=items, category=category)
 
 @main.route("/item/<int:item_id>")
 def each_item(item_id):
@@ -60,8 +120,6 @@ def check_messages(username):
     messages = Message.query.all()
     return render_template("main/messages.html", username=current_user, message=messages)
     
-    
-
 @main.route("/post-new-item", methods=['GET', "POST"])
 @login_required
 def post_new_item():
@@ -79,14 +137,13 @@ def post_new_item():
     # posts = Post.query.order_by(Post.timestamp.desc())
     return render_template("main/post-new-item.html", form=form)
 
-
 @main.route('/user/<username>')
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    # posts = Post.query.filter_by(giver=user)
+    posts = Post.query.filter_by(giver=user)
 
-    return render_template("main/user.html", user=user)
+    return render_template("main/user.html", user=user, posts=posts)
 
 @main.route("/edit-profile", methods=['GET', 'POST'])
 @login_required

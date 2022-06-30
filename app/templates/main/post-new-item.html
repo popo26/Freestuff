@@ -3,32 +3,26 @@
 
 
 {% block title %}{{super()}}Post A New Stuff {% endblock %}
+{% block category %}{% endblock %}
 
 
 {% block page_content %}
-<h1>Let's post a new free stuff,
+<div class="post-new-item-div">
+<h1>New free stuff by
     {% if current_user.is_authenticated %}
-    {{ current_user.username }}
+    <strong>{{ current_user.username }}</strong>
     {%- else %}
     Anonymous
     {%- endif %}
 </h1>
-<div>
-    {% if not known %}
-    <p>Mucho gusto! (Nice to meet you!)</p>
-    {% else %}
-    <p>Enjoy your stay.</p>
-    {% endif %}
-</div>
 
-<!-- <h3>Composition # {{ compositions|length }} </h3> -->
 
 <form method="POST">
     {{ wtf.quick_form(form) }}
 </form>
 <br>
 
-<ul> {# All compositions #}
+<!-- <ul> 
     {% for post in posts %}
 
 
@@ -67,7 +61,7 @@
         <div class="post-content">{{ composition.description }}</div>
     </li>
     {% endfor %}
-</ul>
+</ul> -->
 <!-- 
 {% if pagination %}
 <div class="pagination">
@@ -75,5 +69,5 @@
 </div>
 {% endif %} -->
 
-
+</div>
 {% endblock %}

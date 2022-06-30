@@ -13,13 +13,13 @@
 
     <div class="card col-sm-3 each-item">
         <a href="{{ url_for('main.each_item', item_id=result.id)}}">
-            <img class="card-img-top" src="{{url_for('static', filename='images/trademe.jpeg')}}"
+            <img class="card-img-top" src="{{url_for('static', filename='images/cart.jpg')}}"
                 alt="{{ result.title }}">
 
             <div class="card-body">
                 <h5 class="card-title">{{ result.title }}</h5>
         </a>
-        <p class="card-text">{{ result.description }}</p>
+        
         <p class="card-text"><small class="text-muted">{{ moment(result.timestamp).fromNow() }}</small></p>
     </div>
 </div>

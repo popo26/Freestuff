@@ -13,6 +13,7 @@
 
 {% block title %}{{super()}}Freestuff - {% endblock %}
 
+
 {% block navbar %}
 
 <nav class="navbar navbar-light bg-light">
@@ -24,12 +25,15 @@
         <ul class="nav navbar-nav navbar-right">
           
             {% if current_user.is_authenticated %}
+            
+            <li>
+                <a href="{{ url_for('main.post_new_item') }}"><button type="button" class="btn btn-secondary">Post New Item</button></a>
+            </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     Account <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
-                    
                     <li>
                         <a href="{{ url_for('main.user', username=current_user.username) }}">
                             Profile
@@ -40,19 +44,16 @@
             </li>
 
             <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
+        
+           
 
-            <li>
-                <a href="{{ url_for('main.post_new_item') }}"><button type="button" class="btn btn-secondary">Post New Item</button></a>
-            </li>
 
             {% else %}
+            <li><a href="{{ url_for('auth.register') }}">Create New Account</a></li>
             <li><a href="{{ url_for('auth.login') }}">Log In</a></li>
             {% endif %}
         </ul>
     </div>
-
-
-
     </div>
   </nav>
 
@@ -60,6 +61,7 @@
 
 
 {% block content %}
+<main>
 <div class = "content-div">
 <div class="container">
     {% for msg in get_flashed_messages() %}
@@ -79,16 +81,16 @@
       <span class="caret"></span></button>
       <ul class="dropdown-menu">
         <li><a href="{{ url_for('main.home_living') }}">Home & Living</a></li>
-        <li><a href="#">Kitchen</a></li>
-        <li><a href="#">Baby</a></li>
-        <li><a href="#">Books</a></li>
-        <li><a href="#">Crafts</a></li>
-        <li><a href="#">Electronics</a></li>
-        <li><a href="#">Pets</a></li>
-        <li><a href="#">Clothing</a></li>
-        <li><a href="#">Bathroom</a></li>
-        <li><a href="#">Toys</a></li>
-        <li><a href="#">Jewellry</a></li>
+       <li><a href="{{ url_for('main.kitchen') }}">Kitchen</a></li>
+        <li><a href="{{ url_for('main.baby') }}">Baby</a></li>
+        <li><a href="{{ url_for('main.books') }}">Books</a></li>
+        <li><a href="{{ url_for('main.craft') }}">Crafts</a></li>
+        <li><a href="{{ url_for('main.electronics') }}">Electronics</a></li>
+        <li><a href="{{ url_for('main.pets') }}">Pets</a></li>
+        <li><a href="{{ url_for('main.clothing') }}">Clothing</a></li>
+        <li><a href="{{ url_for('main.bathroom') }}">Bathroom</a></li>
+        <li><a href="{{ url_for('main.toys') }}">Toys</a></li>
+        <li><a href="{{ url_for('main.jewellery') }}">Jewellery</a></li>
       </ul>
     </div>
 
@@ -105,4 +107,14 @@
 
 {% block page_content %}{% endblock  %}
 </div>
+
+
+</main>
+<footer><p>Copyright {{ year }} FreeStuff</p></footer>
+
 {% endblock %}
+
+
+
+
+

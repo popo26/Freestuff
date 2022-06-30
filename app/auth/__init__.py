@@ -7,4 +7,4 @@ auth = Blueprint('auth', __name__,
                     static_url_path="/static",
                     )
 
-from . import views
+from . import views, errors

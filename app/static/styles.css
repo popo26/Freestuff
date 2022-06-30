@@ -1,19 +1,53 @@
+/* To stick footer */
+
+body {
+    display:flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+}
+
+footer {
+    text-align: center;
+    background-color: pink;
+    color: white;
+    height:50px;
+}
+
+/* end */
+
 .form-div {
     width:80%;
     margin: auto;
 }
 
 /* base.html */
+
 .content-div {
     text-align: center;
     width: 90%;
     margin:auto;
+    flex: 1 0 auto;
 }
+
 
 /* index.html */
 .index-div {
-    width:80%;
+    width:100%;
     margin:auto;
+}
+
+.index-div h3 {
+    margin-top: 2%;
+    margin-bottom: 3%;
+}
+
+.item-image {
+    width:260px;
+    height:fit-content;
 }
 
 /* home_living.html */
@@ -23,11 +57,30 @@
 
 /* each-item.html */
 .item-div {
-    width:90%;
+    width:100%;
     text-align: center;
     margin:auto;
 }
 
+.item-image2 {
+    width:420px;
+    height:fit-content;
+}
+
 .item-table {
     text-align: center;
+}
+
+/* user.html */
+.user-item-list {
+    margin-top: 2%;
+}
+
+.user-item-list h4 {
+    margin-bottom: 2%;
+}
+
+/* post-new-item.html */
+.post-new-item-div h1 {
+    margin-bottom: 3%;
 }
