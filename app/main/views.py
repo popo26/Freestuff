@@ -2,7 +2,7 @@ import datetime
 import smtplib
 from flask import render_template, flash, redirect, request, url_for
 from flask_login import login_required, current_user
-from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm
+from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, ReplyForm
 from . import main
 from app.models import User, Post
 from app import db
@@ -103,15 +103,63 @@ def jewellery():
 @main.route("/item/<int:item_id>")
 def each_item(item_id):
     item = Post.query.filter_by(id=item_id).first()
+    # messages = Message.query.filter_by(post_id=item_id).all()
+    # reply_messages = Message.query.filter_by(reply=True)
     return render_template("main/each-item.html", item=item)
+
+@main.route("/item/<int:item_id>/edit-post", methods=['GET', 'POST'])
+@login_required
+def edit_post(item_id):
+    form = PostForm()
+    item = Post.query.filter_by(id=item_id).first()
+    if form.validate_on_submit():
+        item.title = form.title.data
+        item.description = form.description.data
+        item.category_type = form.category.data
+        db.session.add(item)
+        db.session.commit()
+        flash("Successfully updated!")
+        return redirect(url_for('.each_item', item_id=item.id))
+    form.title.data = item.title
+    form.category = item.category_type
+    form.description = item.description #not appearing
+    return render_template("main/edit-post.html", form=form)
+
+@main.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
+@login_required
+def delete_post(item_id):
+    item = Post.query.filter_by(id=item_id).delete()
+    print(f"to be delete item is ---{item}")
+    db.session.commit()
+    flash("Selected item is deleted.")
+    return redirect(url_for("main.user", username=current_user.username))
+    
+
+@main.route('/item/<int:item_id>/reply', methods=['GET', 'POST'])
+def reply(item_id):
+    form = ReplyForm()
+    item = Post.query.filter_by(id=item_id).first()
+    if form.validate_on_submit():
+        message = Message(description= request.form.get('description'),
+                          user_id=current_user.id,
+                          post_id=item.id,
+                          reply=True)
+        db.session.add(message)
+        db.session.commit()
+        return redirect(url_for('main.each_item', item_id=item.id))
+    
+    return render_template('main/reply.html', item=item, form=form)
 
 @main.route("/contact-giver/<int:item_id>", methods=["GET", "POST"])
 @login_required
 def contact_giver(item_id):
     form = ContactGiverForm()
     item = Post.query.filter_by(id=item_id).first()
+    
     if form.validate_on_submit():
-        message = Message(title=request.form.get("title"),description=request.form.get("description"))
+        message = Message(description=request.form.get("description"), 
+                          user_id=current_user.id, 
+                          post_id=item.id)
         db.session.add(message)
         db.session.commit()
         flash("successfully submitted!")

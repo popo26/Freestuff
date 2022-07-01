@@ -79,6 +79,7 @@ class Post(db.Model):
     timestamp = db.Column(db.DateTime, index = True, default=datetime.utcnow)
     category_type = db.Column(db.Integer)
     giver_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    messages = db.relationship("Message", backref="question", lazy="dynamic")
 
     def __repr__(self):
         return '<Post:{}>'.format(self.title)
@@ -163,10 +164,12 @@ class AnonymousUser(AnonymousUserMixin):
 class Message(db.Model):
     __tablename__ = "messages"
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(254), unique=True)
+    
     description = db.Column(db.Text, index=True)
     timestamp = db.Column(db.DateTime, index = True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+    reply = db.Column(db.Boolean, default=False)
 
 login_manager.anonymous_user = AnonymousUser
 

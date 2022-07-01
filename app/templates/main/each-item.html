@@ -18,7 +18,36 @@
             </div>
         </div>
     </div>
+    {% if current_user.is_authenticated%}
     <a href="{{ url_for('main.contact_giver', item_id=item.id) }}"><button type="button" class="btn btn-primary">Contact {{ item.giver.username }}</button></a>
+    {% endif %}
+    {% if current_user == item.giver %} <!-- Want the button to appear for admin as well -->
+    <a href="{{ url_for('main.edit_post', item_id=item.id) }}"><button type="button" class="btn btn-warning">Edit Post</button></a>
+    <a href="{{ url_for('main.delete_post', item_id=item.id) }}"><button type="button" class="btn btn-danger">Delete Post</button></a>
+    {% endif %}
 </div>
+
+<div class="message-div">
+    
+    {% if item.messages %}
+    {% for message in item.messages|sort(reverse=True, attribute='timestamp')  %}
+    {% if message.reply == False %}
+    <p class="asker">from <strong><a href="{{ url_for('main.user', username=message.asker.username)}}">{{ message.asker.username}}</a></strong>{{ moment(message.timestamp).fromNow() }}</p>
+    <p class="bubble speech left">{{ message.description }}  
+        {% if current_user == item.giver %}  
+        <a class="reply-tag" href="{{ url_for('main.reply', item_id=item.id)}}">Reply</a>
+        {% endif %}</p> 
+    {% endif %}
+    {% if message.reply == True %}
+    <p class="giver">from <strong><a href="{{ url_for('main.user', username=item.giver.username)}}">{{ item.giver.username}}</a> </strong>{{ moment(message.timestamp).fromNow() }}</p>
+    <p class="bubble speech right">{{ message.description }}</p>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    <h4>There is no question so far.</h4>
+    
+    {% endif %}
+</div>
+
 
 {% endblock %}

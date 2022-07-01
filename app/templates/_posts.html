@@ -1,7 +1,7 @@
 <div class="index-div">
 <div class="card-deck">
     {% if posts %}
-    {% for post in posts %}
+    {% for post in posts|sort(reverse=True, attribute='timestamp')  %}
 
     <div class="card col-lg-3 col-md-4 each-item">
         <a href="{{ url_for('main.each_item', item_id=post.id)}}">

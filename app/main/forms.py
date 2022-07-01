@@ -47,7 +47,10 @@ class PostForm(FlaskForm):
 #     submit = SubmitField("Search", render_kw={'class': 'btn btn-success btn-block'})
 
 class ContactGiverForm(FlaskForm):
-    title = StringField("Title", validators=[DataRequired()])
+    
     description = TextAreaField("Any message or inquiry goes here.", validators=[DataRequired()], render_kw={'rows':'10'})
     submit = SubmitField("Submit")
 
+class ReplyForm(FlaskForm):
+    description = TextAreaField('Reply', validators=[DataRequired()], render_kw={'rows':'10'})
+    submit = SubmitField("Reply")
