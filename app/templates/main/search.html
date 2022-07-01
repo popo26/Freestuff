@@ -1,36 +1,39 @@
 {% extends 'base.html' %}
-
+{% import "_macros.html" as macros %}
 
 {% block title %}{{super()}}Search result{% endblock %}
 
 {% block page_content %}
 
 {% if results %}
+<div class="index-div">
 <h3>The search result related to "<strong>{{ keyword }}</strong>".</h3>
 {% for result in results %}
 
 <div class="card-deck">
 
-    <div class="card col-sm-3 each-item">
+    <div class="card col-lg-3 col-md-4 each-item">
         <a href="{{ url_for('main.each_item', item_id=result.id)}}">
-            <img class="card-img-top" src="{{url_for('static', filename='images/cart.jpg')}}"
-                alt="{{ result.title }}">
+            <img class="card-img-top item-image" src="{{url_for('static', filename='images/cart.jpg')}}" alt="{{ result.title }}">
 
             <div class="card-body">
                 <h5 class="card-title">{{ result.title }}</h5>
         </a>
-        
+
         <p class="card-text"><small class="text-muted">{{ moment(result.timestamp).fromNow() }}</small></p>
     </div>
 </div>
-
-</div>
-</div>
-
-{% endfor %}
-
-{% else %}
+    {% else %}
 <p>There is no result related to "<strong>{{ keyword }}</strong>".</p>
+{% endfor %}
+{% endif %}
+
+</div>
+
+{% if pagination %}
+<div class="pagination">
+  {{ macros.pagination_widget(pagination, '.index') }}
+</div>
 {% endif %}
 
 {% endblock %}

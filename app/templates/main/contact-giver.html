@@ -9,7 +9,7 @@
 
    <h1>Hi {{ current_user.username }}! Ask away!</h1> 
    <h4>This is about <strong>{{ item.title }}</strong> posted by <strong>{{ item.giver.username }}</strong></h4>
-<form method="POST">
+<form class='forms' method="POST">
     <!-- sending email work in progress -->
     <!-- also creating message page -->
     {{ wtf.quick_form(form) }}

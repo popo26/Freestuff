@@ -6,17 +6,19 @@
 
 {% block page_content %}
 
-{% if messages %}
-{% for message in messages %}
-{% if current_user.message %}
-{{ message }}
-{% endif %}
-{% endfor %} 
 
+
+{% if messages %}
+{% for message in messages|sort(reverse=True, attribute='timestamp') %}
+<li>
+{{ message.description }} for {{ message.post_id}}
+</li>
+{% endfor %}
 {% else %}
 <p>There is no message.</p>
-
 {% endif %}
+
+
 
 
 {% endblock %}

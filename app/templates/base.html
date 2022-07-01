@@ -28,6 +28,7 @@
 
             
             <li class="dropdown">
+                   
                 <a href="#" class="dropdown-toggle nav-items" data-toggle="dropdown">
                     {{current_user.username}} <b class="caret"></b>
                 </a>
@@ -37,7 +38,13 @@
                             Profile
                         </a>
                     </li>
-                    <li><a href="{{ url_for('main.check_messages', username=current_user.username)}}">Messages</a></li>
+                    <li>
+                        <a href="{{ url_for('main.check_messages', username=current_user.username)}}">Messages
+                            <span class="badge badge-light">9</span>
+                            <span class="sr-only">unread messages</span>
+                        </a>
+                       
+                    </li>
                     <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
                 </ul>
             </li>

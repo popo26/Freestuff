@@ -28,7 +28,8 @@ class Config():
     MSEARCH_BACKEND = 'whoosh'
     MSEARCH_PRIMARY_KEY = 'id'
     MSEARCH_ENABLE = True
-   
+
+    POSTS_PER_PAGE = 12  
    
 
     @staticmethod

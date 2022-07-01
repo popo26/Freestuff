@@ -1,6 +1,6 @@
 import datetime
 import smtplib
-from flask import render_template, flash, redirect, request, url_for
+from flask import render_template, flash, redirect, request, url_for, current_app
 from flask_login import login_required, current_user
 from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, ReplyForm
 from . import main
@@ -19,89 +19,238 @@ YEAR = datetime.datetime.now().year
 @main.route("/", methods=['GET', "POST"])
 def index():
     posts = Post.query.all()
-    return render_template("main/index.html", posts=posts, year=YEAR)
+    posts_count = Post.query.count()
+    #Pagination
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.order_by(Post.timestamp.desc()).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/index.html", 
+                            posts=posts, 
+                            pagination=pagination,
+                            posts_count = posts_count,
+                            year=YEAR)
 
 @main.route("/search")
 def search():
     keyword = request.args.get('query')
-    print(keyword)
-   
     results = Post.query.msearch(keyword, fields=['title','description']).all()
-    print(results)
-    return render_template('main/search.html', results=results, keyword=keyword)
+    #pagination seems to be working?
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+         Post.query.msearch(keyword, fields=['title','description']).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template('main/search.html', 
+                            results=results, 
+                            keyword=keyword,
+                            pagination=pagination, 
+                            posts=posts)
 
-# @main.route('/profile/<username>')
-# @login_required
-# def profile(username):
-#     user = User.query.filter_by(username=username).first()
-#     posts = Post.query.filter_by(giver=user)
-#     return render_template('main/user.html', user=user, posts=posts)
 
 @main.route("/home-living")
 def home_living():
     items = Post.query.filter_by(category_type=Category.HOME_LIVING)
     category="Home&Living"
-    return render_template("main/per_category.html", items=items, category=category)
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(category_type=Category.HOME_LIVING).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/per_category.html", 
+                            items=items, 
+                            pagination=pagination,
+                            posts=posts,
+                            category=category)
 
 @main.route("/kitchen")
 def kitchen():
     items = Post.query.filter_by(category_type=Category.KITCHEN)
     category="Kitchen"
-    return render_template("main/per_category.html", items=items, category=category)
-
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(category_type=Category.KITCHEN).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/per_category.html", 
+                            items=items, 
+                            pagination=pagination,
+                            posts=posts,
+                            category=category)
 @main.route("/baby")
 def baby():
     items = Post.query.filter_by(category_type=Category.BABY)
     category="Baby"
-    return render_template("main/per_category.html", items=items, category=category)
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(category_type=Category.BABY).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/per_category.html", 
+                            items=items, 
+                            pagination=pagination,
+                            posts=posts,
+                            category=category)
 
 @main.route("/books")
 def books():
     items = Post.query.filter_by(category_type=Category.BOOKS)
     category="Books"
-    return render_template("main/per_category.html", items=items, category=category)
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(category_type=Category.BOOKS).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/per_category.html", 
+                            items=items, 
+                            pagination=pagination,
+                            posts=posts,
+                            category=category)
 
 @main.route("/craft")
 def craft():
     items = Post.query.filter_by(category_type=Category.CRAFT)
     category="Craft"
-    return render_template("main/per_category.html", items=items, category=category)
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(category_type=Category.CRAFT).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/per_category.html", 
+                            items=items, 
+                            pagination=pagination,
+                            posts=posts,
+                            category=category)
 
 @main.route("/electronics")
 def electronics():
     items = Post.query.filter_by(category_type=Category.ELECTRONICS)
     category="Electronics"
-    return render_template("main/per_category.html", items=items, category=category)
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(category_type=Category.ELECTRONICS).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/per_category.html", 
+                            items=items, 
+                            pagination=pagination,
+                            posts=posts,
+                            category=category)
 
 @main.route("/pets")
 def pets():
     items = Post.query.filter_by(category_type=Category.PETS)
     category="Pets"
-    return render_template("main/per_category.html", items=items, category=category)
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(category_type=Category.PETS).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/per_category.html", 
+                            items=items, 
+                            pagination=pagination,
+                            posts=posts,
+                            category=category)
 
 @main.route("/clothing")
 def clothing():
     items = Post.query.filter_by(category_type=Category.CLOTHING)
     category="clothing"
-    return render_template("main/per_category.html", items=items, category=category)
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(category_type=Category.CLOTHING).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/per_category.html", 
+                            items=items, 
+                            pagination=pagination,
+                            posts=posts,
+                            category=category)
 
 @main.route("/bathroom")
 def bathroom():
     items = Post.query.filter_by(category_type=Category.BATHROOM)
     category="Bathroom"
-    return render_template("main/per_category.html", items=items, category=category)
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(category_type=Category.BATHROOM).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/per_category.html", 
+                            items=items, 
+                            pagination=pagination,
+                            posts=posts,
+                            category=category)
 
 @main.route("/toys")
 def toys():
     items = Post.query.filter_by(category_type=Category.TOYS)
     category="Toys"
-    return render_template("main/per_category.html", items=items, category=category)
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(category_type=Category.TOYS).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/per_category.html", 
+                            items=items, 
+                            pagination=pagination,
+                            posts=posts,
+                            category=category)
 
 @main.route("/jewellery")
 def jewellery():
     items = Post.query.filter_by(category_type=Category.JEWELLERY)
     category="Jewellery"
-    return render_template("main/per_category.html", items=items, category=category)
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(category_type=Category.JEWELLERY).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/per_category.html", 
+                            items=items, 
+                            pagination=pagination,
+                            posts=posts,
+                            category=category)
 
 @main.route("/item/<int:item_id>")
 def each_item(item_id):
@@ -169,7 +318,10 @@ def contact_giver(item_id):
         db.session.add(message)
         db.session.commit()
         flash("successfully submitted!")
-        #how to send email in progress
+        link = url_for('main.each_item', _external=True, item_id=item.id)
+        html = render_template('mail/user_question_recieved.html', giver=item.giver, link=link, item=item)
+        send_email(item.giver.email, "You received a question!", html)
+    
         return redirect(url_for("main.each_item", item_id=item.id))
     return render_template("main/contact-giver.html", form=form, item=item)
 
@@ -177,8 +329,8 @@ def contact_giver(item_id):
 @main.route("/messages/<username>")
 @login_required
 def check_messages(username):
-    messages = Message.query.all()
-    return render_template("main/messages.html", username=current_user, message=messages)
+    messages = Message.query.filter_by(user_id=current_user.id)
+    return render_template("main/messages.html", user_id=current_user.id, messages=messages)
     
 @main.route("/post-new-item", methods=['GET', "POST"])
 @login_required
@@ -201,9 +353,19 @@ def post_new_item():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    posts = Post.query.filter_by(giver=user)
-
-    return render_template("main/user.html", user=user, posts=posts)
+    # posts = Post.query.filter_by(giver=user)
+    page = request.args.get('page', 1, type=int)
+    pagination = \
+        Post.query.filter_by(giver=user).paginate(
+            page,
+            per_page=current_app.config['POSTS_PER_PAGE'],
+            error_out=False
+        )
+    posts = pagination.items
+    return render_template("main/user.html", 
+                            user=user, 
+                            pagination=pagination,
+                            posts=posts)
 
 @main.route("/edit-profile", methods=['GET', 'POST'])
 @login_required

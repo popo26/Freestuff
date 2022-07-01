@@ -87,8 +87,11 @@ def confirm(token):
         user.confirmed = True
         db.session.add(user)
         db.session.commit()
-        send_email(user.email, "Welcome to FreeStuff!", 'mail/user_welcome.html', user=user)
-        send_email(os.getenv('MAIL_USERNAME'), f"Notification: A new user({user.username}) is added", 'mail/admin_new_user.html', user=user)
+        link = url_for('main.index', _external=True)
+        html = render_template('mail/user_welcome.html', user=current_user, link=link)
+        send_email(user.email, "Welcome to FreeStuff!", html, user=user)
+        html = render_template('mail/admin_new_user.html', user=current_user)
+        send_email(os.getenv('MAIL_USERNAME'), f"Notification: A new user({user.username}) is added", html, user=user)
         flash("Now you can login now!")
     return redirect(url_for('auth.login'))
 

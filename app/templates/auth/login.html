@@ -7,10 +7,10 @@
 {% block category %}{% endblock %}
 {% block page_content %}
 <div class="form-div">
-<form method="POST">
+<form class='forms' method="POST">
     {{ wtf.quick_form(form) }}
     </form>
-    
+
     <p>New User? <a href="{{ url_for('auth.register')}}">Click here to register</a></p>
 </div>
 {% endblock  %}  

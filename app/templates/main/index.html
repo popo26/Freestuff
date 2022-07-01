@@ -1,18 +1,20 @@
 {% extends 'base.html' %}
-
+{% import "_macros.html" as macros %}
 
 {% block title %}{{super()}}Index {% endblock %}
 
 
 {% block page_content %}
 <div class="index-div">
-  <h3>Currently {{ posts|length }} items available! </h3>
+  <!-- {{ posts|length }} doesn't work after applying pagination -->
+  <h3>Currently we have {{ posts_count }} posts. </h3>
   {% if posts %}
   {% for post in posts|sort(reverse=True, attribute='timestamp') %}
   <div class="card-deck">
     <div class="card col-lg-3 col-md-4 each-item">
       <a href="{{ url_for('main.each_item', item_id=post.id)}}">
-        <img class="card-img-top item-image" src="{{url_for('static', filename='images/cart.jpg')}}" alt="{{ post.title }}">
+        <img class="card-img-top item-image" src="{{url_for('static', filename='images/cart.jpg')}}"
+          alt="{{ post.title }}">
         <div class="card-body">
           <h5 class="card-title">{{ post.title }}</h5>
       </a>
@@ -24,5 +26,12 @@
   {% endfor %}
   {% endif %}
 </div>
+
+
+{% if pagination %}
+<div class="pagination">
+  {{ macros.pagination_widget(pagination, '.index') }}
+</div>
+{% endif %}
 
 {% endblock %}
