@@ -9,6 +9,9 @@ from app import db
 from ..decorators import permission_required, admin_required
 from ..models import Permission, Category, Message
 from app import config
+from app.email import send_email
+from config import Config
+import os
 
 
 YEAR = datetime.datetime.now().year
@@ -128,9 +131,12 @@ def edit_post(item_id):
 @main.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete_post(item_id):
-    item = Post.query.filter_by(id=item_id).delete()
-    print(f"to be delete item is ---{item}")
+    item = Post.query.filter_by(id=item_id).first()
+    db.session.delete(item)
     db.session.commit()
+    html = render_template('mail/admin_post_deleted.html', user=current_user)
+    send_email(os.getenv('MAIL_USERNAME'), "A post deleted", html)
+    
     flash("Selected item is deleted.")
     return redirect(url_for("main.user", username=current_user.username))
     
