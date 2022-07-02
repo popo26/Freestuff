@@ -1,6 +1,6 @@
 import datetime
 import smtplib
-from flask import render_template, flash, redirect, request, url_for, current_app
+from flask import render_template, flash, redirect, request, url_for, current_app, session
 from flask_login import login_required, current_user
 from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, ReplyForm
 from . import main
@@ -12,6 +12,7 @@ from app import config
 from app.email import send_email
 from config import Config
 import os
+
 
 
 YEAR = datetime.datetime.now().year
@@ -298,8 +299,12 @@ def reply(item_id):
         message = Message(description= request.form.get('description'),
                           user_id=current_user.id,
                           post_id=item.id,
-                          reply=True)
+                          reply=True,
+                          replied=True)
         db.session.add(message)
+        db.session.commit()
+        current_user.inquiry -= 1
+        db.session.add(current_user)
         db.session.commit()
         return redirect(url_for('main.each_item', item_id=item.id))
     
@@ -317,11 +322,13 @@ def contact_giver(item_id):
                           post_id=item.id)
         db.session.add(message)
         db.session.commit()
-        flash("successfully submitted!")
+        item.giver.inquiry += 1
+        db.session.add(item)
+        db.session.commit()
         link = url_for('main.each_item', _external=True, item_id=item.id)
         html = render_template('mail/user_question_recieved.html', giver=item.giver, link=link, item=item)
         send_email(item.giver.email, "You received a question!", html)
-    
+        flash("successfully submitted!")
         return redirect(url_for("main.each_item", item_id=item.id))
     return render_template("main/contact-giver.html", form=form, item=item)
 
@@ -329,8 +336,17 @@ def contact_giver(item_id):
 @main.route("/messages/<username>")
 @login_required
 def check_messages(username):
-    messages = Message.query.filter_by(user_id=current_user.id)
-    return render_template("main/messages.html", user_id=current_user.id, messages=messages)
+    # messages = Message.query.filter(Message.replied==False)
+    if current_user.inquiry > 0:
+        posts = Post.query.filter_by(giver=current_user)
+        messages=Message.query.filter_by(replied=False)
+        for p in posts:
+            print(p)
+            for m in messages:
+                if p.id == m.post_id:
+                    if m.replied == False:
+                        print(m)
+    return render_template("main/messages.html", user_id=current_user.id, messages=messages, username=current_user.username)
     
 @main.route("/post-new-item", methods=['GET', "POST"])
 @login_required

@@ -40,7 +40,7 @@
                     </li>
                     <li>
                         <a href="{{ url_for('main.check_messages', username=current_user.username)}}">Messages
-                            <span class="badge badge-light">9</span>
+                            <span class="badge badge-light">{{ current_user.inquiry }}</span>
                             <span class="sr-only">unread messages</span>
                         </a>
                        
@@ -75,7 +75,7 @@
 
 {% block category %}
 
-<div class="container">
+<div class="container custom-container">
                                     
     <div class="dropdown category-div">
       <button class="btn btn-dark dropdown-toggle button-custom" type="button" data-toggle="dropdown">Category

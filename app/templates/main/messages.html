@@ -10,13 +10,19 @@
 
 {% if messages %}
 {% for message in messages|sort(reverse=True, attribute='timestamp') %}
+
 <li>
-{{ message.description }} for {{ message.post_id}}
+
+{{ message.description }} from {{ message.asker.username}}
+
 </li>
 {% endfor %}
+
 {% else %}
 <p>There is no message.</p>
 {% endif %}
+
+
 
 
 

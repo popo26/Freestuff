@@ -22,6 +22,7 @@ class User(UserMixin, db.Model):
     posts = db.relationship("Post", backref="giver", lazy="dynamic")
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     messages = db.relationship("Message", backref="asker", lazy="dynamic")
+    inquiry = db.Column(db.Integer, nullable=False, default=0)
    
 
     def __init__(self, **kwargs):
@@ -162,12 +163,12 @@ class AnonymousUser(AnonymousUserMixin):
 class Message(db.Model):
     __tablename__ = "messages"
     id = db.Column(db.Integer, primary_key=True)
-    
     description = db.Column(db.Text, index=True)
     timestamp = db.Column(db.DateTime, index = True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id', ondelete='CASCADE'))
     reply = db.Column(db.Boolean, default=False)
+    replied = db.Column(db.Boolean, default=False)
 
 login_manager.anonymous_user = AnonymousUser
 

@@ -19,13 +19,12 @@
           <p class="card-text"><small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small></p>
         </div>
     </div>
-  </div>
-  
-{% else %}
-<h4>There is no item related to {{ category }}.</h4>
+    {% else %}
+<p>There is no item related to {{ category }}.</p>
 {% endfor %}
 {% endif %}
-</div>
+  </div>
+  
 
 {% if pagination %}
 <div class="pagination">

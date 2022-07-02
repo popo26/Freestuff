@@ -58,11 +58,14 @@ a:hover {
 	color: white;
 }
 
-
-
 .button-custom:hover {
 	background-color: white;
 	color:#333;
+}
+
+.custom-container {
+	width:80%;
+	margin: auto;
 }
 
 /* .search-field {
