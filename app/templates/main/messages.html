@@ -7,7 +7,7 @@
 {% block page_content %}
 
 
-
+<!-- 
 {% if messages %}
 {% for message in messages|sort(reverse=True, attribute='timestamp') %}
 
@@ -20,7 +20,20 @@
 
 {% else %}
 <p>There is no message.</p>
+{% endif %} -->
+
+
+{% for p in posts %}
+<h4>About "<strong>{{p.title}}</strong>" :</h4>
+{% for m in messages %}
+    {% if p.id == m.post_id %}
+        {% if m.replied == False %}
+            <li>{{ m.description }} from {{ m.asker.username }}</li>
+
 {% endif %}
+{% endif %}
+{% endfor %}
+{% endfor %}
 
 
 

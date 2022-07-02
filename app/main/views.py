@@ -344,9 +344,11 @@ def check_messages(username):
             print(p)
             for m in messages:
                 if p.id == m.post_id:
+                    print(p.id)
                     if m.replied == False:
                         print(m)
-    return render_template("main/messages.html", user_id=current_user.id, messages=messages, username=current_user.username)
+                        
+    return render_template("main/messages.html", user_id=current_user.id, messages=messages, username=current_user.username, posts=posts)
     
 @main.route("/post-new-item", methods=['GET', "POST"])
 @login_required
