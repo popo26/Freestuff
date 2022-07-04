@@ -40,7 +40,9 @@
                     </li>
                     <li>
                         <a href="{{ url_for('main.check_messages', username=current_user.username)}}">Messages
-                            <span class="badge badge-light">{{ current_user.inquiry }}</span>
+                            <span class="badge badge-light">{{ current_user.question_received }}</span>
+                            <span class="sr-only">unread messages</span>
+                            <span class="badge badge-light">{{ current_user.question_answered }}</span>
                             <span class="sr-only">unread messages</span>
                         </a>
                        

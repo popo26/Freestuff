@@ -6,38 +6,35 @@
 
 {% block page_content %}
 
-
-<!-- 
-{% if messages %}
-{% for message in messages|sort(reverse=True, attribute='timestamp') %}
-
-<li>
-
-{{ message.description }} from {{ message.asker.username}}
-
-</li>
-{% endfor %}
+<h1>Inquiries about your posts. Please reply.</h1>
+{% if current_user.question_received > 0 %}
+    {% for p in posts %}
+        {% for m in messages|sort(reverse=True, attribute='timestamp') %}
+            {% if p.id == m.post_id %}
+            <h4>About "<strong>{{p.title}}</strong>" :</h4>
+                <li> <a href="{{ url_for('main.each_item', item_id=p.id)}}">{{ m.description }}</a> from {{ m.asker.username }}</li>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
 
 {% else %}
-<p>There is no message.</p>
-{% endif %} -->
-
-
-{% for p in posts %}
-<h4>About "<strong>{{p.title}}</strong>" :</h4>
-{% for m in messages %}
-    {% if p.id == m.post_id %}
-        {% if m.replied == False %}
-            <li>{{ m.description }} from {{ m.asker.username }}</li>
-
+<p>You have no inquiry.</p>
 {% endif %}
+<br>
+
+<h1>Answers received for the question you posted.</h1>
+{% if current_user.question_answered > 0 %}
+
+{% for q in posted_questions|sort(reverse=True, attribute='timestamp')  %}
+ 
+    <h4>About "<strong>{{ q.description }}</strong>" :<span>
+        <a href="{{ url_for('main.each_item', item_id=q.post_id )}}">Check reply</a></span> {{q.id}}</h4>
+
+
+{% endfor %}
+
+{% elif current_user.question_answered == 0 %}
+<p>No reply received for your inquiry.</p>
 {% endif %}
-{% endfor %}
-{% endfor %}
-
-
-
-
-
 
 {% endblock %}

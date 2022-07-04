@@ -53,7 +53,8 @@ def search():
                             results=results, 
                             keyword=keyword,
                             pagination=pagination, 
-                            posts=posts)
+                            posts=posts,
+                            year=YEAR)
 
 
 @main.route("/home-living")
@@ -72,7 +73,8 @@ def home_living():
                             items=items, 
                             pagination=pagination,
                             posts=posts,
-                            category=category)
+                            category=category,
+                            year=YEAR)
 
 @main.route("/kitchen")
 def kitchen():
@@ -90,7 +92,8 @@ def kitchen():
                             items=items, 
                             pagination=pagination,
                             posts=posts,
-                            category=category)
+                            category=category,
+                            year=YEAR)
 @main.route("/baby")
 def baby():
     items = Post.query.filter_by(category_type=Category.BABY)
@@ -107,7 +110,8 @@ def baby():
                             items=items, 
                             pagination=pagination,
                             posts=posts,
-                            category=category)
+                            category=category,
+                            year=YEAR)
 
 @main.route("/books")
 def books():
@@ -125,7 +129,8 @@ def books():
                             items=items, 
                             pagination=pagination,
                             posts=posts,
-                            category=category)
+                            category=category,
+                            year=YEAR)
 
 @main.route("/craft")
 def craft():
@@ -143,7 +148,8 @@ def craft():
                             items=items, 
                             pagination=pagination,
                             posts=posts,
-                            category=category)
+                            category=category,
+                            year=YEAR)
 
 @main.route("/electronics")
 def electronics():
@@ -161,7 +167,8 @@ def electronics():
                             items=items, 
                             pagination=pagination,
                             posts=posts,
-                            category=category)
+                            category=category,
+                            year=YEAR)
 
 @main.route("/pets")
 def pets():
@@ -179,7 +186,8 @@ def pets():
                             items=items, 
                             pagination=pagination,
                             posts=posts,
-                            category=category)
+                            category=category,
+                            year=YEAR)
 
 @main.route("/clothing")
 def clothing():
@@ -197,7 +205,8 @@ def clothing():
                             items=items, 
                             pagination=pagination,
                             posts=posts,
-                            category=category)
+                            category=category,
+                            year=YEAR)
 
 @main.route("/bathroom")
 def bathroom():
@@ -215,7 +224,8 @@ def bathroom():
                             items=items, 
                             pagination=pagination,
                             posts=posts,
-                            category=category)
+                            category=category,
+                            year=YEAR)
 
 @main.route("/toys")
 def toys():
@@ -233,7 +243,8 @@ def toys():
                             items=items, 
                             pagination=pagination,
                             posts=posts,
-                            category=category)
+                            category=category,
+                            year=YEAR)
 
 @main.route("/jewellery")
 def jewellery():
@@ -251,14 +262,15 @@ def jewellery():
                             items=items, 
                             pagination=pagination,
                             posts=posts,
-                            category=category)
+                            category=category,
+                            year=YEAR)
 
 @main.route("/item/<int:item_id>")
 def each_item(item_id):
     item = Post.query.filter_by(id=item_id).first()
     # messages = Message.query.filter_by(post_id=item_id).all()
     # reply_messages = Message.query.filter_by(reply=True)
-    return render_template("main/each-item.html", item=item)
+    return render_template("main/each-item.html", item=item, year=YEAR)
 
 @main.route("/item/<int:item_id>/edit-post", methods=['GET', 'POST'])
 @login_required
@@ -272,11 +284,11 @@ def edit_post(item_id):
         db.session.add(item)
         db.session.commit()
         flash("Successfully updated!")
-        return redirect(url_for('.each_item', item_id=item.id))
+        return redirect(url_for('.each_item', item_id=item.id, year=YEAR))
     form.title.data = item.title
     form.category = item.category_type
     form.description = item.description #not appearing
-    return render_template("main/edit-post.html", form=form)
+    return render_template("main/edit-post.html", form=form, year=YEAR)
 
 @main.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
 @login_required
@@ -288,27 +300,66 @@ def delete_post(item_id):
     send_email(os.getenv('MAIL_USERNAME'), "A post deleted", html)
     
     flash("Selected item is deleted.")
-    return redirect(url_for("main.user", username=current_user.username))
+    return redirect(url_for("main.user", username=current_user.username, year=YEAR))
     
 
-@main.route('/item/<int:item_id>/reply', methods=['GET', 'POST'])
-def reply(item_id):
+@main.route('/item/<int:item_id>/reply/<int:message_id>', methods=['GET', 'POST'])
+def reply(item_id, message_id):
     form = ReplyForm()
     item = Post.query.filter_by(id=item_id).first()
     if form.validate_on_submit():
-        message = Message(description= request.form.get('description'),
+        message = Message(description=request.form.get('description'),
                           user_id=current_user.id,
                           post_id=item.id,
                           reply=True,
-                          replied=True)
+                          replied=True
+                          )
         db.session.add(message)
-        db.session.commit()
-        current_user.inquiry -= 1
+        #work in progress
+        # original_message = Message.query.filter_by(post_id=item.id, replied=False).first()
+        original_message = Message.query.filter_by(id=message_id).first()
+        print(original_message)
+        print(original_message.id)
+        print(original_message.replied)
+        print(original_message.reply)
+        original_message.replied = True
+        original_message.asker.question_answered += 1
+        db.session.add(original_message)
+        current_user.question_received -= 1
         db.session.add(current_user)
         db.session.commit()
-        return redirect(url_for('main.each_item', item_id=item.id))
+        return redirect(url_for('main.each_item', item_id=item.id, message_id=message.id, year=YEAR))
     
-    return render_template('main/reply.html', item=item, form=form)
+    return render_template('main/reply.html', item=item, form=form, year=YEAR)
+
+@main.route('/item/<int:item_id>/replied/<int:message_id>', methods=['GET', 'POST'])
+def mark_as_replied(item_id, message_id):
+    replied_message = Message.query.filter_by(id=message_id).first()
+    item = Post.query.filter_by(id=item_id).first()
+    print(message_id)
+    print(replied_message)
+    replied_message.replied = True
+    db.session.add(replied_message)
+    item.giver.question_received -= 1
+    replied_message.read = True
+    db.session.add(replied_message)
+    db.session.add(item)
+    db.session.commit()
+    
+    return redirect(url_for('main.check_messages', username=current_user.username, year=YEAR))
+
+@main.route('/item/<int:item_id>/answered/<int:message_id>', methods=['GET', 'POST'])
+def mark_as_read(item_id, message_id):
+    answered_message = Message.query.filter_by(id=message_id).first()
+    item = Post.query.filter_by(id=item_id).first()
+    print(message_id)
+    current_user.question_answered -=1
+    answered_message.read = True
+    db.session.add(current_user)
+    db.session.add(answered_message)
+    db.session.commit()
+    # return render_template('main/messages.html', username=current_user.username)
+    return redirect(url_for('main.check_messages', username=current_user.username, year=YEAR))
 
 @main.route("/contact-giver/<int:item_id>", methods=["GET", "POST"])
 @login_required
@@ -319,10 +370,10 @@ def contact_giver(item_id):
     if form.validate_on_submit():
         message = Message(description=request.form.get("description"), 
                           user_id=current_user.id, 
-                          post_id=item.id)
+                          post_id=item.id)        
+        item.giver.question_received += 1
+        
         db.session.add(message)
-        db.session.commit()
-        item.giver.inquiry += 1
         db.session.add(item)
         db.session.commit()
         link = url_for('main.each_item', _external=True, item_id=item.id)
@@ -330,25 +381,28 @@ def contact_giver(item_id):
         send_email(item.giver.email, "You received a question!", html)
         flash("successfully submitted!")
         return redirect(url_for("main.each_item", item_id=item.id))
-    return render_template("main/contact-giver.html", form=form, item=item)
+    return render_template("main/contact-giver.html", form=form, item=item, year=YEAR)
 
 #In progress
 @main.route("/messages/<username>")
 @login_required
 def check_messages(username):
-    # messages = Message.query.filter(Message.replied==False)
-    if current_user.inquiry > 0:
-        posts = Post.query.filter_by(giver=current_user)
-        messages=Message.query.filter_by(replied=False)
-        for p in posts:
-            print(p)
-            for m in messages:
-                if p.id == m.post_id:
-                    print(p.id)
-                    if m.replied == False:
-                        print(m)
-                        
-    return render_template("main/messages.html", user_id=current_user.id, messages=messages, username=current_user.username, posts=posts)
+    messages = Message.query.filter(Message.replied==False)
+    posts = Post.query.filter_by(giver=current_user)  
+    posted_questions = Message.query.filter(Message.user_id==current_user.id, 
+                                            Message.replied==True, 
+                                            Message.read==False).all()
+        
+    print(current_user.id)
+    print(current_user.username)
+    print(posted_questions)
+
+    return render_template("main/messages.html", 
+                            posts=posts, 
+                            username=current_user.username, 
+                            messages=messages, 
+                            posted_questions=posted_questions,
+                            year=YEAR)
     
 @main.route("/post-new-item", methods=['GET', "POST"])
 @login_required
@@ -365,7 +419,7 @@ def post_new_item():
         flash("Thank you for posting a new free stuff!")
         return redirect(url_for('.index'))
     # posts = Post.query.order_by(Post.timestamp.desc())
-    return render_template("main/post-new-item.html", form=form)
+    return render_template("main/post-new-item.html", form=form, year=YEAR)
 
 @main.route('/user/<username>')
 @login_required
@@ -383,7 +437,8 @@ def user(username):
     return render_template("main/user.html", 
                             user=user, 
                             pagination=pagination,
-                            posts=posts)
+                            posts=posts,
+                            year=YEAR)
 
 @main.route("/edit-profile", methods=['GET', 'POST'])
 @login_required
@@ -396,11 +451,11 @@ def edit_profile():
         db.session.add(current_user)
         db.session.commit()
         flash("Your profile has been updated! Well Done!")
-        return redirect(url_for(".user", username=current_user.username))
+        return redirect(url_for(".user", username=current_user.username, year=YEAR))
     form.name.data = current_user.name
     form.location.data = current_user.location
     form.bio.data = current_user.bio
-    return render_template("main/user_edit_profile.html", form=form)
+    return render_template("main/user_edit_profile.html", form=form, year=YEAR)
 
 @main.route("/admin-edit-profile/<int:id>", methods=['GET', 'POST'])
 @login_required
@@ -418,11 +473,11 @@ def admin_edit_profile(id):
         db.session.add(user)
         db.session.commit()
         flash("This user profile has been updated by Administrator.")
-        return redirect(url_for('.user', username=user.username))
+        return redirect(url_for('.user', username=user.username, year=YEAR))
     form.name.data = user.name
     form.location.data = user.location
     form.bio.data = user.bio
     form.confirmed.data = user.confirmed
     form.role.data = user.role
     form.username.data = user.username
-    return render_template("main/admin_edit_profile.html", form=form)
+    return render_template("main/admin_edit_profile.html", form=form, year=YEAR)
