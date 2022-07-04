@@ -35,40 +35,42 @@
 
 <div class="message-div">
 
-    {% if item.messages %}
-    {% for message in item.messages|sort(reverse=True, attribute='timestamp')  %}
-    {% if message.reply == False %}
-    <p class="asker">from <strong><a
-                href="{{ url_for('main.user', username=message.asker.username)}}">{{ message.asker.username}}</a></strong>{{ moment(message.timestamp).fromNow() }}
-    </p>
-    <p class="bubble speech left">{{ message.description }}
-        {% if current_user == item.giver%}
-        <a class="reply-tag" href="{{ url_for('main.reply', item_id=item.id, message_id=message.id )}}">Reply</a>{% endif %}
-        {% if message.replied == False and current_user == item.giver %}
-        <a href="{{ url_for('main.mark_as_replied', item_id=item.id, message_id=message.id)}}">
-            <button class="btn btn-light button-custom" type="submit">Mark as Replied</button>
-        </a>
-        
-        {% endif %}</p>
-    <p>{{ message.id }}</p>
-    {% endif %}
-    {% if message.reply == True %}
-    <p class="giver">from <strong><a
-                href="{{ url_for('main.user', username=item.giver.username)}}">{{ item.giver.username}}</a>
-        </strong>{{ moment(message.timestamp).fromNow() }}</p>
-    <p class="bubble speech right">{{ message.description }}
-        {% if message.read == False and message.asker != current_user %}
-        
-        <a href="{{ url_for('main.mark_as_read', item_id=item.id, message_id=message.id)}}">
-            <button class="btn btn-light button-custom" type="submit">Mark as Read</button>
+    {% if messages %}
+        {% for message in item.messages|sort(reverse=True, attribute='timestamp')  %}
+            {% if message.reply == False %}
+                 <p class="asker">from <strong><a
+                href="{{ url_for('main.user', username=message.asker.username)}}">{{ message.asker.username}}</a></strong> --- {{ moment(message.timestamp).fromNow() }}
+                </p>
+                 <p class="bubble speech left">{{ message.description }}
+                {% if current_user == item.giver%}
+                    <a class="reply-tag" href="{{ url_for('main.reply', item_id=item.id, message_id=message.id )}}">Reply</a>{% endif %}
+                {% if message.replied == False and current_user == item.giver %}
+                    <a href="{{ url_for('main.mark_as_replied', item_id=item.id, message_id=message.id)}}">
+                    <button class="btn btn-light button-custom" type="submit">Mark as Replied</button>
+                    </a>
+                {% endif %}</p>
+                <p>{{ message.id }}</p>
             {% endif %}
-    </p>
-    <p>{{ message.id }}</p>
-    {% endif %}
-    {% endfor %}
+
+       
+
+            {% if message.reply == True %}
+                 <p class="giver">from <strong><a
+                href="{{ url_for('main.user', username=item.giver.username)}}">{{ item.giver.username}}</a>
+                </strong> to {{message.answered_user2}} --- {{ moment(message.timestamp).fromNow() }}</p>
+                <p class="bubble speech right">{{ message.description }}
+                    
+                {% if message.read == False and message.answered_user == current_user.id %}
+                    <a href="{{ url_for('main.mark_as_read', item_id=item.id, message_id=message.id)}}">
+                    <button class="btn btn-light button-custom" type="submit">Mark as Read</button>
+                {% endif %}
+               
+                </p>
+                <p>{{ message.id }}</p>
+            {% endif %}
+        {% endfor %}
     {% else %}
     <h4>There is no question so far.</h4>
-
     {% endif %}
 </div>
 

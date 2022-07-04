@@ -268,9 +268,9 @@ def jewellery():
 @main.route("/item/<int:item_id>")
 def each_item(item_id):
     item = Post.query.filter_by(id=item_id).first()
-    # messages = Message.query.filter_by(post_id=item_id).all()
-    # reply_messages = Message.query.filter_by(reply=True)
-    return render_template("main/each-item.html", item=item, year=YEAR)
+    messages = Message.query.filter_by(post_id=item_id).all()
+   
+    return render_template("main/each-item.html", item=item, messages=messages, year=YEAR)
 
 @main.route("/item/<int:item_id>/edit-post", methods=['GET', 'POST'])
 @login_required
@@ -312,21 +312,42 @@ def reply(item_id, message_id):
                           user_id=current_user.id,
                           post_id=item.id,
                           reply=True,
-                          replied=True
+                          replied=True,
+                        #   answered_user = message.asker,
+                        #   answered_user2 = message.asker.username,
                           )
         db.session.add(message)
+        db.session.commit()
+        # message.answered_user = message.asker
+        # message.answered_user2 = message.asker
+        # print(message.asker)
+        
         #work in progress
         # original_message = Message.query.filter_by(post_id=item.id, replied=False).first()
         original_message = Message.query.filter_by(id=message_id).first()
         print(original_message)
         print(original_message.id)
-        print(original_message.replied)
-        print(original_message.reply)
+        # print(original_message.replied)
+        # print(original_message.reply)
         original_message.replied = True
+        print(original_message.asker)
+        print(message.asker)
+        message.answered_user = original_message.asker.id
+        # x = str(original_message.asker)
+        # asker_username = x.replace(x, f'{original_message.asker.username}')
+        message.answered_user2 = original_message.asker.username
+        db.session.add(message)
+        # original_message.answered_user = message.asker
         original_message.asker.question_answered += 1
         db.session.add(original_message)
         current_user.question_received -= 1
+        if current_user.question_received < 0:
+            current_user.question_received = 0
         db.session.add(current_user)
+        # db.session.commit()
+        # message.answered_user = message.asker
+        # message.answered_user2 = message.asker.username
+        # db.session.add(message)
         db.session.commit()
         return redirect(url_for('main.each_item', item_id=item.id, message_id=message.id, year=YEAR))
     
@@ -341,6 +362,8 @@ def mark_as_replied(item_id, message_id):
     replied_message.replied = True
     db.session.add(replied_message)
     item.giver.question_received -= 1
+    if item.giver.question_received < 0:
+        item.giver.question_received = 0
     replied_message.read = True
     db.session.add(replied_message)
     db.session.add(item)
@@ -354,6 +377,8 @@ def mark_as_read(item_id, message_id):
     item = Post.query.filter_by(id=item_id).first()
     print(message_id)
     current_user.question_answered -=1
+    if current_user.question_answered < 0:
+        current_user.question_answered = 0
     answered_message.read = True
     db.session.add(current_user)
     db.session.add(answered_message)

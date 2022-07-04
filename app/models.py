@@ -8,6 +8,7 @@ import hashlib
 import os
 
 
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +25,7 @@ class User(UserMixin, db.Model):
     messages = db.relationship("Message", backref="asker", lazy="dynamic")
     question_received = db.Column(db.Integer, nullable=False, default=0)
     question_answered = db.Column(db.Integer, nullable=False, default=0)
+   
    
 
     def __init__(self, **kwargs):
@@ -82,6 +84,7 @@ class Post(db.Model):
     category_type = db.Column(db.Integer)
     giver_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     messages = db.relationship("Message", backref=db.backref("question", cascade='all, delete'), lazy="dynamic")
+    
 
     def __repr__(self):
         return '<Post:{}>'.format(self.title)
@@ -171,8 +174,10 @@ class Message(db.Model):
     reply = db.Column(db.Boolean, default=False)
     replied = db.Column(db.Boolean, default=False)
     read = db.Column(db.Boolean, default=False)
+    answered_user = db.Column(db.Integer, default=0)
+    answered_user2 = db.Column(db.String(64), index=True)
+   
     
-
 login_manager.anonymous_user = AnonymousUser
 
 

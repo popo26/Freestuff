@@ -56,7 +56,7 @@ def create_app(config_name = "default"):
    
     from app.models import Post
     search.create_index(Post)
-    # search.create_index(Post, update=True)
+    search.create_index(Post, update=True)
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)
     

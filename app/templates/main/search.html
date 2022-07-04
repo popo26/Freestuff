@@ -15,7 +15,7 @@
 
   <div class="card-deck">
     <div class="card col-lg-3 col-md-4 each-item">
-      <a href="{{ url_for('main.search', item_id=result.id)}}">
+      <a href="{{ url_for('main.each_item', item_id=result.id) }}">
         <img class="card-img-top item-image" src="{{url_for('static', filename='images/cart.jpg')}}" alt="">
         <div class="card-body">
           <h5 class="card-title">{{ result.title }}</h5></a>
