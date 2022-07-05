@@ -1,6 +1,9 @@
+from base64 import b64encode
 import datetime
 import smtplib
-from flask import render_template, flash, redirect, request, url_for, current_app, session
+import secrets
+from PIL import Image
+from flask import render_template, flash, redirect, request, url_for, current_app, session, send_file
 from flask_login import login_required, current_user
 from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, ReplyForm
 from . import main
@@ -12,15 +15,36 @@ from app import config
 from app.email import send_email
 from config import Config
 import os
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import  FileStorage
+from base64 import b64encode
+from io import BytesIO
 
 
+# UPLOAD_FOLDER = '/static/uploads'
+# ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 YEAR = datetime.datetime.now().year
+
+
+def save_photos(form_photos):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_photos.filename)
+    photos_fn = random_hex + f_ext
+    photos_path = os.path.join(current_app.root_path, 'static/uploads', photos_fn)
+    output_size = (500, 500)
+    i = Image.open(form_photos)
+    i.thumbnail(output_size)
+    i.save(photos_path)
+    return photos_fn
+
 
 @main.route("/", methods=['GET', "POST"])
 def index():
     posts = Post.query.all()
     posts_count = Post.query.count()
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+ 
     #Pagination
     page = request.args.get('page', 1, type=int)
     pagination = \
@@ -34,12 +58,15 @@ def index():
                             posts=posts, 
                             pagination=pagination,
                             posts_count = posts_count,
-                            year=YEAR)
+                            year=YEAR,
+                            photos_path = photos_path,
+                            )
 
 @main.route("/search")
 def search():
     keyword = request.args.get('query')
     results = Post.query.msearch(keyword, fields=['title','description']).all()
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     #pagination seems to be working?
     page = request.args.get('page', 1, type=int)
     pagination = \
@@ -54,6 +81,7 @@ def search():
                             keyword=keyword,
                             pagination=pagination, 
                             posts=posts,
+                            photos_path = photos_path,
                             year=YEAR)
 
 
@@ -62,6 +90,7 @@ def home_living():
     items = Post.query.filter_by(category_type=Category.HOME_LIVING)
     category="Home&Living"
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(category_type=Category.HOME_LIVING).paginate(
             page,
@@ -74,6 +103,7 @@ def home_living():
                             pagination=pagination,
                             posts=posts,
                             category=category,
+                            photos_path = photos_path,
                             year=YEAR)
 
 @main.route("/kitchen")
@@ -81,6 +111,7 @@ def kitchen():
     items = Post.query.filter_by(category_type=Category.KITCHEN)
     category="Kitchen"
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(category_type=Category.KITCHEN).paginate(
             page,
@@ -93,12 +124,14 @@ def kitchen():
                             pagination=pagination,
                             posts=posts,
                             category=category,
+                            photos_path = photos_path,
                             year=YEAR)
 @main.route("/baby")
 def baby():
     items = Post.query.filter_by(category_type=Category.BABY)
     category="Baby"
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(category_type=Category.BABY).paginate(
             page,
@@ -111,6 +144,7 @@ def baby():
                             pagination=pagination,
                             posts=posts,
                             category=category,
+                            photos_path = photos_path,
                             year=YEAR)
 
 @main.route("/books")
@@ -118,6 +152,7 @@ def books():
     items = Post.query.filter_by(category_type=Category.BOOKS)
     category="Books"
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(category_type=Category.BOOKS).paginate(
             page,
@@ -130,6 +165,7 @@ def books():
                             pagination=pagination,
                             posts=posts,
                             category=category,
+                            photos_path = photos_path,
                             year=YEAR)
 
 @main.route("/craft")
@@ -137,6 +173,7 @@ def craft():
     items = Post.query.filter_by(category_type=Category.CRAFT)
     category="Craft"
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(category_type=Category.CRAFT).paginate(
             page,
@@ -149,6 +186,7 @@ def craft():
                             pagination=pagination,
                             posts=posts,
                             category=category,
+                            photos_path = photos_path,
                             year=YEAR)
 
 @main.route("/electronics")
@@ -156,6 +194,7 @@ def electronics():
     items = Post.query.filter_by(category_type=Category.ELECTRONICS)
     category="Electronics"
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(category_type=Category.ELECTRONICS).paginate(
             page,
@@ -168,6 +207,7 @@ def electronics():
                             pagination=pagination,
                             posts=posts,
                             category=category,
+                            photos_path = photos_path,
                             year=YEAR)
 
 @main.route("/pets")
@@ -175,6 +215,7 @@ def pets():
     items = Post.query.filter_by(category_type=Category.PETS)
     category="Pets"
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(category_type=Category.PETS).paginate(
             page,
@@ -187,6 +228,7 @@ def pets():
                             pagination=pagination,
                             posts=posts,
                             category=category,
+                            photos_path = photos_path,
                             year=YEAR)
 
 @main.route("/clothing")
@@ -194,6 +236,7 @@ def clothing():
     items = Post.query.filter_by(category_type=Category.CLOTHING)
     category="clothing"
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(category_type=Category.CLOTHING).paginate(
             page,
@@ -206,6 +249,7 @@ def clothing():
                             pagination=pagination,
                             posts=posts,
                             category=category,
+                            photos_path = photos_path,
                             year=YEAR)
 
 @main.route("/bathroom")
@@ -213,6 +257,7 @@ def bathroom():
     items = Post.query.filter_by(category_type=Category.BATHROOM)
     category="Bathroom"
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(category_type=Category.BATHROOM).paginate(
             page,
@@ -225,6 +270,7 @@ def bathroom():
                             pagination=pagination,
                             posts=posts,
                             category=category,
+                            photos_path = photos_path,
                             year=YEAR)
 
 @main.route("/toys")
@@ -232,6 +278,7 @@ def toys():
     items = Post.query.filter_by(category_type=Category.TOYS)
     category="Toys"
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(category_type=Category.TOYS).paginate(
             page,
@@ -244,6 +291,7 @@ def toys():
                             pagination=pagination,
                             posts=posts,
                             category=category,
+                            photos_path = photos_path,
                             year=YEAR)
 
 @main.route("/jewellery")
@@ -251,6 +299,7 @@ def jewellery():
     items = Post.query.filter_by(category_type=Category.JEWELLERY)
     category="Jewellery"
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(category_type=Category.JEWELLERY).paginate(
             page,
@@ -263,14 +312,44 @@ def jewellery():
                             pagination=pagination,
                             posts=posts,
                             category=category,
+                            photos_path = photos_path,
                             year=YEAR)
 
 @main.route("/item/<int:item_id>")
 def each_item(item_id):
     item = Post.query.filter_by(id=item_id).first()
     messages = Message.query.filter_by(post_id=item_id).all()
-   
-    return render_template("main/each-item.html", item=item, messages=messages, year=YEAR)
+    img_file = url_for('static', filename='uploads/' + item.photos)
+
+    #Decoding photos stored by LargeBinary
+    # img = b64encode(item.photos).decode('utf-8')
+    return render_template("main/each-item.html", 
+                            item=item, 
+                            messages=messages, 
+                            year=YEAR, 
+                            img=img_file,
+                            )
+
+@main.route("/post-new-item", methods=['GET', "POST"])
+@login_required
+def post_new_item():
+    form = PostForm()
+    if current_user.can(Permission.PUBLISH) \
+        and form.validate_on_submit():
+        if form.photos.data:
+            photos_file = save_photos(form.photos.data)
+            form.photos = photos_file
+        post = Post(category_type=form.category.data,
+                    title=form.title.data,
+                    description=form.description.data,
+                    photos=form.photos,
+                    giver=current_user._get_current_object())
+        db.session.add(post)
+        db.session.commit()
+        flash("Thank you for posting a new free stuff!")
+        return redirect(url_for('.index'))
+    return render_template("main/post-new-item.html", form=form, year=YEAR)
+
 
 @main.route("/item/<int:item_id>/edit-post", methods=['GET', 'POST'])
 @login_required
@@ -278,16 +357,20 @@ def edit_post(item_id):
     form = PostForm()
     item = Post.query.filter_by(id=item_id).first()
     if form.validate_on_submit():
+        if form.photos.data:
+            photos_file = save_photos(form.photos.data)
+            item.photos = photos_file
         item.title = form.title.data
         item.description = form.description.data
         item.category_type = form.category.data
-        db.session.add(item)
+        # db.session.add(item)
         db.session.commit()
-        flash("Successfully updated!")
+        flash("Successfully updated!", 'success')
         return redirect(url_for('.each_item', item_id=item.id, year=YEAR))
     form.title.data = item.title
     form.category = item.category_type
     form.description = item.description #not appearing
+    # img_file = url_for('static', filename='uploads/' + item.photos)
     return render_template("main/edit-post.html", form=form, year=YEAR)
 
 @main.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
@@ -429,22 +512,6 @@ def check_messages(username):
                             posted_questions=posted_questions,
                             year=YEAR)
     
-@main.route("/post-new-item", methods=['GET', "POST"])
-@login_required
-def post_new_item():
-    form = PostForm()
-    if current_user.can(Permission.PUBLISH) \
-        and form.validate_on_submit():
-        post = Post(category_type=form.category.data,
-                    title=form.title.data,
-                    description=form.description.data,
-                    giver=current_user._get_current_object())
-        db.session.add(post)
-        db.session.commit()
-        flash("Thank you for posting a new free stuff!")
-        return redirect(url_for('.index'))
-    # posts = Post.query.order_by(Post.timestamp.desc())
-    return render_template("main/post-new-item.html", form=form, year=YEAR)
 
 @main.route('/user/<username>')
 @login_required

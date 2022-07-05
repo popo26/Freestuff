@@ -30,6 +30,9 @@ class Config():
     MSEARCH_ENABLE = True
 
     POSTS_PER_PAGE = 12  
+
+    UPLOAD_FOLDER = os.path.join(basedir, "/static/uploads")
+    ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
    
 
     @staticmethod

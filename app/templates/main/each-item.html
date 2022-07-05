@@ -10,7 +10,7 @@
         <h3>{{ item.title }} </h3>
 
         <div class="card col-sm-12 each-item">
-            <img class="card-img-top item-image2" src="{{url_for('static', filename='images/cart.jpg')}}" alt="">
+            <img class="card-img-top item-image2" src="{{ img }}" alt="{{item.title}}">
             <div class="card-body">
                 <a href="{{ url_for('main.user', username=item.giver.username)}}">
                     <h5 class="card-title">By {{ item.giver.username }}</h5>

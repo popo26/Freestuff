@@ -17,8 +17,15 @@
 </h1>
 
 
-<form method="POST">
+<form method="POST" enctype=multipart/form-data>
     {{ wtf.quick_form(form) }}
+    <!-- {{ form.hidden_tag() }}
+{{ form.category.label }}{{ form.category }}
+{{ form.title.label }}{{ form.title}}
+{{ form.photos.label }}{{ form.photos }}
+{{ form.description.label }}{{ form.description }}
+{{ form.submit() }} -->
+
 </form>
 <br>
 

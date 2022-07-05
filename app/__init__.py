@@ -12,6 +12,8 @@ import flask_sqlalchemy
 from flask_msearch import Search
 from sqlalchemy import MetaData
 
+
+
 load_dotenv()
 
 #for migration issue
@@ -28,12 +30,10 @@ db = SQLAlchemy(metadata=metadata)
 
 bootstrap=Bootstrap()
 mail = Mail()
-# db = SQLAlchemy()
 moment = Moment()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 search = Search()
-
 
 
 def create_app(config_name = "default"):
@@ -43,6 +43,10 @@ def create_app(config_name = "default"):
     
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
+    # app.config['UPLOAD_FOLDER'] = config.UPLOAD_FOLDER
+    app.config["UPLOADED_PHOTOS_DEST"] = "static/uploads"
+    # app.configure_uploads(app, photos)
+    # photos.init_app(app, photos)
 
     bootstrap.init_app(app)
     mail.init_app(app)
@@ -54,6 +58,7 @@ def create_app(config_name = "default"):
 
     app.app_context().push()
    
+   #When creating a new db below 3 lines need to be commented since it cannot access models
     from app.models import Post
     search.create_index(Post)
     search.create_index(Post, update=True)

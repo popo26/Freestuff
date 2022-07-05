@@ -9,6 +9,8 @@ import os
 
 
 
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -84,10 +86,12 @@ class Post(db.Model):
     category_type = db.Column(db.Integer)
     giver_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     messages = db.relationship("Message", backref=db.backref("question", cascade='all, delete'), lazy="dynamic")
+    photos = db.Column(db.String(40), default='cart.jpg')
     
-
     def __repr__(self):
         return '<Post:{}>'.format(self.title)
+
+
 
 class Permission:
     FOLLOW = 1

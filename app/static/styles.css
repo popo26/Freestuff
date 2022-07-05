@@ -115,8 +115,9 @@ a:hover {
 }
 
 .item-image {
-    width:260px;
-    height:fit-content;
+	width:260px;
+	height:260px;
+	object-fit: contain;
 }
 
 /* per_category.html */

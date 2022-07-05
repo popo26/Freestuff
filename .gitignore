@@ -9,3 +9,4 @@ dev_setup.sh
 *.pdf
 msearch/*
 migrations/*
+/uploads/*
