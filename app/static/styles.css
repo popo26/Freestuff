@@ -1,5 +1,19 @@
+.test {
+	color:red;
+}
 
+.flask-moment {
+	display: inline !important;
+	color: white !important;
+}
 
+.card {
+	border-color:transparent;
+}
+
+a {
+	text-decoration: none !important;
+}
 /* To stick footer */
 
 body {
@@ -8,6 +22,7 @@ body {
     min-height: 100vh;
 	background-color: #333;
 	color:#fff;
+	font-family: sans-serif;
 }
 
 main {
@@ -16,7 +31,6 @@ main {
 
 footer {
     text-align: center;
-    
     color: white;
     height:50px;
 }
@@ -34,7 +48,7 @@ a:hover {
 
 .form-div {
     width:100%;
-    margin: auto;
+    margin: auto auto 3% auto;
 }
 
 /* base.html */
@@ -49,6 +63,37 @@ a:hover {
 .nav-custom {
 	color: white;
 	font-size: xx-large;
+	font-weight: bolder;
+}
+
+.nav-custom:hover {
+	color: chartreuse;
+	font-size: xx-large;
+	font-weight: bolder;
+}
+
+.navbar-toggler {
+	color: chartreuse;
+}
+
+.nav-link {
+	color: white;
+}
+
+.nav-link:hover {
+	color: chartreuse;
+}
+
+.navbar-text {
+	color:white;
+}
+
+.navbar-nav {
+	padding-left: 16px;
+}
+
+.show {
+	display: inline !important;
 }
 
 .button-custom {
@@ -61,47 +106,82 @@ a:hover {
 .button-custom:hover {
 	background-color: white;
 	color:#333;
-}
+} */
 
 .custom-container {
 	width:80%;
 	margin: auto;
 }
 
-/* .search-field {
+.search-field {
 	margin: 1% auto 1% auto;
 	width: 50%;
+}
+
+.bg-light {
+	background-color: transparent !important;
+}
+
+/* .nav-items {
+	color:white;
+}
+
+.nav-items2:hover {
+	color: chartreuse;	
+}
+
+.navbar-nav>li>a {
+	color:white;
+	background-color: #333;
+}
+
+.navbar-nav>li>a:hover{
+	color:chartreuse;
+	background-color: #333;
+}
+
+.nav .open>a {
+	background-color:#333;
+	border-color: transparent;
+	color:white;
+}
+
+.nav .open>a:hover {
+	background-color:#333;
+	border-color: transparent;
+	color:white;
+}
+
+.dropdown-menu>li>a {
+	display:inline-block;
+}
+
+.navbar-nav .open .dropdown-menu>li>a:hover {
+	color:red;
+	background-color: transparent;
 } */
 
-.nav-items {
-	color:#fff;
-}
 
-.nav-items:hover {
-	background-color: #333;
-	color: black;
-}
-
-.category-div {
-	display:inline-block;
-	position: relative;
-	margin-bottom: 3%;
-	
+.dropdown-div {
+	display:inline;
+	background-color:green;
 }
 
 .form-div {
-	display: inline;
+	display: inline-block;
+	background-color: blue;
+	width:40%;
 }
 
 .seach-field-div {
 	display:inline-block;
-	width:50%;
+	width:100%;
 	
 }
 
-.search_button {
+/* .search_button {
 	display: inline-block;
-}
+} */
 
 /* index.html */
 .index-div {
@@ -123,6 +203,8 @@ a:hover {
 /* per_category.html */
 .each-item {
     text-align: center;
+	background-color: #333;
+	color:white;
 }
 
 /* each-item.html */
@@ -132,9 +214,44 @@ a:hover {
     margin:auto auto 3%;
 }
 
+.item-div h1 {
+	margin-bottom:3%;
+}
+
 .item-image2 {
-    width:420px;
-    height:fit-content;
+	width:420px;
+	height:420px;
+	object-fit: contain;
+}
+
+.img-div {
+	margin:auto;
+}
+
+.card-img-top {
+	text-align: center;
+}
+
+.item-image3 {
+	width:200px;
+	height:200px;
+	object-fit: contain;
+}
+
+.info-tab {
+	margin: 3% auto 1% auto;
+}
+
+.info-tab h5 {
+	margin-bottom: 2%;
+}
+
+/* .three-photos {
+	padding-bottom: 3%;
+} */
+
+.category-button-div {
+	margin: 2% auto 2% auto;
 }
 
 .item-table {
@@ -155,7 +272,7 @@ a:hover {
     margin-top: 2%;
 }
 
-.user-item-list h4 {
+.user-item-list h2 {
     margin-bottom: 2%;
 }
 
@@ -164,13 +281,19 @@ a:hover {
 	margin:auto;
 }
 
+.profile-div h1 {
+	font-size:xx-large;
+}
+
 .profile-div2 {
 	text-align: left;
+	margin-top: 2%;
 }
 
 .profile-table {
 	table-layout: fixed; 
 	width: 100%;
+	color:#fff;
 }
 
 .profile-table th {
@@ -194,6 +317,10 @@ a:hover {
 /* post-new-item.html */
 .post-new-item-div h1 {
     margin-bottom: 3%;
+}
+
+.category-search-div {
+	margin-bottom:16px;
 }
 
 /* contact-giver.html */
@@ -301,6 +428,7 @@ p.speech.right:after {
 /* per_category.html */
 .category-title {
 	margin-bottom: 3%;
+	margin-top:2%;
 }
 
 .forms {
@@ -311,4 +439,39 @@ p.speech.right:after {
 .form-div p {
 	margin-top: 2%;
 }
+
+/* _macros.html */
+
+.pagination-div {
+    width:100%;
+	margin:auto;
+	
+}
+
+.pagination {
+    height:30px;
+}
+
+
+.pagination .active a {
+	background-color: #333;
+	border-color: white;
+}
+
+.pagination .active a:hover {
+	background-color: chartreuse;
+	color:#333;
+	border-color: white;
+}
+
+.pagination li a {
+	background-color: white;
+	color: #333;
+}
+
+.pagination li a:hover{
+	background-color: white;
+	color:darkmagenta;
+}
+
 

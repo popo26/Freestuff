@@ -16,16 +16,88 @@
     {%- endif %}
 </h1>
 
+<form method="POST" enctype=multipart/form-data class="test">
+    <!-- {{ wtf.quick_form(form) }} -->
+    {{ form.hidden_tag() }}
+    {{ p_form.hidden_tag() }}
+    
+    <div class="mb-3">
+        <label for="title" class="form-label">Category</label>
+        {{ form.category }}</div>
 
-<form method="POST" enctype=multipart/form-data>
-    {{ wtf.quick_form(form) }}
-    <!-- {{ form.hidden_tag() }}
-{{ form.category.label }}{{ form.category }}
-{{ form.title.label }}{{ form.title}}
-{{ form.photos.label }}{{ form.photos }}
-{{ form.description.label }}{{ form.description }}
-{{ form.submit() }} -->
+    <div class="form-group">{{ form.category.label }}{{ form.category }}</div>
 
+
+<!-- dropdown work in progress -->
+<div class="d-flex">
+    <div class="dropdown me-1">
+      <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuOffset" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20">
+        Category
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuOffset">
+        {{ form.category.HOME_LIVING }}
+        <li><a class="dropdown-item" href="{{ form.category.HOME_LIVING }}">HOME&LIVING</a></li>
+        <li><a class="dropdown-item" href="#">Another action</a></li>
+        <li><a class="dropdown-item" href="#">Something else here</a></li>
+      </ul>
+    </div>
+  </div>
+<!-- end -->
+
+
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="text">
+      </div>
+
+      <div class="mb-3">
+        <label for="formFile" class="form-label">Default file input example</label>
+        <input class="form-control" type="file" id="formFile">
+      </div>
+
+      <div class="mb-3">
+        <label for="formFile" class="form-label">Default file input example</label>
+        <input class="form-control" type="file" id="formFile">
+      </div>
+
+      <div class="mb-3">
+        <label for="formFile" class="form-label">Default file input example</label>
+        <input class="form-control" type="file" id="formFile">
+      </div>
+
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" rows="6"></textarea>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Submit</button>
+
+<!-- <div class="form-group">{{ form.category.label }}{{ form.category }}</div>
+
+<div class="form-group">{{ form.title.label }}{{ form.title}}</div> -->
+
+<!-- {{ form.photos.label }}{{ form.photos }} -->
+<!-- <div class="form-group">{{ form.description.label }}{{ form.description }}</div> -->
+
+<!-- <div class="form-group">
+{{p_form.photo_one.label()}}
+{{p_form.photo_one()}}
+</div>
+
+<div class="form-group">
+{{p_form.photo_two.label()}}
+{{p_form.photo_two()}}
+</div>
+
+<div class="form-group">
+{{p_form.photo_three.label()}}
+{{p_form.photo_three()}}
+</div>
+
+<div id="success">
+<div class="form-group">
+{{ form.submit() }}
+</div> -->
 </form>
 <br>
 

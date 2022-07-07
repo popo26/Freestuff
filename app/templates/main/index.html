@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
 {% import "_macros.html" as macros %}
 
+
 {% block title %}{{super()}}Index {% endblock %}
 
 
 {% block page_content %}
+
+
+
 <div class="index-div">
   <!-- {{ posts|length }} doesn't work after applying pagination -->
   <h3>Currently we have {{ posts_count }} posts. </h3>
   {% if posts %}
   {% for post in posts|sort(reverse=True, attribute='timestamp') %}
+
   <div class="card-deck">
     <div class="card col-lg-3 col-md-4 each-item">
       <a href="{{ url_for('main.each_item', item_id=post.id)}}"> 
@@ -19,7 +24,9 @@
         <div class="card-body">
           <h5 class="card-title">{{ post.title }}</h5>
       </a>
-      <p class="card-text"><small class="text-muted">{{ moment(post.timestamp).fromNow() }}</small></p>
+      <p class="card-text"><small class="text-muted">{{ moment(post.timestamp).fromNow()}}</small></p>
+     
+   
     </div>
   </div>
   {% else %}
@@ -28,11 +35,14 @@
   {% endif %}
 </div>
 
+{% endblock %}
 
+
+
+{% block pagination %}
 {% if pagination %}
-<div class="pagination">
+<div class="pagination-div">
   {{ macros.pagination_widget(pagination, '.index') }}
 </div>
 {% endif %}
-
 {% endblock %}

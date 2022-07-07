@@ -42,12 +42,12 @@
       </table>
     </div>
   </div>
-  <hr class="profile-hr">
+  <!-- <hr class="profile-hr"> -->
 <!-- </div> -->
 
 <div class="profile-buttons">
 {% if user == current_user %}
-<a class="btn btn-default" href="{{ url_for('.edit_profile') }}">Edit Profile</a>
+<a class="btn btn-default button-custom" href="{{ url_for('.edit_profile') }}">Edit Profile</a>
 {% endif %}
 {% if user == current_user and user.is_administrator() %}
 <a class="btn btn-danger" href="{{ url_for('.admin_edit_profile', id=user.id) }}">Edit as Admin</a>
@@ -59,13 +59,14 @@
   {% include '_posts.html' %}
 </div>
 
+
+{% endblock %}
+
+
+{% block pagination %}
 {% if pagination %}
-<div class="pagination">
+<div class="pagination-div">
   {{ macros.pagination_widget(pagination, '.index') }}
 </div>
 {% endif %}
-
-
-
-
 {% endblock %}

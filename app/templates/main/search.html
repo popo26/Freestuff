@@ -9,7 +9,7 @@
 
 
 <div class="item-div">
-  <h3 class="category-title">Search keyword "<strong>{{ keyword }}</strong>". </h3>
+  <h1 class="category-title">Search keyword "<strong>{{ keyword }}</strong>". </h1>
   {% if results %}
   {% for result in results|sort(reverse=True, attribute='timestamp') %}
 
@@ -29,11 +29,13 @@
     {% endif %}
   </div>
   
+{% endblock %}
 
+
+{% block pagination %}
 {% if pagination %}
-<div class="pagination">
+<div class="pagination-div">
   {{ macros.pagination_widget(pagination, '.index') }}
 </div>
 {% endif %}
-
 {% endblock %}

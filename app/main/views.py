@@ -5,12 +5,12 @@ import secrets
 from PIL import Image
 from flask import render_template, flash, redirect, request, url_for, current_app, session, send_file
 from flask_login import login_required, current_user
-from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, ReplyForm
+from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, ReplyForm, PhotoForm
 from . import main
 from app.models import User, Post
 from app import db
 from ..decorators import permission_required, admin_required
-from ..models import Permission, Category, Message
+from ..models import Permission, Category, Message, Photo
 from app import config
 from app.email import send_email
 from config import Config
@@ -44,6 +44,13 @@ def index():
     posts = Post.query.all()
     posts_count = Post.query.count()
     photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    '''work in progress'''
+    # photos = Photo.query.filter_by(post_id=item_id).first()
+    # img1 = url_for('static', filename='uploads/' + photos.photo_one)
+    # for p in posts:
+    #     photo = Photo.query.filter_by(post_id=p.id).first()
+    #     img = url_for('static', filename='uploads/' + photo.photo_one)
+    #     print(img)
  
     #Pagination
     page = request.args.get('page', 1, type=int)
@@ -60,6 +67,7 @@ def index():
                             posts_count = posts_count,
                             year=YEAR,
                             photos_path = photos_path,
+                            # img=img,
                             )
 
 @main.route("/search")
@@ -318,37 +326,93 @@ def jewellery():
 @main.route("/item/<int:item_id>")
 def each_item(item_id):
     item = Post.query.filter_by(id=item_id).first()
-    messages = Message.query.filter_by(post_id=item_id).all()
-    img_file = url_for('static', filename='uploads/' + item.photos)
+    print(item.id)
+    print(item.photos)
+    photos = Photo.query.filter_by(post_id=item_id).first()
+    print(photos)
+    print(photos.photo_one)
 
-    #Decoding photos stored by LargeBinary
-    # img = b64encode(item.photos).decode('utf-8')
+    
+    messages = Message.query.filter_by(post_id=item_id).all()
+    img1 = url_for('static', filename='uploads/' + photos.photo_one)
+    img2 = url_for('static', filename='uploads/' + photos.photo_two)
+    img3 = url_for('static', filename='uploads/' + photos.photo_three)
+
     return render_template("main/each-item.html", 
                             item=item, 
                             messages=messages, 
                             year=YEAR, 
-                            img=img_file,
+                            img1=img1,
+                            img2=img2,
+                            img3=img3,
                             )
 
 @main.route("/post-new-item", methods=['GET', "POST"])
 @login_required
 def post_new_item():
+    '''Single photo upload'''
+    # form = PostForm()
+    # if current_user.can(Permission.PUBLISH) \
+    #     and form.validate_on_submit():
+    #     if form.photos.data:
+    #         photos_file = save_photos(form.photos.data)
+    #         form.photos = photos_file
+    #     post = Post(category_type=form.category.data,
+    #                 title=form.title.data,
+    #                 description=form.description.data,
+    #                 photos=form.photos,
+    #                 giver=current_user._get_current_object())
+    #     db.session.add(post)
+    #     db.session.commit()
+    #     flash("Thank you for posting a new free stuff!")
+    #     return redirect(url_for('.index'))
+    # return render_template("main/post-new-item.html", form=form, year=YEAR)
+
     form = PostForm()
+    p_form = PhotoForm()
     if current_user.can(Permission.PUBLISH) \
-        and form.validate_on_submit():
-        if form.photos.data:
-            photos_file = save_photos(form.photos.data)
-            form.photos = photos_file
+        and form.validate_on_submit() \
+        and p_form.validate_on_submit():
+        if p_form.photo_one.data\
+            or p_form.photo_two.data\
+            or p_form.photo_three.data:
+            if p_form.photo_one.data:
+                photo_file_one = save_photos(p_form.photo_one.data)
+                p_form.photo_one = photo_file_one
+            else:
+                photo_file_one = None
+                p_form.photo_one = photo_file_one
+            if p_form.photo_two.data:   
+                photo_file_two = save_photos(p_form.photo_two.data)
+                p_form.photo_two = photo_file_two
+            else:
+                photo_file_two = None
+                p_form.photo_two = photo_file_two
+            if p_form.photo_three.data:
+                photo_file_three = save_photos(p_form.photo_three.data)
+                p_form.photo_three = photo_file_three
+            else:
+                photo_file_three = None
+                p_form.photo_three = photo_file_three
+            
+            
         post = Post(category_type=form.category.data,
                     title=form.title.data,
                     description=form.description.data,
-                    photos=form.photos,
                     giver=current_user._get_current_object())
+        photo = Photo(photo_one=p_form.photo_one,
+                      photo_two=p_form.photo_two,
+                      photo_three=p_form.photo_three)
+    
         db.session.add(post)
+        db.session.add(photo)
+        db.session.commit()
+        photo.post_id = post.id
+        db.session.add(photo)
         db.session.commit()
         flash("Thank you for posting a new free stuff!")
         return redirect(url_for('.index'))
-    return render_template("main/post-new-item.html", form=form, year=YEAR)
+    return render_template("main/post-new-item.html", form=form, year=YEAR, p_form=p_form)
 
 
 @main.route("/item/<int:item_id>/edit-post", methods=['GET', 'POST'])
@@ -519,6 +583,7 @@ def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     # posts = Post.query.filter_by(giver=user)
     page = request.args.get('page', 1, type=int)
+    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
         Post.query.filter_by(giver=user).paginate(
             page,
@@ -530,6 +595,7 @@ def user(username):
                             user=user, 
                             pagination=pagination,
                             posts=posts,
+                            photos_path=photos_path,
                             year=YEAR)
 
 @main.route("/edit-profile", methods=['GET', 'POST'])
@@ -539,6 +605,8 @@ def edit_profile():
     if form.validate_on_submit():
         current_user.name = form.name.data
         current_user.location = form.location.data
+        current_user.email = form.email.data
+        current_user.username = form.username.data
         current_user.bio = form.bio.data
         db.session.add(current_user)
         db.session.commit()
@@ -547,6 +615,8 @@ def edit_profile():
     form.name.data = current_user.name
     form.location.data = current_user.location
     form.bio.data = current_user.bio
+    form.username.data = current_user.username
+    form.email.data = current_user.email
     return render_template("main/user_edit_profile.html", form=form, year=YEAR)
 
 @main.route("/admin-edit-profile/<int:id>", methods=['GET', 'POST'])

@@ -73,6 +73,11 @@ class PostForm(FlaskForm):
             (Category.JEWELLERY, 'Jewellery'),
         ]
 
+class PhotoForm(FlaskForm):
+    photo_one = FileField("Photo1", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'pdf'])])
+    photo_two = FileField("Photo2", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'pdf'])])
+    photo_three = FileField("Photo3", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'pdf'])])
+    submit = SubmitField("Submit")
 
 class ContactGiverForm(FlaskForm):
     description = TextAreaField("Any message or inquiry goes here.", validators=[DataRequired()], render_kw={'rows':'10'})

@@ -8,7 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_moment import Moment
 from flask_migrate import Migrate
-import flask_sqlalchemy
 from flask_msearch import Search
 from sqlalchemy import MetaData
 
@@ -35,7 +34,6 @@ login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 search = Search()
 
-
 def create_app(config_name = "default"):
     app = Flask(__name__)
     
@@ -43,7 +41,8 @@ def create_app(config_name = "default"):
     
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
-    # app.config['UPLOAD_FOLDER'] = config.UPLOAD_FOLDER
+    UPLOAD_FOLDER = "static/upload"
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.config["UPLOADED_PHOTOS_DEST"] = "static/uploads"
     # app.configure_uploads(app, photos)
     # photos.init_app(app, photos)
@@ -61,7 +60,7 @@ def create_app(config_name = "default"):
    #When creating a new db below 3 lines need to be commented since it cannot access models
     from app.models import Post
     search.create_index(Post)
-    search.create_index(Post, update=True)
+    # search.create_index(Post, update=True)
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)
     

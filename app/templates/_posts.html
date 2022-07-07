@@ -5,7 +5,7 @@
 
     <div class="card col-lg-3 col-md-4 each-item">
         <a href="{{ url_for('main.each_item', item_id=post.id)}}">
-            <img class="card-img-top item-image" src="{{url_for('static', filename='images/cart.jpg')}}"
+            <img class="card-img-top item-image" src="{{ photos_path}}{{ post.photos }}"
                 alt="{{ post.title }}">
 
             <div class="card-body">

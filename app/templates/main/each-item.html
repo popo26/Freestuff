@@ -4,12 +4,12 @@
 {% block title %}{{super()}}{{item.title}}{% endblock %}
 {% block category %}{% endblock %}
 
-{% block page_content %}
-<div class="item-div">
-    <div class="card-deck">
-        <h3>{{ item.title }} </h3>
 
-        <div class="card col-sm-12 each-item">
+{% block page_content %}
+<!-- <div class="item-div">
+    <h3>{{ item.title }} </h3>
+    <div class="card-deck">
+        <div class="card col-lg-12 each-item">
             <img class="card-img-top item-image2" src="{{ img }}" alt="{{item.title}}">
             <div class="card-body">
                 <a href="{{ url_for('main.user', username=item.giver.username)}}">
@@ -19,7 +19,72 @@
                 <p class="card-text"><small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small></p>
             </div>
         </div>
+    </div> -->
+
+
+    <!-- <div class="item-div">
+    {{ item.title }}
+    <div class="row row-cols-12">
+        <div class="col">
+          <div class="card each-item">
+            <div class="img-div"><img src="{{ img }}" class="card-img-top item-image2" alt="{{item.title}}"></div>
+            <div class="card-body">
+                <a href="{{ url_for('main.user', username=item.giver.username)}}">
+              <h5 class="card-title">By {{ item.giver.username }}</h5></a>
+              <p class="card-text">{{ item.description }}</p>
+              <p class="card-text"><small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small></p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+        
+    </div> -->
+          
+
+    <div class="item-div">
+        <h1>{{ item.title }}</h1>
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="{{ img1 }}" class="d-block w-100 item-image2" alt="...">
+              </div>
+              <div class="carousel-item">
+                <img src="{{ img2 }}" class="d-block w-100 item-image2" alt="...">
+              </div>
+              <div class="carousel-item">
+                <img src="{{ img3 }}" class="d-block w-100 item-image2" alt="...">
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+
+          <div class="card-body info-tab">
+            <p class="card-text"><small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small></p>
+            <a href="{{ url_for('main.user', username=item.giver.username)}}">
+          <h5 class="card-title">By {{ item.giver.username }}</h5></a>
+          <p class="card-text">{{ item.description }}</p>
+          
+        </div>
+
     </div>
+    
+
+  
+    
+<div class="category-button-div">
     {% if current_user.is_authenticated and not current_user==item.giver %}
     <a href="{{ url_for('main.contact_giver', item_id=item.id) }}"><button type="button"
             class="btn btn-primary button-custom">Contact {{ item.giver.username }}</button></a>

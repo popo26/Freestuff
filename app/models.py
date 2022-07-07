@@ -87,11 +87,21 @@ class Post(db.Model):
     giver_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     messages = db.relationship("Message", backref=db.backref("question", cascade='all, delete'), lazy="dynamic")
     photos = db.Column(db.String(40), default='cart.jpg')
+    photoss = db.relationship("Photo", backref=db.backref("post", cascade='all, delete'), lazy="dynamic")
     
     def __repr__(self):
         return '<Post:{}>'.format(self.title)
 
+class Photo(db.Model):
+    __tablename__ = 'photos'
+    id = db.Column(db.Integer, primary_key=True)
+    photo_one = db.Column(db.String(40), default='cart.jpg')
+    photo_two = db.Column(db.String(40), default='cart.jpg')
+    photo_three = db.Column(db.String(40), default='cart.jpg')
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
+    def __repr__(self):
+        return '<Photo:{}>'.format(self.id)
 
 class Permission:
     FOLLOW = 1
