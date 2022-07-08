@@ -72,7 +72,7 @@
           </div>
 
           <div class="card-body info-tab">
-            <p class="card-text"><small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small></p>
+            <p class="card-text"><small class="text-muted test">{{ moment.include_moment() }}{{ moment(item.timestamp).fromNow() }}</small></p>
             <a href="{{ url_for('main.user', username=item.giver.username)}}">
           <h5 class="card-title">By {{ item.giver.username }}</h5></a>
           <p class="card-text">{{ item.description }}</p>
@@ -104,7 +104,7 @@
         {% for message in item.messages|sort(reverse=True, attribute='timestamp')  %}
             {% if message.reply == False %}
                  <p class="asker">from <strong><a
-                href="{{ url_for('main.user', username=message.asker.username)}}">{{ message.asker.username}}</a></strong> --- {{ moment(message.timestamp).fromNow() }}
+                href="{{ url_for('main.user', username=message.asker.username)}}">{{ message.asker.username}}</a></strong> --- {{ moment.include_moment() }}{{ moment(message.timestamp).fromNow() }}
                 </p>
                  <p class="bubble speech left">{{ message.description }}
                 {% if current_user == item.giver%}
@@ -122,7 +122,7 @@
             {% if message.reply == True %}
                  <p class="giver">from <strong><a
                 href="{{ url_for('main.user', username=item.giver.username)}}">{{ item.giver.username}}</a>
-                </strong> to {{message.answered_user2}} --- {{ moment(message.timestamp).fromNow() }}</p>
+                </strong> to {{message.answered_user2}} --- {{ moment.include_moment() }}{{ moment(message.timestamp).fromNow() }}</p>
                 <p class="bubble speech right">{{ message.description }}
                     
                 {% if message.read == False and message.answered_user == current_user.id %}

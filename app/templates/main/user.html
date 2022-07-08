@@ -8,6 +8,7 @@
 
 {% block category %}{% endblock %}
 {% block page_content %}
+{{ moment.include_moment() }}
 
 <!-- <div class="page-header"> -->
   <div class="profile-header profile-div">
@@ -35,7 +36,7 @@
             <td class="profile-bio-td">{% if user.bio %}{{ user.bio }}{% endif %}</td>
           </tr>
           <tr>
-            <th scope="row">Last seen</th>
+            <th scope="row" >Last seen</th>
             <td>{{ moment(user.last_seen).fromNow() }}</td>
           </tr>
         </tbody>

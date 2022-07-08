@@ -12,7 +12,6 @@ from flask_msearch import Search
 from sqlalchemy import MetaData
 
 
-
 load_dotenv()
 
 #for migration issue
@@ -46,7 +45,7 @@ def create_app(config_name = "default"):
     app.config["UPLOADED_PHOTOS_DEST"] = "static/uploads"
     # app.configure_uploads(app, photos)
     # photos.init_app(app, photos)
-
+    
     bootstrap.init_app(app)
     mail.init_app(app)
     db.init_app(app)

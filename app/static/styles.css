@@ -1,5 +1,5 @@
 .test {
-	color:red;
+	color:red !important;
 }
 
 .flask-moment {
@@ -164,12 +164,12 @@ a:hover {
 
 .dropdown-div {
 	display:inline;
-	background-color:green;
+	/* background-color:green; */
 }
 
 .form-div {
 	display: inline-block;
-	background-color: blue;
+	/* background-color: blue; */
 	width:40%;
 }
 
@@ -315,8 +315,13 @@ a:hover {
 }
 
 /* post-new-item.html */
+.post-new-item-div{
+	width:60%;
+	margin:auto;
+}
+
 .post-new-item-div h1 {
-    margin-bottom: 3%;
+    margin-bottom: 5%;
 }
 
 .category-search-div {

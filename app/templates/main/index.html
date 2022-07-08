@@ -2,12 +2,12 @@
 {% import "_macros.html" as macros %}
 
 
+
+
 {% block title %}{{super()}}Index {% endblock %}
 
 
 {% block page_content %}
-
-
 
 <div class="index-div">
   <!-- {{ posts|length }} doesn't work after applying pagination -->
@@ -24,7 +24,9 @@
         <div class="card-body">
           <h5 class="card-title">{{ post.title }}</h5>
       </a>
-      <p class="card-text"><small class="text-muted">{{ moment(post.timestamp).fromNow()}}</small></p>
+      <p class="card-text"><small class="text-muted test">{{ moment.include_moment() }}{{ moment(post.timestamp).fromNow()}}</small></p>
+   
+     
      
    
     </div>

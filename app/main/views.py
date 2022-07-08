@@ -18,14 +18,11 @@ import os
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from base64 import b64encode
-from io import BytesIO
-
 
 # UPLOAD_FOLDER = '/static/uploads'
 # ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 YEAR = datetime.datetime.now().year
-
 
 def save_photos(form_photos):
     random_hex = secrets.token_hex(8)
@@ -37,7 +34,6 @@ def save_photos(form_photos):
     i.thumbnail(output_size)
     i.save(photos_path)
     return photos_fn
-
 
 @main.route("/", methods=['GET', "POST"])
 def index():
@@ -326,17 +322,25 @@ def jewellery():
 @main.route("/item/<int:item_id>")
 def each_item(item_id):
     item = Post.query.filter_by(id=item_id).first()
-    print(item.id)
-    print(item.photos)
-    photos = Photo.query.filter_by(post_id=item_id).first()
-    print(photos)
-    print(photos.photo_one)
-
-    
     messages = Message.query.filter_by(post_id=item_id).all()
-    img1 = url_for('static', filename='uploads/' + photos.photo_one)
-    img2 = url_for('static', filename='uploads/' + photos.photo_two)
-    img3 = url_for('static', filename='uploads/' + photos.photo_three)
+    # print(item.id)
+    # print(item.photos)
+    photos = Photo.query.filter_by(post_id=item_id).first()
+    # print(photos)
+    # print(photos.photo_one)
+    if photos == None:
+        img1 = url_for('static', filename='uploads/cart.jpg' )
+    else:
+        img1 = url_for('static', filename='uploads/' + photos.photo_one)
+    if photos == None:
+        img2 = url_for('static', filename='uploads/cart.jpg' )
+    else:
+        img2 = url_for('static', filename='uploads/' + photos.photo_two)
+    if photos == None:
+        img3 = url_for('static', filename='uploads/cart.jpg' )
+    else:
+        img3 = url_for('static', filename='uploads/' + photos.photo_three)
+   
 
     return render_template("main/each-item.html", 
                             item=item, 
@@ -379,30 +383,38 @@ def post_new_item():
             if p_form.photo_one.data:
                 photo_file_one = save_photos(p_form.photo_one.data)
                 p_form.photo_one = photo_file_one
+                
             else:
                 photo_file_one = None
                 p_form.photo_one = photo_file_one
+               
+
             if p_form.photo_two.data:   
                 photo_file_two = save_photos(p_form.photo_two.data)
                 p_form.photo_two = photo_file_two
             else:
                 photo_file_two = None
                 p_form.photo_two = photo_file_two
+               
             if p_form.photo_three.data:
                 photo_file_three = save_photos(p_form.photo_three.data)
                 p_form.photo_three = photo_file_three
             else:
                 photo_file_three = None
                 p_form.photo_three = photo_file_three
-            
+              
             
         post = Post(category_type=form.category.data,
                     title=form.title.data,
                     description=form.description.data,
-                    giver=current_user._get_current_object())
+                    giver=current_user._get_current_object(),
+                    photos=p_form.photo_one)
         photo = Photo(photo_one=p_form.photo_one,
                       photo_two=p_form.photo_two,
-                      photo_three=p_form.photo_three)
+                      photo_three=p_form.photo_three, 
+                      photo_one_name=p_form.photo_one,
+                      photo_two_name=p_form.photo_two,
+                      photo_three_name=p_form.photo_three,)
     
         db.session.add(post)
         db.session.add(photo)
@@ -419,29 +431,136 @@ def post_new_item():
 @login_required
 def edit_post(item_id):
     form = PostForm()
+    p_form = PhotoForm()
     item = Post.query.filter_by(id=item_id).first()
-    if form.validate_on_submit():
-        if form.photos.data:
-            photos_file = save_photos(form.photos.data)
-            item.photos = photos_file
+    photos = Photo.query.filter_by(post_id=item_id).first()
+    print(f"Item ID is {item.id}")
+    # print(f"Photos ID is {photos.id}")
+        
+    if form.validate_on_submit()\
+        and p_form.validate_on_submit():
+        # if form.photos.data:
+        #     photos_file = save_photos(form.photos.data)
+        #     item.photos = photos_file
+        if p_form.photo_one.data\
+            or p_form.photo_two.data\
+            or p_form.photo_three.data:
+            if p_form.photo_one.data:
+                photo_file_one = save_photos(p_form.photo_one.data)
+                p_form.photo_one = photo_file_one
+                photos.photo_one = photo_file_one
+                photos.photo_one_name = photo_file_one
+            else:
+                photo_file_one = None
+                p_form.photo_one = photo_file_one
+            if p_form.photo_two.data:   
+                photo_file_two = save_photos(p_form.photo_two.data)
+                p_form.photo_two = photo_file_two
+                photos.photo_two = photo_file_two
+                photos.photo_two_name = photo_file_one
+            else:
+                photo_file_two = None
+                p_form.photo_two = photo_file_two
+            if p_form.photo_three.data:
+                photo_file_three = save_photos(p_form.photo_three.data)
+                p_form.photo_three = photo_file_three
+                photos.photo_three = photo_file_three
+                photos.photo_three_name = photo_file_one
+            else:
+                photo_file_three = None
+                p_form.photo_three = photo_file_three
+                
         item.title = form.title.data
         item.description = form.description.data
         item.category_type = form.category.data
-        # db.session.add(item)
+        if not item.photos:
+            item.photos = 'cart.jpg'
+        else:
+            item.photos = photo_file_one
+        db.session.add(photos)
+        db.session.add(item)
+        print(f"Item ID is {item.id}")
+        
         db.session.commit()
         flash("Successfully updated!", 'success')
-        return redirect(url_for('.each_item', item_id=item.id, year=YEAR))
+        return redirect(url_for('.each_item', item_id=item.id))
+    
     form.title.data = item.title
-    form.category = item.category_type
-    form.description = item.description #not appearing
+    form.category.data = item.category_type
+    form.description.data = item.description 
     # img_file = url_for('static', filename='uploads/' + item.photos)
-    return render_template("main/edit-post.html", form=form, year=YEAR)
+    
+    # if not photos:
+    #     p_form.photo_one.data = 'cart.jpg'
+    #     p_form.photo_two.data = 'cart.jpg'
+    #     p_form.photo_three.data = 'cart.jpg'
+    # else:
+    #     p_form.photo_one.data = photos.photo_one
+    #     p_form.photo_two.data = photos.photo_two
+    #     p_form.photo_three.data = photos.photo_three
+    # print(photos.photo_one)
+    # p_form.photo_one.data = request.files.get(photos.photo_one)
+    # p_form.photo_two.data = photos.photo_two.data
+    # p_form.photo_three.data = photos.photo_three.data
+
+    if photos:
+        p_form.photo_one_name.data = photos.photo_one
+        p_form.photo_two_name.data = photos.photo_two
+        p_form.photo_three_name.data = photos.photo_three
+    else:
+        p_form.photo_one.data = None
+        p_form.photo_two.data = None
+        p_form.photo_three.data = None
+        
+    return render_template("main/edit-post.html", form=form, p_form=p_form, item=item, year=YEAR)
+
+@main.route('/delete/<int:item_id>/photo', methods=["GET", "POST"])
+@login_required
+def delete_all_photos(item_id):
+    item = Post.query.filter_by(id=item_id).first()
+    photos = Photo.query.filter_by(post_id=item.id)
+    for p in photos:
+        print(p.photo_one)
+        if p.photo_one:
+            p.photo_one = 'cart.jpg'
+            p.photo_one_name = 'default'
+            db.session.commit()
+        if p.photo_two:
+            p.photo_two = 'cart.jpg'
+            p.photo_two_name = 'default'
+            db.session.commit()
+        if p.photo_three:
+            p.photo_three = 'cart.jpg'
+            p.photo_three_name = 'default'
+            db.session.commit()
+    
+        item.photos = p.photo_one
+        db.session.add(item)
+        db.session.commit()
+
+    return redirect(url_for('main.edit_post', item_id=item.id))
+
+
 
 @main.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete_post(item_id):
-    item = Post.query.filter_by(id=item_id).first()
-    db.session.delete(item)
+    photos = Photo.query.filter_by(post_id=item_id).first()
+    
+    photo1 = url_for('static', filename='uploads/' + photos.photo_one)
+    print(photo1)
+    if photo1:
+        os.remove(photo2)
+  
+    photo2 = url_for('static', filename='uploads/' + photos.photo_two)
+    if photo2:
+        os.remove(photo2)
+    photo3 = url_for('static', filename='uploads/' + photos.photo_three)
+    if photo3:
+        os.remove(photo3)
+    
+    Photo.query.filter_by(post_id=item_id).delete()
+    Post.query.filter_by(id=item_id).delete()
     db.session.commit()
     html = render_template('mail/admin_post_deleted.html', user=current_user)
     send_email(os.getenv('MAIL_USERNAME'), "A post deleted", html)

@@ -6,17 +6,76 @@
 {% block category %}{% endblock %}
 
 {% block page_content %}
+<div class="post-new-item-div">
 <h1>Edit Your Post</h1>
+<p>{{ item.title }}</p>
 
 <form method="POST" enctype=multipart/form-data>
-{{ wtf.quick_form(form) }}
-</form>
+    <!-- {{ wtf.quick_form(form) }}
+    {{ wtf.quick_form(p_form) }} -->
+    {{ form.hidden_tag() }}
+    {{ p_form.hidden_tag() }}
+    
+    <div class="mb-3">
+        {{ form.category.label }}
+        {{ form.category(class='form-control') }}</div>
+
+    <div class="mb-3">
+        {{ form.title.label }}
+        {{ form.title(class='form-control')}}
+      </div>
+
+      <div class="mb-3">
+        {{p_form.photo_one.label}}
+        <span><a href="{{ url_for('main.delete_all_photos', item_id=item.id)}}"><button type="button" class="btn btn-danger">Delete All Photos</button></a></span>
+        {{p_form.photo_one_name(class="form-control", disabled=disabled, placeholder='No photo uploaded yet')}}
+        {{p_form.photo_one(class="form-control")}}
+
+        {% if p_form.photo_one.errors %}
+        {% for error in p_form.photo_one.errors %}
+        <span class="text-danger">{{ error }}</span><br>
+        {% endfor %}
+        {% endif %}
+      </div>
+
+
+      <div class="mb-3">
+        {{p_form.photo_two.label}}
+        {{p_form.photo_two_name(class="form-control", disabled=disabled, placeholder='No photo uploaded yet')}}
+        {{p_form.photo_two(class="form-control")}}
+                
+        {% if p_form.photo_two.errors %}
+        {% for error in p_form.photo_two.errors %}
+        <span class="text-danger">{{ error }}</span><br>
+        {% endfor %}
+        {% endif %}
+
+      </div>
+
+      <div class="mb-3">
+        {{p_form.photo_three.label}}
+        {{p_form.photo_three_name(class="form-control", disabled=disabled, placeholder='No photo uploaded yet')}}
+        {{p_form.photo_three(class="form-control")}}
+
+        {% if p_form.photo_three.errors %}
+        {% for error in p_form.photo_three.errors %}
+        <span class="text-danger">{{ error }}</span><br>
+        {% endfor %}
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.description.label }}
+        {{ form.description(class='form-control')}}
+      </div>
+      
+      <button type="submit" class="btn btn-primary btn-lg button-custom">Submit</button>
+
+      </form>
 
 <!-- error is taken care of by bootstrap form -->
-<!-- {% if form.photos.errors %}
-{% for error in form.photos.errors %}
-<span class="'text-danger">{{ error }}</span><br>
-{% endfor %}
-{% endif %} -->
 
+
+
+</div>
 {% endblock %}

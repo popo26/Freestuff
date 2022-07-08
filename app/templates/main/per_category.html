@@ -4,6 +4,7 @@
 {% block title %}{{super()}}{{category}} {% endblock %}
 
 {% block page_content %}
+{{ moment.include_moment() }}
 <div class="item-div">
 
   <h1 class="category-title">Category: {{ category }}</h1>
@@ -16,7 +17,7 @@
         <img class="card-img-top item-image" src="{{ photos_path }}{{ item.photos }}" alt="{{ item.title }}">
         <div class="card-body">
           <h5 class="card-title">{{ item.title }}</h5></a>
-          <p class="card-text"><small class="text-muted">{{ moment(item.timestamp).fromNow() }}</small></p>
+          <p class="card-text"><small class="text-muted test">{{ moment(item.timestamp).fromNow() }}</small></p>
         </div>
     </div>
     {% else %}

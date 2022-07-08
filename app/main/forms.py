@@ -77,6 +77,9 @@ class PhotoForm(FlaskForm):
     photo_one = FileField("Photo1", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'pdf'])])
     photo_two = FileField("Photo2", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'pdf'])])
     photo_three = FileField("Photo3", validators=[FileAllowed(['jpg', 'png', 'jpeg', 'pdf'])])
+    photo_one_name = StringField("Photo1 filename")
+    photo_two_name = StringField("Photo2 filename")
+    photo_three_name = StringField("Photo3 filename")
     submit = SubmitField("Submit")
 
 class ContactGiverForm(FlaskForm):

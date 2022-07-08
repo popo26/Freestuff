@@ -1,7 +1,7 @@
 from sqlite3 import IntegrityError
 from faker import Faker
 from . import db
-from .models import User, Post
+from .models import User, Post, Photo
 from random import randint
 import string
 
@@ -35,8 +35,20 @@ def posts(count=100):
                  timestamp = fake.past_date(),
                  giver=u)
         db.session.add(p)
+
+        photos = Photo(photo_one = 'cart.jpg',
+                       photo_two = 'cart.jpg', 
+                       photo_three = 'cart.jpg',
+                       photo_one_name = 'default',
+                       photo_two_name = 'default',
+                       photo_three_name = 'default',
+                       post_id = randint(1, count-1))
+        db.session.add(photos)
+
     db.session.commit()
     #Slug LATER
     # for p in Post.query.all():
     #     p.generate_slug()
+
+
 
