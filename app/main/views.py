@@ -329,15 +329,18 @@ def each_item(item_id):
     # print(photos)
     # print(photos.photo_one)
     if photos == None:
-        img1 = url_for('static', filename='uploads/cart.jpg' )
+        img1 = url_for('static', filename='cart.jpg' )
+        # img1 = os.path.join('/app/static/default_image', 'cart.jpg')
     else:
         img1 = url_for('static', filename='uploads/' + photos.photo_one)
     if photos == None:
-        img2 = url_for('static', filename='uploads/cart.jpg' )
+        img2 = url_for('static', filename='cart.jpg' )
+        # img2 = os.path.join('/app/static/default_image', 'cart.jpg')
     else:
         img2 = url_for('static', filename='uploads/' + photos.photo_two)
     if photos == None:
-        img3 = url_for('static', filename='uploads/cart.jpg' )
+        img3 = url_for('static', filename='cart.jpg' )
+        # img2 = os.path.join('/app/static/default_image', 'cart.jpg')
     else:
         img3 = url_for('static', filename='uploads/' + photos.photo_three)
    
@@ -383,24 +386,25 @@ def post_new_item():
             if p_form.photo_one.data:
                 photo_file_one = save_photos(p_form.photo_one.data)
                 p_form.photo_one = photo_file_one
-                
             else:
-                photo_file_one = None
+                # photo_file_one = None
+                photo_file_one = 'cart.jpg'
                 p_form.photo_one = photo_file_one
-               
 
             if p_form.photo_two.data:   
                 photo_file_two = save_photos(p_form.photo_two.data)
                 p_form.photo_two = photo_file_two
             else:
-                photo_file_two = None
-                p_form.photo_two = photo_file_two
-               
+                # photo_file_two = None
+                photo_file_two = 'cart.jpg'
+                p_form.photo_two = photo_file_two  
+
             if p_form.photo_three.data:
                 photo_file_three = save_photos(p_form.photo_three.data)
                 p_form.photo_three = photo_file_three
             else:
-                photo_file_three = None
+                # photo_file_three = None
+                photo_file_three = 'cart.jpg'
                 p_form.photo_three = photo_file_three
               
             
@@ -475,6 +479,8 @@ def edit_post(item_id):
         item.category_type = form.category.data
         if not item.photos:
             item.photos = 'cart.jpg'
+        elif item.photos == 'cart.jpg':
+            pass
         else:
             item.photos = photo_file_one
         db.session.add(photos)
@@ -522,14 +528,35 @@ def delete_all_photos(item_id):
     for p in photos:
         print(p.photo_one)
         if p.photo_one:
+            photo1_path = os.path.join('app/static/uploads', p.photo_one)
+            print(photo1_path)
+            if os.path.exists(photo1_path):
+                if photo1_path == os.path.join('app/static/uploads', 'cart.jpg'):
+                    pass
+                    print("here 1")
+                else:
+                    os.remove(photo1_path)
+                    print("here 2")
             p.photo_one = 'cart.jpg'
             p.photo_one_name = 'default'
             db.session.commit()
         if p.photo_two:
+            photo2_path = os.path.join('app/static/uploads', p.photo_two)
+            if os.path.exists(photo2_path):
+                if photo2_path == os.path.join('app/static/uploads', 'cart.jpg'):
+                    pass
+                else:
+                    os.remove(photo2_path)
             p.photo_two = 'cart.jpg'
             p.photo_two_name = 'default'
             db.session.commit()
         if p.photo_three:
+            photo3_path = os.path.join('app/static/uploads', p.photo_three)
+            if os.path.exists(photo3_path):
+                if photo3_path == os.path.join('app/static/uploads', 'cart.jpg'):
+                    pass
+                else:
+                    os.remove(photo3_path)
             p.photo_three = 'cart.jpg'
             p.photo_three_name = 'default'
             db.session.commit()
@@ -537,6 +564,30 @@ def delete_all_photos(item_id):
         item.photos = p.photo_one
         db.session.add(item)
         db.session.commit()
+
+    #delete files from static folder
+    # three_photos = Photo.query.filter_by(post_id=item.id).first()
+    # photo1_path = os.path.join('app/static/uploads', photos.photo_one)
+    # photo2_path = os.path.join('app/static/uploads', photos.photo_two)
+    # photo3_path = os.path.join('app/static/uploads', photos.photo_three)
+   
+    # if os.path.exists(photo1_path):
+    #     if photo1_path == os.path.join('app/static/uploads', 'cart.jpg'):
+    #         pass
+    #     else:
+    #         os.remove(photo1_path)
+    
+    # if os.path.exists(photo2_path):
+    #     if photo2_path == os.path.join('app/static/uploads', 'cart.jpg'):
+    #         pass
+    #     else:
+    #         os.remove(photo2_path)
+
+    # if os.path.exists(photo3_path):
+    #     if photo3_path == os.path.join('app/static/uploads', 'cart.jpg'):
+    #         pass
+    #     else:
+    #         os.remove(photo3_path)
 
     return redirect(url_for('main.edit_post', item_id=item.id))
 
@@ -547,18 +598,37 @@ def delete_all_photos(item_id):
 def delete_post(item_id):
     photos = Photo.query.filter_by(post_id=item_id).first()
     
-    photo1 = url_for('static', filename='uploads/' + photos.photo_one)
-    print(photo1)
-    if photo1:
-        os.remove(photo2)
-  
-    photo2 = url_for('static', filename='uploads/' + photos.photo_two)
-    if photo2:
-        os.remove(photo2)
-    photo3 = url_for('static', filename='uploads/' + photos.photo_three)
-    if photo3:
-        os.remove(photo3)
+    #delete files from static folder
+    photo1_path = os.path.join('app/static/uploads', photos.photo_one)
+    photo2_path = os.path.join('app/static/uploads', photos.photo_two)
+    photo3_path = os.path.join('app/static/uploads', photos.photo_three)
+    print(f'Photo1_Path is:{photo1_path}')
+    print(f'Photo2_Path is:{photo2_path}')
+    print(f'Photo3_Path is:{photo3_path}')
+    if os.path.exists(photo1_path):
+        if photo1_path == os.path.join('app/static/uploads', 'cart.jpg'):
+            print("it's default")
+            pass
+        else:
+            os.remove(photo1_path)
+        print(f'Photo1_Path is:{photo1_path}')
     
+    if os.path.exists(photo2_path):
+        if photo2_path == os.path.join('app/static/uploads', 'cart.jpg'):
+            print("it's default")
+            pass
+        else:
+            os.remove(photo2_path)
+        print(f'Photo2_Path is:{photo2_path}')
+
+    if os.path.exists(photo3_path):
+        if photo3_path == os.path.join('app/static/uploads', 'cart.jpg'):
+            print("it's default")
+            pass
+        else:
+            os.remove(photo3_path)
+        print(f'Photo3_Path is:{photo3_path}')
+
     Photo.query.filter_by(post_id=item_id).delete()
     Post.query.filter_by(id=item_id).delete()
     db.session.commit()
