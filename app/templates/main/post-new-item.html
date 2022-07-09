@@ -16,7 +16,7 @@
     {%- endif %}
 </h1>
 
-<form method="POST" enctype=multipart/form-data>
+<form method="POST" enctype=multipart/form-data novalidate>
     <!-- {{ wtf.quick_form(form) }} -->
     {{ form.hidden_tag() }}
     {{ p_form.hidden_tag() }}
@@ -32,6 +32,12 @@
         <input type="text" class="form-control" id="text"> -->
         {{ form.title.label() }}
         {{ form.title(class='form-control')}}
+
+        {% if form.title.errors %}
+        {% for error in form.title.errors %}
+        <span class="text-danger">{{ error }}</span><br>
+        {% endfor %}
+        {% endif %}
       </div>
 
       <div class="mb-3">

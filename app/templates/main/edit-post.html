@@ -10,7 +10,7 @@
 <h1>Edit Your Post</h1>
 <p>{{ item.title }}</p>
 
-<form method="POST" enctype=multipart/form-data>
+<form method="POST" enctype=multipart/form-data novalidate>
     <!-- {{ wtf.quick_form(form) }}
     {{ wtf.quick_form(p_form) }} -->
     {{ form.hidden_tag() }}
@@ -23,6 +23,12 @@
     <div class="mb-3">
         {{ form.title.label }}
         {{ form.title(class='form-control')}}
+
+        {% if form.title.errors %}
+        {% for error in form.title.errors %}
+        <span class="text-danger">{{ error }}</span><br>
+        {% endfor %}
+        {% endif %}
       </div>
 
       <div class="mb-3">

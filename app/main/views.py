@@ -377,6 +377,8 @@ def post_new_item():
 
     form = PostForm()
     p_form = PhotoForm()
+    current_photo_number = Photo.query.count()
+
     if current_user.can(Permission.PUBLISH) \
         and form.validate_on_submit() \
         and p_form.validate_on_submit():
@@ -387,39 +389,52 @@ def post_new_item():
                 photo_file_one = save_photos(p_form.photo_one.data)
                 p_form.photo_one = photo_file_one
             else:
-                # photo_file_one = None
-                photo_file_one = 'cart.jpg'
+                photo_file_one = None
                 p_form.photo_one = photo_file_one
 
             if p_form.photo_two.data:   
                 photo_file_two = save_photos(p_form.photo_two.data)
                 p_form.photo_two = photo_file_two
             else:
-                # photo_file_two = None
-                photo_file_two = 'cart.jpg'
+                photo_file_two = None
                 p_form.photo_two = photo_file_two  
 
             if p_form.photo_three.data:
                 photo_file_three = save_photos(p_form.photo_three.data)
                 p_form.photo_three = photo_file_three
             else:
-                # photo_file_three = None
-                photo_file_three = 'cart.jpg'
+                photo_file_three = None
                 p_form.photo_three = photo_file_three
               
-            
-        post = Post(category_type=form.category.data,
-                    title=form.title.data,
-                    description=form.description.data,
-                    giver=current_user._get_current_object(),
-                    photos=p_form.photo_one)
-        photo = Photo(photo_one=p_form.photo_one,
+            photo = Photo(photo_one=p_form.photo_one,
+                        photo_two=p_form.photo_two,
+                        photo_three=p_form.photo_three, 
+                        photo_one_name=p_form.photo_one,
+                        photo_two_name=p_form.photo_two,
+                        photo_three_name=p_form.photo_three,)
+
+        else:
+            photo_file_one = None
+            p_form.photo_one = photo_file_one
+            photo_file_two = None
+            p_form.photo_two = photo_file_two  
+            photo_file_three = None
+            p_form.photo_three = photo_file_three
+
+            photo = Photo(id = current_photo_number + 1,
+                      photo_one=p_form.photo_one,
                       photo_two=p_form.photo_two,
                       photo_three=p_form.photo_three, 
                       photo_one_name=p_form.photo_one,
                       photo_two_name=p_form.photo_two,
                       photo_three_name=p_form.photo_three,)
-    
+
+        post = Post(category_type=form.category.data,
+            title=form.title.data,
+            description=form.description.data,
+            giver=current_user._get_current_object(),
+            photos=p_form.photo_one)
+
         db.session.add(post)
         db.session.add(photo)
         db.session.commit()
