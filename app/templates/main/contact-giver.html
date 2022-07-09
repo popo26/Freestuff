@@ -7,12 +7,24 @@
 {% block page_content %}
 <div class="contact-giver-div">
 
-   <h1>Ask away!</h1> 
-   <h4>This is about <strong>{{ item.title }}</strong> posted by <strong>{{ item.giver.username }}</strong></h4>
+   <h1>This is about <strong>{{ item.title }}</strong> posted by <strong>{{ item.giver.username }}</strong></h1>
 <form class='forms' method="POST">
-    <!-- sending email work in progress -->
-    <!-- also creating message page -->
-    {{ wtf.quick_form(form) }}
+
+    <!-- {{ wtf.quick_form(form) }} -->
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{form.description.label}}
+        {{form.description(class="form-control")}}
+
+        {% if form.description.errors %}
+        {% for error in form.description.errors %}
+        <span class="text-danger">{{ error }}</span><br>
+        {% endfor %}
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg button-custom">Submit</button>
     </form>
 </div>
 {% endblock %}

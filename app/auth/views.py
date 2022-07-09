@@ -36,7 +36,7 @@ def login():
             next = url_for('main.index')
         return redirect(next)
 
-    return render_template("auth/login.html", form=form)
+    return render_template("auth/login.html", form=form, year=YEAR)
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -56,7 +56,7 @@ def register():
 
         return redirect(url_for('auth.unconfirmed'))
 
-    return render_template("auth/register.html", form=form)
+    return render_template("auth/register.html", form=form, year=YEAR)
 
 @auth.route("/logout")
 @login_required

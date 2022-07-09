@@ -357,27 +357,9 @@ def each_item(item_id):
 @main.route("/post-new-item", methods=['GET', "POST"])
 @login_required
 def post_new_item():
-    '''Single photo upload'''
-    # form = PostForm()
-    # if current_user.can(Permission.PUBLISH) \
-    #     and form.validate_on_submit():
-    #     if form.photos.data:
-    #         photos_file = save_photos(form.photos.data)
-    #         form.photos = photos_file
-    #     post = Post(category_type=form.category.data,
-    #                 title=form.title.data,
-    #                 description=form.description.data,
-    #                 photos=form.photos,
-    #                 giver=current_user._get_current_object())
-    #     db.session.add(post)
-    #     db.session.commit()
-    #     flash("Thank you for posting a new free stuff!")
-    #     return redirect(url_for('.index'))
-    # return render_template("main/post-new-item.html", form=form, year=YEAR)
-
     form = PostForm()
     p_form = PhotoForm()
-    current_photo_number = Photo.query.count()
+    last_photo_id = Photo.query.order_by(Photo.id.desc()).first()
 
     if current_user.can(Permission.PUBLISH) \
         and form.validate_on_submit() \
@@ -421,13 +403,13 @@ def post_new_item():
             photo_file_three = None
             p_form.photo_three = photo_file_three
 
-            photo = Photo(id = current_photo_number + 1,
-                      photo_one=p_form.photo_one,
-                      photo_two=p_form.photo_two,
-                      photo_three=p_form.photo_three, 
-                      photo_one_name=p_form.photo_one,
-                      photo_two_name=p_form.photo_two,
-                      photo_three_name=p_form.photo_three,)
+            photo = Photo(id = last_photo_id.id + 1,
+                    photo_one=p_form.photo_one,
+                    photo_two=p_form.photo_two,
+                    photo_three=p_form.photo_three, 
+                    photo_one_name=p_form.photo_one,
+                    photo_two_name=p_form.photo_two,
+                    photo_three_name=p_form.photo_three,)
 
         post = Post(category_type=form.category.data,
             title=form.title.data,
@@ -436,11 +418,17 @@ def post_new_item():
             photos=p_form.photo_one)
 
         db.session.add(post)
-        db.session.add(photo)
         db.session.commit()
         photo.post_id = post.id
         db.session.add(photo)
         db.session.commit()
+
+        # db.session.add(post)
+        # db.session.add(photo)
+        # db.session.commit()
+        # photo.post_id = post.id
+        # db.session.add(photo)
+        # db.session.commit()
         flash("Thank you for posting a new free stuff!")
         return redirect(url_for('.index'))
     return render_template("main/post-new-item.html", form=form, year=YEAR, p_form=p_form)
@@ -476,7 +464,7 @@ def edit_post(item_id):
                 photo_file_two = save_photos(p_form.photo_two.data)
                 p_form.photo_two = photo_file_two
                 photos.photo_two = photo_file_two
-                photos.photo_two_name = photo_file_one
+                photos.photo_two_name = photo_file_two
             else:
                 photo_file_two = None
                 p_form.photo_two = photo_file_two
@@ -488,16 +476,22 @@ def edit_post(item_id):
             else:
                 photo_file_three = None
                 p_form.photo_three = photo_file_three
-                
+        print(f'item photo1 : {photo_file_one}')       
         item.title = form.title.data
         item.description = form.description.data
         item.category_type = form.category.data
         if not item.photos:
             item.photos = 'cart.jpg'
+            print('here1')
         elif item.photos == 'cart.jpg':
-            pass
+            if photo_file_one == None:
+                item.photos = 'cart.jpg'
+            else:
+                item.photos = photo_file_one
+            print('here2')
         else:
             item.photos = photo_file_one
+            print(photo_file_one)
         db.session.add(photos)
         db.session.add(item)
         print(f"Item ID is {item.id}")

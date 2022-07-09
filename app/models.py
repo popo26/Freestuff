@@ -7,10 +7,6 @@ from app import create_app
 import hashlib
 import os
 
-
-
-
-
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)

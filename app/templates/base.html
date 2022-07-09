@@ -43,10 +43,21 @@
           <!-- <a class="nav-link active" aria-current="page" href="#">Home</a> -->
           <a class="nav-link" href="{{ url_for('main.check_messages', username=current_user.username)}}">Messages
             <!-- <span class="sr-only">(current)</span> -->
-            <span class="badge badge-light">{{ current_user.question_received }}</span>
+            {% if current_user.question_received == 0 %}
+            <span class="badge rounded-pill text-bg-secondary">{{ current_user.question_received }}</span>
             <span class="sr-only">unread messages</span>
-            <span class="badge badge-light">{{ current_user.question_answered }}</span>
+            {% else %}
+            <span class="badge rounded-pill text-bg-danger">{{ current_user.question_received }}</span>
             <span class="sr-only">unread messages</span>
+            {% endif %}
+
+            {% if current_user.question_answered == 0 %}
+            <span class="badge rounded-pill text-bg-secondary">{{ current_user.question_answered }}</span>
+            <span class="sr-only">unread messages</span>
+            {% else %}
+            <span class="badge rounded-pill text-bg-danger">{{ current_user.question_answered }}</span>
+            <span class="sr-only">unread messages</span>
+            {% endif %}
         </a>
         </li>
         <li class="nav-item">
@@ -62,16 +73,17 @@
       </ul>
     
       {%else%}
-
+      <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('auth.register') }}">Create New Account</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a>
       </li>
+    </ul>
       {% endif %}
         
-      </ul>
+      
     </div>
   </div>
 </nav>
@@ -177,8 +189,12 @@
   <div class="content-div">
     <div class="container">
       {% for msg in get_flashed_messages() %}
-      <div class="alert alert-warning">
+      <!-- <div class="alert alert-secondary" role="alert">
         <button type="button" class="done" data-dismiss="alert">&times;</button>
+        {{ msg }}
+      </div> -->
+      <div class="alert alert-secondary alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         {{ msg }}
       </div>
       {% endfor %}

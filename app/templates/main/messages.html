@@ -6,13 +6,16 @@
 
 {% block page_content %}
 
-<h1>Inquiries about your posts. Please reply.</h1>
+<div class="entire-message-div">
+
+<div class="message-received-div">
+<h1>Message Received.</h1>
 {% if current_user.question_received > 0 %}
     {% for p in posts %}
         {% for m in messages|sort(reverse=True, attribute='timestamp') %}
             {% if p.id == m.post_id %}
-            <h4>About "<strong>{{p.title}}</strong>" :</h4>
-                <li> <a href="{{ url_for('main.each_item', item_id=p.id)}}">{{ m.description }}</a> from {{ m.asker.username }}</li>
+            <h4>About "<strong>{{p.title}}</strong>" :
+                <a href="{{ url_for('main.each_item', item_id=p.id)}}">{{ m.description }}</a> from {{ m.asker.username }}</h4>
             {% endif %}
         {% endfor %}
     {% endfor %}
@@ -20,9 +23,10 @@
 {% else %}
 <p>You have no inquiry.</p>
 {% endif %}
-<br>
+</div>
 
-<h1>Answers received for the question you posted.</h1>
+<div class="answer-received-div">
+<h1>Answers Received.</h1>
 {% if current_user.question_answered > 0 %}
 
 {% for q in posted_questions|sort(reverse=True, attribute='timestamp')  %}
@@ -36,5 +40,8 @@
 {% elif current_user.question_answered == 0 %}
 <p>No reply received for your inquiry.</p>
 {% endif %}
+</div>
+
+</div>
 
 {% endblock %}

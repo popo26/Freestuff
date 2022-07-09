@@ -1,5 +1,5 @@
 .test {
-	color:red !important;
+	color:white !important;
 }
 
 .flask-moment {
@@ -32,7 +32,7 @@ main {
 footer {
     text-align: center;
     color: white;
-    height:50px;
+    height:30px;
 }
 
 /* end */
@@ -246,6 +246,10 @@ a:hover {
 	margin-bottom: 2%;
 }
 
+.carousel-indicators {
+	margin:auto;
+}
+
 /* .three-photos {
 	padding-bottom: 3%;
 } */
@@ -329,16 +333,43 @@ a:hover {
 }
 
 /* contact-giver.html */
-.contact-giver-div h4 {
+.contact-giver-div h1 {
     margin-top: 2%;
     margin-bottom: 4%;
 }
+
 
 .message-div {
     width: 80%;
     margin:auto;
 }
 
+/* message.html */
+
+.entire-message-div {
+	width:80%;
+	margin:auto;
+}
+
+.message-received-div {
+	margin-bottom: 5%;
+}
+
+.message-received-div h4 {
+	margin-top:1%;
+}
+
+.message-received-div p {
+	margin-top:1%;
+}
+
+.answer-received-div h4{
+	margin-top:1%;
+}
+
+.answer-received-div p{
+	margin-top:1%;
+}
 
 /* LEFT BUBBLE */
 p.bubble {
