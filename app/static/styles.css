@@ -73,7 +73,11 @@ a:hover {
 }
 
 .navbar-toggler {
-	color: chartreuse;
+	color:#fff;
+}
+
+.navbar-toggler-icon {
+	color:#fff;
 }
 
 .nav-link {
@@ -104,9 +108,23 @@ a:hover {
 }
 
 .button-custom:hover {
-	background-color: white;
-	color:#333;
-} */
+	background-color: #333;
+	color:white;
+	border-color: chartreuse;
+}
+
+.post-button {
+	background-color: chartreuse;
+	color: #333;
+	font-size: large;
+	font-weight: bolder;
+}
+
+.post-button:hover {
+	color:chartreuse;
+	font-size: large;
+	font-weight: bolder;
+}
 
 .custom-container {
 	width:80%;
@@ -240,19 +258,19 @@ a:hover {
 
 .info-tab {
 	margin: 3% auto 1% auto;
+	width:60%;
+	word-wrap:break-word;
 }
 
 .info-tab h5 {
 	margin-bottom: 2%;
 }
 
+
 .carousel-indicators {
 	margin:auto;
 }
 
-/* .three-photos {
-	padding-bottom: 3%;
-} */
 
 .category-button-div {
 	margin: 2% auto 2% auto;
@@ -352,7 +370,7 @@ a:hover {
 }
 
 .message-received-div {
-	margin-bottom: 5%;
+	margin-bottom: 40px;
 }
 
 .message-received-div h4 {
@@ -360,15 +378,23 @@ a:hover {
 }
 
 .message-received-div p {
-	margin-top:1%;
+	margin-top:10px;
 }
 
 .answer-received-div h4{
-	margin-top:1%;
+	margin-top:10px;
 }
 
 .answer-received-div p{
 	margin-top:1%;
+}
+
+.message-tag {
+	color:chartreuse;
+}
+
+.message-tag:hover {
+	color:white;
 }
 
 /* LEFT BUBBLE */
@@ -481,7 +507,6 @@ p.speech.right:after {
 .pagination-div {
     width:100%;
 	margin:auto;
-	
 }
 
 .pagination {
@@ -507,7 +532,19 @@ p.speech.right:after {
 
 .pagination li a:hover{
 	background-color: white;
-	color:darkmagenta;
+	color:darkgreen;
+	font-weight: bolder;
 }
 
+/* reply.html */
+
+.reply-div h1 {
+    margin-top: 2%;
+    margin-bottom: 4%;
+}
+
+.reply-div {
+	width:60%;
+	margin:auto;
+}
 

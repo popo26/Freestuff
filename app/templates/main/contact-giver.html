@@ -14,7 +14,7 @@
     {{ form.hidden_tag() }}
 
     <div class="mb-3">
-        {{form.description.label}}
+        <!-- {{form.description.label}} -->
         {{form.description(class="form-control")}}
 
         {% if form.description.errors %}
@@ -24,7 +24,7 @@
         {% endif %}
       </div>
 
-      <button type="submit" class="btn btn-primary btn-lg button-custom">Submit</button>
+      <button type="submit" class="btn btn-secondary btn-lg button-custom">Send Question</button>
     </form>
 </div>
 {% endblock %}

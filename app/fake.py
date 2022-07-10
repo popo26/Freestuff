@@ -36,6 +36,7 @@ def posts(count=100):
                  giver=u)
         db.session.add(p)
         db.session.commit()
+    #Photo
         photos = Photo(photo_one = 'cart.jpg',
                        photo_two = 'cart.jpg', 
                        photo_three = 'cart.jpg',
@@ -44,11 +45,11 @@ def posts(count=100):
                        photo_three_name = 'default',
                        post_id = p.id)
         db.session.add(photos)
-
     db.session.commit()
-    #Slug LATER
-    # for p in Post.query.all():
-    #     p.generate_slug()
 
+    #Slug
+    for p in Post.query.all():
+        p.generate_slug()
+   
 
 

@@ -319,13 +319,54 @@ def jewellery():
                             photos_path = photos_path,
                             year=YEAR)
 
-@main.route("/item/<int:item_id>")
-def each_item(item_id):
-    item = Post.query.filter_by(id=item_id).first()
-    messages = Message.query.filter_by(post_id=item_id).all()
+# @main.route("/item/<int:item_id>")
+# def each_item(item_id):
+#     item = Post.query.filter_by(id=item_id).first()
+#     print(item.slug)
+#     messages = Message.query.filter_by(post_id=item_id).all()
+#     # print(item.id)
+#     # print(item.photos)
+#     photos = Photo.query.filter_by(post_id=item_id).first()
+#     # print(photos)
+#     # print(photos.photo_one)
+#     if photos == None:
+#         img1 = url_for('static', filename='cart.jpg' )
+#         # img1 = os.path.join('/app/static/default_image', 'cart.jpg')
+#     else:
+#         img1 = url_for('static', filename='uploads/' + photos.photo_one)
+#     if photos == None:
+#         img2 = url_for('static', filename='cart.jpg' )
+#         # img2 = os.path.join('/app/static/default_image', 'cart.jpg')
+#     else:
+#         img2 = url_for('static', filename='uploads/' + photos.photo_two)
+#     if photos == None:
+#         img3 = url_for('static', filename='cart.jpg' )
+#         # img2 = os.path.join('/app/static/default_image', 'cart.jpg')
+#     else:
+#         img3 = url_for('static', filename='uploads/' + photos.photo_three)
+   
+
+#     return render_template("main/each-item.html", 
+#                             item=item, 
+#                             messages=messages, 
+#                             year=YEAR, 
+#                             img1=img1,
+#                             img2=img2,
+#                             img3=img3,
+#                             )
+
+
+@main.route('/item/<slug>')
+def each_slug_post(slug):
+    post = Post.query.filter_by(slug=slug).first_or_404()
+    # return render_template('main/each_slug_post.html', posts=[post])
+    print(post.slug)
+
+    # item = Post.query.filter_by(id=item_id).first()
+    messages = Message.query.filter_by(post_id=post.id).all()
     # print(item.id)
     # print(item.photos)
-    photos = Photo.query.filter_by(post_id=item_id).first()
+    photos = Photo.query.filter_by(post_id=post.id).first()
     # print(photos)
     # print(photos.photo_one)
     if photos == None:
@@ -345,14 +386,15 @@ def each_item(item_id):
         img3 = url_for('static', filename='uploads/' + photos.photo_three)
    
 
-    return render_template("main/each-item.html", 
-                            item=item, 
+    return render_template("main/each_slug_post.html", 
+                            post=post, 
                             messages=messages, 
                             year=YEAR, 
                             img1=img1,
                             img2=img2,
                             img3=img3,
                             )
+    
 
 @main.route("/post-new-item", methods=['GET', "POST"])
 @login_required
@@ -429,6 +471,9 @@ def post_new_item():
         # photo.post_id = post.id
         # db.session.add(photo)
         # db.session.commit()
+
+        post.generate_slug()
+
         flash("Thank you for posting a new free stuff!")
         return redirect(url_for('.index'))
     return render_template("main/post-new-item.html", form=form, year=YEAR, p_form=p_form)
@@ -457,48 +502,70 @@ def edit_post(item_id):
                 p_form.photo_one = photo_file_one
                 photos.photo_one = photo_file_one
                 photos.photo_one_name = photo_file_one
+                print('passed here1')
             else:
                 photo_file_one = None
                 p_form.photo_one = photo_file_one
-            if p_form.photo_two.data:   
+            if p_form.photo_two.data:  
+                print('passed here2') 
                 photo_file_two = save_photos(p_form.photo_two.data)
                 p_form.photo_two = photo_file_two
                 photos.photo_two = photo_file_two
                 photos.photo_two_name = photo_file_two
+                print('passed here3')
             else:
                 photo_file_two = None
                 p_form.photo_two = photo_file_two
             if p_form.photo_three.data:
+                print('passed here4')
                 photo_file_three = save_photos(p_form.photo_three.data)
                 p_form.photo_three = photo_file_three
                 photos.photo_three = photo_file_three
-                photos.photo_three_name = photo_file_one
+                photos.photo_three_name = photo_file_three
+                print('passed here5')
             else:
                 photo_file_three = None
                 p_form.photo_three = photo_file_three
-        print(f'item photo1 : {photo_file_one}')       
+                print('passed here6')
+        # print(f'item photo1 : {photo_file_one}')  
+            if not item.photos:
+                item.photos = 'cart.jpg'
+                print('here1')
+            elif item.photos == 'cart.jpg':
+                if photo_file_one == None:
+                    item.photos = 'cart.jpg'
+                else:
+                    item.photos = photo_file_one
+                print('here2')
+            else:
+                item.photos = photo_file_one
+                print(photo_file_one)     
         item.title = form.title.data
         item.description = form.description.data
         item.category_type = form.category.data
-        if not item.photos:
-            item.photos = 'cart.jpg'
-            print('here1')
-        elif item.photos == 'cart.jpg':
-            if photo_file_one == None:
-                item.photos = 'cart.jpg'
-            else:
-                item.photos = photo_file_one
-            print('here2')
-        else:
-            item.photos = photo_file_one
-            print(photo_file_one)
+        # if not item.photos:
+        #     item.photos = 'cart.jpg'
+        #     print('here1')
+        # elif item.photos == 'cart.jpg':
+        #     if photo_file_one == None:
+        #         item.photos = 'cart.jpg'
+        #     else:
+        #         item.photos = photo_file_one
+        #     print('here2')
+        # else:
+        #     item.photos = photo_file_one
+        #     print(photo_file_one)
         db.session.add(photos)
         db.session.add(item)
         print(f"Item ID is {item.id}")
         
         db.session.commit()
+
+        item.generate_slug()
+
         flash("Successfully updated!", 'success')
-        return redirect(url_for('.each_item', item_id=item.id))
+        # return redirect(url_for('.each_item', item_id=item.id))
+        return redirect(url_for('.each_slug_post', slug=item.slug))
     
     form.title.data = item.title
     form.category.data = item.category_type
@@ -694,7 +761,8 @@ def reply(item_id, message_id):
         # message.answered_user2 = message.asker.username
         # db.session.add(message)
         db.session.commit()
-        return redirect(url_for('main.each_item', item_id=item.id, message_id=message.id, year=YEAR))
+        # return redirect(url_for('main.each_item', item_id=item.id, message_id=message.id, year=YEAR))
+        return redirect(url_for('main.each_slug_post', slug=item.slug, message_id=message.id))
     
     return render_template('main/reply.html', item=item, form=form, year=YEAR)
 
@@ -746,11 +814,13 @@ def contact_giver(item_id):
         db.session.add(message)
         db.session.add(item)
         db.session.commit()
-        link = url_for('main.each_item', _external=True, item_id=item.id)
+        # link = url_for('main.each_item', _external=True, item_id=item.id)
+        link = url_for('main.each_slug_post', _external=True, slug=item.slug)
         html = render_template('mail/user_question_recieved.html', giver=item.giver, link=link, item=item)
         send_email(item.giver.email, "You received a question!", html)
         flash("successfully submitted!")
-        return redirect(url_for("main.each_item", item_id=item.id))
+        # return redirect(url_for("main.each_item", item_id=item.id))
+        return redirect(url_for("main.each_slug_post", slug=item.slug))
     return render_template("main/contact-giver.html", form=form, item=item, year=YEAR)
 
 #In progress

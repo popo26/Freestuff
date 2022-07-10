@@ -14,14 +14,17 @@
     {% for p in posts %}
         {% for m in messages|sort(reverse=True, attribute='timestamp') %}
             {% if p.id == m.post_id %}
-            <h4>About "<strong>{{p.title}}</strong>" :
-                <a href="{{ url_for('main.each_item', item_id=p.id)}}">{{ m.description }}</a> from {{ m.asker.username }}</h4>
+            <h4>Question received "<strong>{{ m.description }}</strong>" about "<strong>{{p.title}}</strong>" 
+                from {{ m.asker.username }} 
+                
+                <a class='message-tag' href="{{ url_for('main.each_slug_post', slug=p.slug)}}">See the question</a>
+            </h4>
             {% endif %}
         {% endfor %}
     {% endfor %}
 
 {% else %}
-<p>You have no inquiry.</p>
+<p>There is no message received.</p>
 {% endif %}
 </div>
 
@@ -31,14 +34,14 @@
 
 {% for q in posted_questions|sort(reverse=True, attribute='timestamp')  %}
  
-    <h4>About "<strong>{{ q.description }}</strong>" :<span>
-        <a href="{{ url_for('main.each_item', item_id=q.post_id )}}">Check reply</a></span> {{q.id}}</h4>
-
+    <h4>Message received "<strong>{{ q.description }}</strong>" <span>
+       
+        <a class='message-tag' href="{{ url_for('main.each_slug_post', slug=q.slug )}}">See the message</a></span></h4>
 
 {% endfor %}
 
 {% elif current_user.question_answered == 0 %}
-<p>No reply received for your inquiry.</p>
+<p>There is no answer received.</p>
 {% endif %}
 </div>
 

@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 
-{% block title %}{{super()}}{{item.title}}{% endblock %}
+{% block title %}{{super()}}{{post.title}}{% endblock %}
 {% block category %}{% endblock %}
 
 
 {% block page_content %}
 
     <div class="item-div">
-        <h1>{{ item.title }}</h1>
+        <h1>{{ post.title }}</h1>
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
             <div class="carousel-indicators">
               <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -17,13 +17,13 @@
             </div>
             <div class="carousel-inner">
               <div class="carousel-item active">
-                <img src="{{ img1 }}" class="d-block w-100 item-image2" alt="{{ item.title }}">
+                <img src="{{ img1 }}" class="d-block w-100 item-image2" alt="{{ post.title }}">
               </div>
               <div class="carousel-item">
-                <img src="{{ img2 }}" class="d-block w-100 item-image2" alt="{{ item.title }}">
+                <img src="{{ img2 }}" class="d-block w-100 item-image2" alt="{{ post.title }}">
               </div>
               <div class="carousel-item">
-                <img src="{{ img3 }}" class="d-block w-100 item-image2" alt="{{ item.title }}">
+                <img src="{{ img3 }}" class="d-block w-100 item-image2" alt="{{ post.title }}">
               </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -37,10 +37,10 @@
           </div>
 
           <div class="card-body info-tab">
-            <p><small class="text-muted test">{{ moment.include_moment() }}{{ moment(item.timestamp).fromNow() }}</small></p>
-            <a href="{{ url_for('main.user', username=item.giver.username)}}">
-          <h5 class="card-title">By {{ item.giver.username }}</h5></a>
-          <p class="card-text">{{ item.description }}</p>
+            <p><small class="text-muted test">{{ moment.include_moment() }}{{ moment(post.timestamp).fromNow() }}</small></p>
+            <a href="{{ url_for('main.user', username=post.giver.username)}}">
+          <h5 class="card-title">By {{ post.giver.username }}</h5></a>
+          <p class="card-text">{{ post.description }}</p>
           
         </div>
 
@@ -50,15 +50,15 @@
   
     
 <div class="category-button-div">
-    {% if current_user.is_authenticated and not current_user==item.giver %}
-    <a href="{{ url_for('main.contact_giver', item_id=item.id) }}"><button type="button"
-            class="btn btn-secondary button-custom">Contact {{ item.giver.username }}</button></a>
+    {% if current_user.is_authenticated and not current_user==post.giver %}
+    <a href="{{ url_for('main.contact_giver', item_id=post.id) }}"><button type="button"
+            class="btn btn-secondary button-custom">Contact {{ post.giver.username }}</button></a>
     {% endif %}
-    {% if current_user == item.giver %}
+    {% if current_user == post.giver %}
     <!-- Want the button to appear for admin as well -->
-    <a href="{{ url_for('main.edit_post', item_id=item.id) }}"><button type="button" class="btn btn-warning">Edit
+    <a href="{{ url_for('main.edit_post', item_id=post.id) }}"><button type="button" class="btn btn-warning">Edit
             Post</button></a>
-    <a href="{{ url_for('main.delete_post', item_id=item.id) }}"><button type="button" class="btn btn-danger">Delete
+    <a href="{{ url_for('main.delete_post', item_id=post.id) }}"><button type="button" class="btn btn-danger">Delete
             Post</button></a>
     {% endif %}
 </div>
@@ -66,16 +66,16 @@
 <div class="message-div">
 
     {% if messages %}
-        {% for message in item.messages|sort(reverse=True, attribute='timestamp')  %}
+        {% for message in post.messages|sort(reverse=True, attribute='timestamp')  %}
             {% if message.reply == False %}
                  <p class="asker">from <strong><a
                 href="{{ url_for('main.user', username=message.asker.username)}}">{{ message.asker.username}}</a></strong> --- {{ moment.include_moment() }}{{ moment(message.timestamp).fromNow() }}
                 </p>
                  <p class="bubble speech left">{{ message.description }}
-                {% if current_user == item.giver%}
-                    <a class="reply-tag" href="{{ url_for('main.reply', item_id=item.id, message_id=message.id )}}">Reply</a>{% endif %}
-                {% if message.replied == False and current_user == item.giver %}
-                    <a href="{{ url_for('main.mark_as_replied', item_id=item.id, message_id=message.id)}}">
+                {% if current_user == post.giver%}
+                    <a class="reply-tag" href="{{ url_for('main.reply', item_id=post.id, message_id=message.id )}}">Reply</a>{% endif %}
+                {% if message.replied == False and current_user == post.giver %}
+                    <a href="{{ url_for('main.mark_as_replied', item_id=post.id, message_id=message.id)}}">
                     <button class="btn btn-light button-custom" type="submit">Mark as Replied</button>
                     </a>
                 {% endif %}</p>
@@ -86,12 +86,12 @@
 
             {% if message.reply == True %}
                  <p class="giver">from <strong><a
-                href="{{ url_for('main.user', username=item.giver.username)}}">{{ item.giver.username}}</a>
+                href="{{ url_for('main.user', username=post.giver.username)}}">{{ post.giver.username}}</a>
                 </strong> to {{message.answered_user2}} --- {{ moment.include_moment() }}{{ moment(message.timestamp).fromNow() }}</p>
                 <p class="bubble speech right">{{ message.description }}
                     
                 {% if message.read == False and message.answered_user == current_user.id %}
-                    <a href="{{ url_for('main.mark_as_read', item_id=item.id, message_id=message.id)}}">
+                    <a href="{{ url_for('main.mark_as_read', item_id=post.id, message_id=message.id)}}">
                     <button class="btn btn-light button-custom" type="submit">Mark as Read</button>
                 {% endif %}
                

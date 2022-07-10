@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from app import create_app
 import hashlib
 import os
+import re
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -84,7 +85,13 @@ class Post(db.Model):
     messages = db.relationship("Message", backref=db.backref("question", cascade='all, delete'), lazy="dynamic")
     photos = db.Column(db.String(40), default='cart.jpg')
     photoss = db.relationship("Photo", backref=db.backref("post", cascade='all, delete-orphan', single_parent=True), lazy="dynamic")
-    
+    slug = db.Column(db.String(126), unique=True, index=True)
+
+    def generate_slug(self):
+        self.slug = f"{self.id}-" + re.sub(r'[^\w]+', '-', self.title.lower())
+        db.session.add(self)
+        db.session.commit()
+
     def __repr__(self):
         return '<Post:{}>'.format(self.title)
 

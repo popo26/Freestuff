@@ -17,7 +17,8 @@
 
   <div class="card-deck">
     <div class="card col-lg-3 col-md-4 each-item">
-      <a href="{{ url_for('main.each_item', item_id=post.id)}}"> 
+      
+      <a href="{{ url_for('main.each_slug_post', slug=post.slug)}}"> 
         <img class="card-img-top item-image" src="{{ photos_path }}{{ post.photos }}"
           alt="{{ post.title }}">
           

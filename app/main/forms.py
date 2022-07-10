@@ -87,5 +87,5 @@ class ContactGiverForm(FlaskForm):
     submit = SubmitField("Submit")
 
 class ReplyForm(FlaskForm):
-    description = TextAreaField('Reply', validators=[DataRequired()], render_kw={'rows':'10'})
+    description = TextAreaField('Reply message goes here.', validators=[DataRequired()], render_kw={'rows':'10'})
     submit = SubmitField("Reply")
