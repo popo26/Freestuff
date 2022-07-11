@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 {% import "_macros.html" as macros %}
 
-
-
-
 {% block title %}{{super()}}Index {% endblock %}
 
 
@@ -16,22 +13,15 @@
   {% for post in posts|sort(reverse=True, attribute='timestamp') %}
 
   <div class="card-deck">
-    <div class="card col-lg-3 col-md-4 each-item">
-      
+    <div class="card col-lg-3 col-md-4 col-sm-12 each-item">
       <a href="{{ url_for('main.each_slug_post', slug=post.slug)}}"> 
         <img class="card-img-top item-image" src="{{ photos_path }}{{ post.photos }}"
           alt="{{ post.title }}">
-          
         <div class="card-body">
-          <h5 class="card-title">{{ post.title }}</h5>
-      </a>
+          <h5 class="card-title">{{ post.title }}</h5></a>
       <p class="card-text"><small class="text-muted test">{{ moment.include_moment() }}{{ moment(post.timestamp).fromNow()}}</small></p>
-   
-     
-     
-   
+       </div>
     </div>
-  </div>
   {% else %}
   <p>There is no post.</p>
   {% endfor %}

@@ -7,13 +7,13 @@
 {{ moment.include_moment() }}
 <div class="item-div">
 
-  <h1 class="category-title">Category: {{ category }}</h1>
+  <h1>Category: {{ category }}</h1>
   {% if items %}
   {% for item in items|sort(reverse=True, attribute='timestamp') %}
 
   <div class="card-deck">
-    <div class="card col-lg-3 col-md-4 each-item">
-      <!-- <a href="{{ url_for('main.each_item', item_id=item.id)}}"> -->
+    <div class="card col-lg-3 col-md-4 col-sm-12 each-item">
+      
         <a href="{{ url_for('main.each_slug_post', slug=item.slug)}}">
         <img class="card-img-top item-image" src="{{ photos_path }}{{ item.photos }}" alt="{{ item.title }}">
         <div class="card-body">

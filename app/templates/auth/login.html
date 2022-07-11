@@ -6,7 +6,7 @@
 
 {% block category %}{% endblock %}
 {% block page_content %}
-<div class="form-div">
+<div class="form-div2">
 <form class='forms' method="POST" novalidate>
     <!-- {{ wtf.quick_form(form) }} -->
     {{ form.hidden_tag() }}
@@ -42,6 +42,6 @@
 
     </form>
 
-    <p>New User? <a href="{{ url_for('auth.register')}}">Click here to register</a></p>
+    <p class="new-user">New User? <a href="{{ url_for('auth.register')}}">Click here to register</a></p>
 </div>
 {% endblock  %}  

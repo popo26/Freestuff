@@ -51,6 +51,7 @@ a:hover {
     margin: auto auto 3% auto;
 }
 
+
 /* base.html */
 
 .content-div {
@@ -140,55 +141,22 @@ a:hover {
 	background-color: transparent !important;
 }
 
-/* .nav-items {
-	color:white;
-}
-
-.nav-items2:hover {
-	color: chartreuse;	
-}
-
-.navbar-nav>li>a {
-	color:white;
-	background-color: #333;
-}
-
-.navbar-nav>li>a:hover{
-	color:chartreuse;
-	background-color: #333;
-}
-
-.nav .open>a {
-	background-color:#333;
-	border-color: transparent;
-	color:white;
-}
-
-.nav .open>a:hover {
-	background-color:#333;
-	border-color: transparent;
-	color:white;
-}
-
-.dropdown-menu>li>a {
-	display:inline-block;
-}
-
-.navbar-nav .open .dropdown-menu>li>a:hover {
-	color:red;
-	background-color: transparent;
-} */
-
 
 .dropdown-div {
 	display:inline;
 	/* background-color:green; */
 }
 
-.form-div {
+.form-div1 {
 	display: inline-block;
 	/* background-color: blue; */
-	width:40%;
+	width:50%;
+}
+
+.form-div2 {
+	display: inline-block;
+	/* background-color: blue; */
+	width:80%;
 }
 
 .seach-field-div {
@@ -208,8 +176,8 @@ a:hover {
 }
 
 .index-div h3 {
-    margin-top: 2%;
-    margin-bottom: 3%;
+    margin-top: 5rem;
+    margin-bottom: 10rem;
 }
 
 .item-image {
@@ -223,7 +191,11 @@ a:hover {
     text-align: center;
 	background-color: #333;
 	color:white;
+	margin:auto;
+	overflow:hidden;	
+	height:400px;
 }
+
 
 /* each-item.html */
 .item-div {
@@ -233,7 +205,8 @@ a:hover {
 }
 
 .item-div h1 {
-	margin-bottom:3%;
+	margin-top:5rem;
+	margin-bottom:10rem;
 }
 
 .item-image2 {
@@ -291,11 +264,11 @@ a:hover {
 
 /* user.html */
 .user-item-list {
-    margin-top: 2%;
+    margin-top: 3rem;
 }
 
 .user-item-list h2 {
-    margin-bottom: 2%;
+    margin-bottom: 4rem;
 }
 
 .profile-div {
@@ -309,7 +282,7 @@ a:hover {
 
 .profile-div2 {
 	text-align: left;
-	margin-top: 2%;
+	margin-top: 3rem;
 }
 
 .profile-table {
@@ -332,23 +305,25 @@ a:hover {
 }
 
 .profile-buttons{
-	margin-top:3%;
-	margin-bottom:3%;
+	margin-top:3rem;
+	margin-bottom:3rem;
 }
 
 /* post-new-item.html */
+
 .post-new-item-div{
 	width:60%;
 	margin:auto;
+	padding-top:3rem;
 }
 
 .post-new-item-div h1 {
-    margin-bottom: 5%;
+    margin-bottom: 5rem;
 }
 
-.category-search-div {
+/* .category-search-div {
 	margin-bottom:16px;
-}
+} */
 
 /* contact-giver.html */
 .contact-giver-div h1 {
@@ -488,10 +463,6 @@ p.speech.right:after {
 }
 
 /* per_category.html */
-.category-title {
-	margin-bottom: 3%;
-	margin-top:2%;
-}
 
 .forms {
 	width:50%;
@@ -547,4 +518,11 @@ p.speech.right:after {
 	width:60%;
 	margin:auto;
 }
+
+/* login.html */
+
+.new-user {
+	margin-top:20px;
+}
+
 
