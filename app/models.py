@@ -195,7 +195,7 @@ class Message(db.Model):
     replied = db.Column(db.Boolean, default=False)
     read = db.Column(db.Boolean, default=False)
     answered_user = db.Column(db.Integer, default=0)
-    answered_user2 = db.Column(db.String(64), index=True)
+    answered_user2 = db.Column(db.String(64), index=True, default=0)
    
     
 login_manager.anonymous_user = AnonymousUser

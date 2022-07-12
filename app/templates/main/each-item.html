@@ -52,16 +52,20 @@
 <div class="category-button-div">
     {% if current_user.is_authenticated and not current_user==item.giver %}
     <a href="{{ url_for('main.contact_giver', item_id=item.id) }}"><button type="button"
-            class="btn btn-secondary button-custom">Contact {{ item.giver.username }}</button></a>
+            class="btn btn-secondary button-custom">Contact2 {{ item.giver.username }}</button></a>
     {% endif %}
-    {% if current_user == item.giver %}
+
+    {% if current_user == item.giver or current_user.is_administrator() %}
     <!-- Want the button to appear for admin as well -->
-    <a href="{{ url_for('main.edit_post', item_id=item.id) }}"><button type="button" class="btn btn-warning">Edit
+    <a href="{{ url_for('main.edit_post', item_id=item.id) }}"><button type="button" class="btn btn-warning">Edit2
             Post</button></a>
     <a href="{{ url_for('main.delete_post', item_id=item.id) }}"><button type="button" class="btn btn-danger">Delete
             Post</button></a>
     {% endif %}
+
 </div>
+
+
 
 <div class="message-div">
 

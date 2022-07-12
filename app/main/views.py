@@ -874,16 +874,16 @@ def edit_profile():
         current_user.name = form.name.data
         current_user.location = form.location.data
         current_user.email = form.email.data
-        current_user.username = form.username.data
+        # current_user.username = form.username.data
         current_user.bio = form.bio.data
         db.session.add(current_user)
         db.session.commit()
         flash("Your profile has been updated! Well Done!")
-        return redirect(url_for(".user", username=current_user.username, year=YEAR))
+        return redirect(url_for(".user", username=current_user.username))
     form.name.data = current_user.name
     form.location.data = current_user.location
     form.bio.data = current_user.bio
-    form.username.data = current_user.username
+    # form.username.data = current_user.username
     form.email.data = current_user.email
     return render_template("main/user_edit_profile.html", form=form, year=YEAR)
 
@@ -893,21 +893,25 @@ def edit_profile():
 def admin_edit_profile(id):
     form = AdminLevelEditProfileForm()
     user = User.query.filter_by(id=id).first()
+    print(user.username)
+    print(user.id)
     if form.validate_on_submit():
         user.name = form.name.data
         user.location = form.location.data
         user.bio = form.bio.data
         user.confirmed = form.confirmed.data
         user.username = form.username.data
+        user.email = form.email.data
         user.role_id = form.role.data 
         db.session.add(user)
         db.session.commit()
         flash("This user profile has been updated by Administrator.")
-        return redirect(url_for('.user', username=user.username, year=YEAR))
+        return redirect(url_for('.user', username=user.username))
     form.name.data = user.name
     form.location.data = user.location
     form.bio.data = user.bio
     form.confirmed.data = user.confirmed
     form.role.data = user.role
     form.username.data = user.username
-    return render_template("main/admin_edit_profile.html", form=form, year=YEAR)
+    form.email.data = user.email
+    return render_template("main/admin_edit_profile.html", form=form, user=user, year=YEAR)

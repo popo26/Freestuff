@@ -6,15 +6,66 @@
 {% block category %}{% endblock %}
 
 {% block page_content %}
-<h1>Edit Your Profile</h1>
 
-<form method="POST">
-<!-- {{ form.hidden_tag() }}
-{{ form.name.label }}{{ form.name(id='my-field-id') }}
-{{ form.submit() }} -->
+<div class="post-new-item-div">
+<h1>Edit Profile of {{user.username}}</h1>
 
-{{ wtf.quick_form(form) }}
+<form method="POST" novalidate>
+
+ 
+  {{ form.hidden_tag() }}
+    
+    <div class="mb-3">
+        {{ form.name.label }}
+        {{ form.name(class='form-control') }}</div>
+
+    <div class="mb-3">
+        {{ form.username.label }}
+        {{ form.username(class='form-control')}}
+
+        {% if form.username.errors %}
+        {% for error in form.username.errors %}
+        <span class="text-danger">{{ error }}</span><br>
+        {% endfor %}
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.confirmed() }}
+        {{ form.confirmed.label }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.role.label }}
+          {{ form.role(class='form-control') }}
+          </div>
+
+      <div class="mb-3">
+        {{form.email.label}}
+        {{form.email(class="form-control")}}
+
+        <!-- {% if form.email.errors %}
+        {% for error in form.email.errors %}
+        <span class="text-danger">{{ error }}</span><br>
+        {% endfor %}
+        {% endif %} -->
+      </div>
+
+
+      <div class="mb-3">
+        {{form.location.label}}
+        {{form.location(class="form-control")}}
+      </div>
+
+      <div class="mb-3">
+        {{form.bio.label}}
+        {{form.bio(class="form-control")}}
+      </div>
+      
+      <button type="submit" class="btn btn-secondary btn-lg button-custom">Edit</button>
 
 </form>
+
+</div>
 
 {% endblock %}
