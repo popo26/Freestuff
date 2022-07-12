@@ -19,6 +19,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from base64 import b64encode
 
+
 # UPLOAD_FOLDER = '/static/uploads'
 # ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
@@ -238,7 +239,7 @@ def pets():
 @main.route("/clothing")
 def clothing():
     items = Post.query.filter_by(category_type=Category.CLOTHING)
-    category="clothing"
+    category="Clothing"
     page = request.args.get('page', 1, type=int)
     photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     pagination = \
@@ -891,18 +892,21 @@ def edit_profile():
 @login_required
 @admin_required
 def admin_edit_profile(id):
-    form = AdminLevelEditProfileForm()
+    
     user = User.query.filter_by(id=id).first()
-    print(user.username)
-    print(user.id)
+    form = AdminLevelEditProfileForm(
+        original_username=user.username, 
+        original_email=user.email
+        )
+
     if form.validate_on_submit():
-        user.name = form.name.data
-        user.location = form.location.data
-        user.bio = form.bio.data
+        user.name = request.form.get('name')
+        user.location = request.form.get('location')
+        user.bio = request.form.get('bio')
         user.confirmed = form.confirmed.data
-        user.username = form.username.data
-        user.email = form.email.data
-        user.role_id = form.role.data 
+        user.username = request.form.get('username')
+        user.email = request.form.get('email')
+        user.role_id = request.form.get('role')
         db.session.add(user)
         db.session.commit()
         flash("This user profile has been updated by Administrator.")
@@ -914,4 +918,5 @@ def admin_edit_profile(id):
     form.role.data = user.role
     form.username.data = user.username
     form.email.data = user.email
+    
     return render_template("main/admin_edit_profile.html", form=form, user=user, year=YEAR)

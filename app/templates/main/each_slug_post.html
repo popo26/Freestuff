@@ -40,19 +40,15 @@
             <p><small class="text-muted test">{{ moment.include_moment() }}{{ moment(post.timestamp).fromNow() }}</small></p>
             <a href="{{ url_for('main.user', username=post.giver.username)}}">
           <h5 class="card-title">By {{ post.giver.username }}</h5></a>
-          <p class="card-text">{{ post.description }}</p>
+          <h3 class="card-text post-description">{{ post.description }}</h3>
           
         </div>
-
     </div>
-    
-
-  
     
 <div class="category-button-div">
     {% if current_user.is_authenticated and not current_user==post.giver %}
     <a href="{{ url_for('main.contact_giver', item_id=post.id) }}"><button type="button"
-            class="btn btn-secondary button-custom">Contact {{ post.giver.username }}</button></a>
+            class="btn btn-secondary btn-lg button-custom">Contact {{ post.giver.username }}</button></a>
     {% endif %}
     {% if current_user == post.giver or current_user.is_administrator() %}
     <a href="{{ url_for('main.edit_post', item_id=post.id) }}"><button type="button" class="btn btn-warning">Edit

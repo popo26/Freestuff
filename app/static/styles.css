@@ -1,5 +1,5 @@
 .test {
-	color:white !important;
+	color:grey !important;
 }
 
 .flask-moment {
@@ -33,7 +33,13 @@ footer {
     text-align: center;
     color: white;
     height:30px;
+	color:grey;
 }
+
+footer p {
+	line-height: 40px;
+}
+
 
 /* end */
 
@@ -165,9 +171,6 @@ a:hover {
 	
 }
 
-/* .search_button {
-	display: inline-block;
-} */
 
 /* index.html */
 .index-div {
@@ -177,7 +180,7 @@ a:hover {
 
 .index-div h3 {
     margin-top: 5rem;
-    margin-bottom: 10rem;
+    margin-bottom: 6rem;
 }
 
 .item-image {
@@ -197,7 +200,7 @@ a:hover {
 }
 
 
-/* each-item.html */
+/* each_slug_post.html */
 .item-div {
     width:100%;
     text-align: center;
@@ -206,7 +209,7 @@ a:hover {
 
 .item-div h1 {
 	margin-top:5rem;
-	margin-bottom:10rem;
+	margin-bottom:6rem;
 }
 
 .item-image2 {
@@ -246,7 +249,12 @@ a:hover {
 
 
 .category-button-div {
-	margin: 2% auto 2% auto;
+	margin: 2rem auto 2rem auto;
+}
+
+.post-description {
+	padding-top:3rem;
+	padding-bottom: 3rem;
 }
 
 .item-table {
@@ -278,11 +286,13 @@ a:hover {
 
 .profile-div h1 {
 	font-size:xx-large;
+	color: chartreuse;
 }
 
 .profile-div2 {
 	text-align: left;
 	margin-top: 3rem;
+	font-size:small;
 }
 
 .profile-table {
@@ -524,5 +534,7 @@ p.speech.right:after {
 .new-user {
 	margin-top:20px;
 }
+
+
 
 
