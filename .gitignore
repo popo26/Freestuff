@@ -10,3 +10,5 @@ dev_setup.sh
 msearch/*
 migrations/*
 /uploads/*
+.indexes/*
+.pytest_cache

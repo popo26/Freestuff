@@ -7,9 +7,11 @@ from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_moment import Moment
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 from flask_msearch import Search
 from sqlalchemy import MetaData
+from flask_wtf.csrf import CSRFProtect
+
 
 
 load_dotenv()
@@ -32,19 +34,24 @@ moment = Moment()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 search = Search()
+csrf = CSRFProtect()
+
+
+
+
 
 def create_app(config_name = "default"):
     app = Flask(__name__)
     
-    migrate = Migrate(app, db, render_as_batch=True)
     
+    migrate = Migrate(app, db, render_as_batch=True)
+        
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
     UPLOAD_FOLDER = "static/upload"
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.config["UPLOADED_PHOTOS_DEST"] = "static/uploads"
-    # app.configure_uploads(app, photos)
-    # photos.init_app(app, photos)
+    
     
     bootstrap.init_app(app)
     mail.init_app(app)
@@ -53,12 +60,20 @@ def create_app(config_name = "default"):
     moment.init_app(app)
     migrate.init_app(app, db)
     search.init_app(app)
+    csrf.init_app(app)
 
     app.app_context().push()
+
+    # db.create_all()
+
+    # from flask_migrate import upgrade
+    # upgrade()
+    # from app.models import Role
+    # Role.insert_roles()
    
    #When creating a new db below 3 lines need to be commented since it cannot access models
-    from app.models import Post
-    search.create_index(Post)
+    # from app.models import Post
+    # search.create_index(Post)
     # search.create_index(Post, update=True)
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)
@@ -68,7 +83,39 @@ def create_app(config_name = "default"):
     app.register_blueprint(main_blueprint)
     app.register_blueprint(auth_blueprint)
 
+    if app.config['HTTPS_REDIRECT']:
+        from flask_talisman import Talisman
+        Talisman(app, content_security_policy={
+                'default-src': [
+                    "'self'",
+                    'cdnjs.cloudflare.com',
+                ],
+                # allow images from anywhere, 
+                #   including unicornify.pictures
+                'img-src': '*'
+            }
+        )
+    
+    from flask_migrate import upgrade
+
+    @app.cli.command()
+    def deploy():
+        """ Run deployment tasks """
+        # migrate database
+        upgrade()
+        db.create_all()
+        from app.models import Role
+        Role.insert_roles()
+
+        from app.models import Post
+        search.create_index(Post)
+        # search.create_index(Post, update=True)
+        # search.create_index(delete=True)
+        # search.create_index(Post, delete=True)
+
     return app
+
+
 
 
 
@@ -92,13 +139,6 @@ def current_app(config_name="testing"):
     search.init_app(app)
 
     app.app_context().push()
-   
-   #When creating a new db below 3 lines need to be commented since it cannot access models
-    # from app.models import Post
-    # search.create_index(Post)
-    # search.create_index(Post, update=True)
-    # search.create_index(delete=True)
-    # search.create_index(Post, delete=True)
     
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
