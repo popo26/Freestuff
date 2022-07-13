@@ -38,11 +38,8 @@ csrf = CSRFProtect()
 
 
 
-
-
 def create_app(config_name = "default"):
     app = Flask(__name__)
-    
     
     migrate = Migrate(app, db, render_as_batch=True)
         
@@ -102,7 +99,7 @@ def create_app(config_name = "default"):
     def deploy():
         """ Run deployment tasks """
         # migrate database
-        db.create_all()
+        
         upgrade()
         
         from app.models import Role
