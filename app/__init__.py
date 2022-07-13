@@ -102,6 +102,7 @@ def create_app(config_name = "default"):
     def deploy():
         """ Run deployment tasks """
         # migrate database
+        db.create_all()
         upgrade()
         db.create_all()
         from app.models import Role
