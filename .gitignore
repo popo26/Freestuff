@@ -7,8 +7,6 @@ dev_setup.sh
 *.jpg
 *.jpeg
 *.pdf
-msearch/*
-migrations/*
 /uploads/*
 .indexes/*
 .pytest_cache
