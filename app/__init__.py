@@ -69,3 +69,40 @@ def create_app(config_name = "default"):
     app.register_blueprint(auth_blueprint)
 
     return app
+
+
+
+def current_app(config_name="testing"):
+    app = Flask(__name__)
+    
+    migrate = Migrate(app, db, render_as_batch=True)
+    
+    app.config.from_object(config[config_name])
+    config[config_name].init_app(app)
+    UPLOAD_FOLDER = "static/upload"
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config["UPLOADED_PHOTOS_DEST"] = "static/uploads"
+  
+    bootstrap.init_app(app)
+    mail.init_app(app)
+    db.init_app(app)
+    login_manager.init_app(app)
+    moment.init_app(app)
+    migrate.init_app(app, db)
+    search.init_app(app)
+
+    app.app_context().push()
+   
+   #When creating a new db below 3 lines need to be commented since it cannot access models
+    # from app.models import Post
+    # search.create_index(Post)
+    # search.create_index(Post, update=True)
+    # search.create_index(delete=True)
+    # search.create_index(Post, delete=True)
+    
+    from .main import main as main_blueprint
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(main_blueprint)
+    app.register_blueprint(auth_blueprint)
+
+    return app
