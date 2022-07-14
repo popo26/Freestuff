@@ -41,7 +41,8 @@ csrf = CSRFProtect()
 def create_app(config_name = "default"):
     app = Flask(__name__)
     
-    migrate = Migrate(app, db, render_as_batch=True)
+    # migrate = Migrate(app, db, render_as_batch=True)
+    migrate = Migrate(app, db)
         
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
@@ -69,8 +70,8 @@ def create_app(config_name = "default"):
     # Role.insert_roles()
    
    #When creating a new db below 3 lines need to be commented since it cannot access models
-    # from app.models import Post
-    # search.create_index(Post)
+    from app.models import Post
+    search.create_index(Post)
     # search.create_index(Post, update=True)
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)
@@ -105,8 +106,8 @@ def create_app(config_name = "default"):
         from app.models import Role
         Role.insert_roles()
 
-        from app.models import Post
-        search.create_index(Post)
+        # from app.models import Post
+        # search.create_index(Post)
         # search.create_index(Post, update=True)
         # search.create_index(delete=True)
         # search.create_index(Post, delete=True)

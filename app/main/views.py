@@ -18,6 +18,7 @@ import os
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from base64 import b64encode
+from flask_msearch import Search
 
 
 # UPLOAD_FOLDER = '/static/uploads'
@@ -69,6 +70,7 @@ def index():
 
 @main.route("/search")
 def search():
+    
     keyword = request.args.get('query')
     results = Post.query.msearch(keyword, fields=['title','description']).all()
     photos_path = os.path.join(current_app.root_path, '/static/uploads/')

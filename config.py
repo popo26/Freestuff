@@ -1,19 +1,32 @@
 import os
 from dotenv import load_dotenv
-
-
-
+import psycopg2
 
 load_dotenv()
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+# conn=psycopg2.connect(
+# #   database=os.getenv('DATABASE_URL'),
+#   user=os.getenv("DATABASE_USER"),
+#   password=os.getenv("DATABASE_PASSWORD"),
+# #   port=5432,
+#   database='freestuff_db',
+# #   user='freestuff_admin',
+# #   password='yBhY4onCzYXLrsgzj5NT',
+#   port=5432,
+# )
+
 
 
 class Config():
     SECRET_KEY = os.getenv("SECRET_KEY")
-    SQLALCHEMY_DATABASE_URI = \
-        'sqlite:///' + os.path.join(basedir, "dev.sqlite")
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    # or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
+    
+    # DATABASE_USER=os.getenv("DATABASE_USER")
+    # DATABASE_PASSWORD=os.getenv("DATABASE_PASSWORD")
+    
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WHOOSH_BASE = "whoosh"
 
@@ -52,6 +65,7 @@ class TestingConfig(Config):
 
 
 class ProductionConfig(Config):
+    DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         f'sqlite:///{os.path.join(basedir, "data.sqlite")}'
 
