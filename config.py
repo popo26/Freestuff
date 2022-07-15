@@ -1,21 +1,13 @@
 import os
 from dotenv import load_dotenv
 import psycopg2
+from flask_s3 import FlaskS3
+import boto3
 
 load_dotenv()
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# conn=psycopg2.connect(
-# #   database=os.getenv('DATABASE_URL'),
-#   user=os.getenv("DATABASE_USER"),
-#   password=os.getenv("DATABASE_PASSWORD"),
-# #   port=5432,
-#   database='freestuff_db',
-# #   user='freestuff_admin',
-# #   password='yBhY4onCzYXLrsgzj5NT',
-#   port=5432,
-# )
 
 
 
@@ -48,10 +40,18 @@ class Config():
 
     POSTS_PER_PAGE = 12  
 
-    UPLOAD_FOLDER = os.path.join(basedir, "/static/uploads")
+    # UPLOAD_FOLDER = os.path.join(basedir, "/static/uploads")
+    UPLOAD_FOLDER = os.path.join(os.getenv('S3_BUCKET_PATH'), "/static/uploads")
     ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
     HTTPS_REDIRECT = False
+
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    ACL = 'public-read'
+    S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME')
+    S3_REGION = os.getenv('S3_REGION') 
+    S3_BUCKET_PATH = os.getenv('S3_BUCKET_PATH')
    
 
     @staticmethod

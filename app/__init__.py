@@ -11,8 +11,8 @@ from flask_migrate import Migrate, upgrade
 from flask_msearch import Search
 from sqlalchemy import MetaData
 from flask_wtf.csrf import CSRFProtect
-
-
+from flask_s3 import FlaskS3
+import boto3
 
 load_dotenv()
 
@@ -35,6 +35,12 @@ login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 search = Search()
 csrf = CSRFProtect()
+s3 = boto3.client(
+    's3',
+    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
+)
+
 
 
 
@@ -46,11 +52,16 @@ def create_app(config_name = "default"):
         
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
-    UPLOAD_FOLDER = "static/upload"
+   
+    UPLOAD_FOLDER = "static/uploads"
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    app.config["UPLOADED_PHOTOS_DEST"] = "static/uploads"
+    # app.config["UPLOADED_PHOTOS_DEST"] = "static/uploads"
+    app.config["UPLOADED_PHOTOS_DEST"] = os.path.join(app.config['S3_BUCKET_PATH'], 'static/uploads')
+    app.config['S3_BUCKET_NAME'] = os.getenv('S3_BUCKET_NAME')
+    # s3 = FlaskS3(app)
+
     
-    
+    # s3.init_app(app)
     bootstrap.init_app(app)
     mail.init_app(app)
     db.init_app(app)
@@ -70,8 +81,8 @@ def create_app(config_name = "default"):
     # Role.insert_roles()
    
    #When creating a new db below 3 lines need to be commented since it cannot access models
-    from app.models import Post
-    search.create_index(Post)
+    # from app.models import Post
+    # search.create_index(Post)
     # search.create_index(Post, update=True)
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)

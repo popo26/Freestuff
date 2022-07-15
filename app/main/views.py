@@ -14,12 +14,15 @@ from ..models import Permission, Category, Message, Photo
 from app import config
 from app.email import send_email
 from config import Config
-import os
+import os, json, boto3
+from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from base64 import b64encode
 from flask_msearch import Search
+import boto3
 
+load_dotenv()
 
 # UPLOAD_FOLDER = '/static/uploads'
 # ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -31,17 +34,36 @@ def save_photos(form_photos):
     _, f_ext = os.path.splitext(form_photos.filename)
     photos_fn = random_hex + f_ext
     photos_path = os.path.join(current_app.root_path, 'static/uploads', photos_fn)
+    bucket_name = current_app.config['S3_BUCKET_NAME']
+    s3 = boto3.resource('s3')
+    
     output_size = (500, 500)
     i = Image.open(form_photos)
     i.thumbnail(output_size)
     i.save(photos_path)
+    
+    s3.meta.client.upload_file(photos_path, bucket_name, photos_fn)
+    
     return photos_fn
+
+#Work in progress - Serve image from S3
+@main.route('/download/<resource>')
+def download_image(resource):
+    """ resource: name of the file to download"""
+    s3 = boto3.client('s3',
+                      aws_access_key_id=current_app.config['AWS_ACCESS_KEY_ID'],
+                      aws_secret_access_key=current_app.config['AWS_SECRET_ACCESS_KEY'])
+
+    url = s3.generate_presigned_url('get_object', Params = {'Bucket': current_app.config['S3_BUCKET_NAME'], 'Key': resource}, ExpiresIn = 100)
+    return redirect(url, code=302)
 
 @main.route("/", methods=['GET', "POST"])
 def index():
     posts = Post.query.all()
     posts_count = Post.query.count()
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     '''work in progress'''
     # photos = Photo.query.filter_by(post_id=item_id).first()
     # img1 = url_for('static', filename='uploads/' + photos.photo_one)
@@ -73,7 +95,9 @@ def search():
     
     keyword = request.args.get('query')
     results = Post.query.msearch(keyword, fields=['title','description']).all()
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     #pagination seems to be working?
     page = request.args.get('page', 1, type=int)
     pagination = \
@@ -97,7 +121,9 @@ def home_living():
     items = Post.query.filter_by(category_type=Category.HOME_LIVING)
     category="Home&Living"
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     pagination = \
         Post.query.filter_by(category_type=Category.HOME_LIVING).paginate(
             page,
@@ -118,7 +144,9 @@ def kitchen():
     items = Post.query.filter_by(category_type=Category.KITCHEN)
     category="Kitchen"
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     pagination = \
         Post.query.filter_by(category_type=Category.KITCHEN).paginate(
             page,
@@ -138,7 +166,9 @@ def baby():
     items = Post.query.filter_by(category_type=Category.BABY)
     category="Baby"
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     pagination = \
         Post.query.filter_by(category_type=Category.BABY).paginate(
             page,
@@ -159,7 +189,9 @@ def books():
     items = Post.query.filter_by(category_type=Category.BOOKS)
     category="Books"
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     pagination = \
         Post.query.filter_by(category_type=Category.BOOKS).paginate(
             page,
@@ -180,7 +212,9 @@ def craft():
     items = Post.query.filter_by(category_type=Category.CRAFT)
     category="Craft"
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     pagination = \
         Post.query.filter_by(category_type=Category.CRAFT).paginate(
             page,
@@ -201,7 +235,9 @@ def electronics():
     items = Post.query.filter_by(category_type=Category.ELECTRONICS)
     category="Electronics"
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     pagination = \
         Post.query.filter_by(category_type=Category.ELECTRONICS).paginate(
             page,
@@ -222,7 +258,9 @@ def pets():
     items = Post.query.filter_by(category_type=Category.PETS)
     category="Pets"
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     pagination = \
         Post.query.filter_by(category_type=Category.PETS).paginate(
             page,
@@ -243,7 +281,9 @@ def clothing():
     items = Post.query.filter_by(category_type=Category.CLOTHING)
     category="Clothing"
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     pagination = \
         Post.query.filter_by(category_type=Category.CLOTHING).paginate(
             page,
@@ -264,7 +304,9 @@ def bathroom():
     items = Post.query.filter_by(category_type=Category.BATHROOM)
     category="Bathroom"
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     pagination = \
         Post.query.filter_by(category_type=Category.BATHROOM).paginate(
             page,
@@ -285,7 +327,9 @@ def toys():
     items = Post.query.filter_by(category_type=Category.TOYS)
     category="Toys"
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     pagination = \
         Post.query.filter_by(category_type=Category.TOYS).paginate(
             page,
@@ -306,7 +350,9 @@ def jewellery():
     items = Post.query.filter_by(category_type=Category.JEWELLERY)
     category="Jewellery"
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+    photos_path = current_app.config['S3_BUCKET_PATH']
+
     pagination = \
         Post.query.filter_by(category_type=Category.JEWELLERY).paginate(
             page,
@@ -922,3 +968,35 @@ def admin_edit_profile(id):
     form.email.data = user.email
     
     return render_template("main/admin_edit_profile.html", form=form, user=user, year=YEAR)
+
+# @main.route('/sign_s3/')
+# def sign_s3():
+#   S3_BUCKET = os.getenv('S3_BUCKET')
+
+#   file_name = request.args.get('file_name')
+#   file_type = request.args.get('file_type')
+
+#   s3 = boto3.client('s3')
+
+#   presigned_post = s3.generate_presigned_post(
+#     Bucket = S3_BUCKET,
+#     Key = file_name,
+#     Fields = {"acl": "public-read", "Content-Type": file_type},
+#     Conditions = [
+#       {"acl": "public-read"},
+#       {"Content-Type": file_type}
+#     ],
+#     ExpiresIn = 3600
+#   )
+
+#   return json.dumps({
+#     'data': presigned_post,
+#     'url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, file_name)
+#   })
+
+
+
+
+# if __name__ == '__main__':
+#   port = int(os.environ.get('PORT', 5000))
+#   app.run(host='0.0.0.0', port = port)
