@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 import psycopg2
-from flask_s3 import FlaskS3
+# from flask_s3 import FlaskS3
 import boto3
 
 load_dotenv()
@@ -41,7 +41,7 @@ class Config():
     POSTS_PER_PAGE = 12  
 
     # UPLOAD_FOLDER = os.path.join(basedir, "/static/uploads")
-    UPLOAD_FOLDER = os.path.join(os.getenv('S3_BUCKET_PATH'), "/static/uploads")
+    UPLOAD_FOLDER = os.getenv('S3_BUCKET_PATH')
     ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
     HTTPS_REDIRECT = False

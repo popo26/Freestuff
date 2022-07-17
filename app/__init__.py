@@ -11,7 +11,7 @@ from flask_migrate import Migrate, upgrade
 from flask_msearch import Search
 from sqlalchemy import MetaData
 from flask_wtf.csrf import CSRFProtect
-from flask_s3 import FlaskS3
+# from flask_s3 import FlaskS3
 import boto3
 
 load_dotenv()
