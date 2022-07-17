@@ -77,8 +77,8 @@ def create_app(config_name = "default"):
     # Role.insert_roles()
    
    #When creating a new db below 3 lines need to be commented since it cannot access models
-    # from app.models import Post
-    # search.create_index(Post)
+    from app.models import Post
+    search.create_index(Post)
     # search.create_index(Post, update=True)
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)
