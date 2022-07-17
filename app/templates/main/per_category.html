@@ -15,7 +15,7 @@
     <div class="card col-lg-3 col-md-4 col-sm-12 each-item">
       
         <a href="{{ url_for('main.each_slug_post', slug=item.slug)}}">
-        <img class="card-img-top item-image" src="{{ photos_path }}{{ item.photos }}" alt="{{ item.title }}">
+        <img class="card-img-top item-image" src="{{ url_for('main.download_image', resource=item.photos) }}" alt="{{ item.title }}">
         <div class="card-body">
           <h5 class="card-title">{{ item.title }}</h5></a>
           <p class="card-text"><small class="text-muted test">{{ moment(item.timestamp).fromNow() }}</small></p>

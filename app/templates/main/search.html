@@ -16,7 +16,7 @@
       
       <a href="{{ url_for('main.each_slug_post', slug=result.slug) }}">
         <div class="img-div">
-      <img class="card-img-top item-image" src="{{ photos_path }}{{ result.photos }}" alt="{{ result.title }}">
+      <img class="card-img-top item-image" src="{{ url_for('main.download_image', resource=result.photos) }}" alt="{{ result.title }}">
     </div>
       <div class="card-body">
         <h5 class="card-title">{{ result.title }}</h5></a>

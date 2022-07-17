@@ -408,31 +408,27 @@ def jewellery():
 @main.route('/item/<slug>')
 def each_slug_post(slug):
     post = Post.query.filter_by(slug=slug).first_or_404()
-    # return render_template('main/each_slug_post.html', posts=[post])
-    print(post.slug)
-
-    # item = Post.query.filter_by(id=item_id).first()
     messages = Message.query.filter_by(post_id=post.id).all()
-    # print(item.id)
-    # print(item.photos)
     photos = Photo.query.filter_by(post_id=post.id).first()
-    # print(photos)
-    # print(photos.photo_one)
+  
     if photos == None:
-        img1 = url_for('static', filename='cart.jpg' )
-        # img1 = os.path.join('/app/static/default_image', 'cart.jpg')
+        # img1 = url_for('static', filename='cart.jpg' )
+        img1 = url_for('main.download_image', resource='cart.jpg')
     else:
-        img1 = url_for('static', filename='uploads/' + photos.photo_one)
+        # img1 = url_for('static', filename='uploads/' + photos.photo_one)
+        img1 = url_for('main.download_image', resource=photos.photo_one)
     if photos == None:
-        img2 = url_for('static', filename='cart.jpg' )
-        # img2 = os.path.join('/app/static/default_image', 'cart.jpg')
+        # img2 = url_for('static', filename='cart.jpg' )
+        img2 = url_for('main.download_image', resource='cart.jpg')
     else:
-        img2 = url_for('static', filename='uploads/' + photos.photo_two)
+        # img2 = url_for('static', filename='uploads/' + photos.photo_two)
+        img2 = url_for('main.download_image', resource=photos.photo_two)
     if photos == None:
-        img3 = url_for('static', filename='cart.jpg' )
-        # img2 = os.path.join('/app/static/default_image', 'cart.jpg')
+        # img3 = url_for('static', filename='cart.jpg' )
+        img3 = url_for('main.download_image', resource='cart.jpg')
     else:
-        img3 = url_for('static', filename='uploads/' + photos.photo_three)
+        # img3 = url_for('static', filename='uploads/' + photos.photo_three)
+        img3 = url_for('main.download_image', resource=photos.photo_three)
    
 
     return render_template("main/each_slug_post.html", 
@@ -514,13 +510,6 @@ def post_new_item():
         db.session.add(photo)
         db.session.commit()
 
-        # db.session.add(post)
-        # db.session.add(photo)
-        # db.session.commit()
-        # photo.post_id = post.id
-        # db.session.add(photo)
-        # db.session.commit()
-
         post.generate_slug()
 
         flash("Thank you for posting a new free stuff!")
@@ -535,113 +524,172 @@ def edit_post(item_id):
     p_form = PhotoForm()
     item = Post.query.filter_by(id=item_id).first()
     photos = Photo.query.filter_by(post_id=item_id).first()
-    print(f"Item ID is {item.id}")
-    # print(f"Photos ID is {photos.id}")
+    print(f"Item is {item}")
+
+    bucket_name = current_app.config['S3_BUCKET_NAME']
+    bucket_path = current_app.config['S3_BUCKET_PATH']
+    s3 = boto3.resource('s3')  
+    s3_bucket = s3.Bucket(bucket_name)
+    s3_client = boto3.client('s3')
         
     if form.validate_on_submit()\
         and p_form.validate_on_submit():
-        # if form.photos.data:
-        #     photos_file = save_photos(form.photos.data)
-        #     item.photos = photos_file
+    
         if p_form.photo_one.data\
             or p_form.photo_two.data\
             or p_form.photo_three.data:
-            if p_form.photo_one.data:
+            print(f'p_form.photo_one.data {p_form.photo_one.data}')
+            print(f'photos.photo_one {photos.photo_one}')
+
+            if p_form.photo_one.data == None\
+                and photos.photo_one:
+                 print('pass for photo1')
+                 pass
+
+            elif p_form.photo_one.data\
+                 and p_form.photo_one.data != photos.photo_one\
+                 and photos.photo_one == 'cart.jpg':
+          
                 photo_file_one = save_photos(p_form.photo_one.data)
                 p_form.photo_one = photo_file_one
                 photos.photo_one = photo_file_one
                 photos.photo_one_name = photo_file_one
-                print('passed here1')
+                print('you are here')
+            
+            elif p_form.photo_one.data\
+                 and p_form.photo_one.data != photos.photo_one\
+                 and photos.photo_one != 'cart.jpg':
+                old_photo_one_path = os.path.join('app/static/uploads', photos.photo_one)
+                os.remove(old_photo_one_path)
+                s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_one)
+                photo_file_one = save_photos(p_form.photo_one.data)
+                p_form.photo_one = photo_file_one
+                photos.photo_one = photo_file_one
+                photos.photo_one_name = photo_file_one
+                print('passed here1 edit')
+
             else:
                 photo_file_one = None
                 p_form.photo_one = photo_file_one
-            if p_form.photo_two.data:  
-                print('passed here2') 
+                print('else for photo one')
+
+            if p_form.photo_two.data == None\
+                and photos.photo_two:
+                 print('pass for photo2')
+                 pass
+
+            elif p_form.photo_two.data\
+                 and p_form.photo_two.data != photos.photo_two\
+                 and photos.photo_two == 'cart.jpg':
+            
                 photo_file_two = save_photos(p_form.photo_two.data)
                 p_form.photo_two = photo_file_two
                 photos.photo_two = photo_file_two
                 photos.photo_two_name = photo_file_two
-                print('passed here3')
+                print('you are here for photo 2')
+                
+            elif p_form.photo_two.data\
+                 and p_form.photo_two.data != photos.photo_two\
+                 and photos.photo_two != 'cart.jpg': 
+                old_photo_two_path = os.path.join('app/static/uploads', photos.photo_two)
+                os.remove(old_photo_two_path)
+                s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_two) 
+                print('passed here2 edit') 
+                photo_file_two = save_photos(p_form.photo_two.data)
+                p_form.photo_two = photo_file_two
+                photos.photo_two = photo_file_two
+                photos.photo_two_name = photo_file_two
+                
             else:
                 photo_file_two = None
                 p_form.photo_two = photo_file_two
-            if p_form.photo_three.data:
-                print('passed here4')
+                print('passed here3 edit')
+
+            if p_form.photo_three.data == None\
+                and photos.photo_three:
+                 print('pass for photo3')
+                 pass
+
+            elif p_form.photo_three.data\
+                 and p_form.photo_three.data != photos.photo_three\
+                 and photos.photo_three == 'cart.jpg':
+             
                 photo_file_three = save_photos(p_form.photo_three.data)
                 p_form.photo_three = photo_file_three
                 photos.photo_three = photo_file_three
                 photos.photo_three_name = photo_file_three
-                print('passed here5')
+
+            elif p_form.photo_three.data\
+                 and p_form.photo_three.data != photos.photo_three\
+                 and photos.photo_three != 'cart.jpg':
+                old_photo_three_path = os.path.join('app/static/uploads', photos.photo_three)
+                os.remove(old_photo_three_path)
+                s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_three) 
+                print('passed here4 edit')
+                photo_file_three = save_photos(p_form.photo_three.data)
+                p_form.photo_three = photo_file_three
+                photos.photo_three = photo_file_three
+                photos.photo_three_name = photo_file_three
+                print('passed here5 edit')
             else:
                 photo_file_three = None
                 p_form.photo_three = photo_file_three
-                print('passed here6')
-        # print(f'item photo1 : {photo_file_one}')  
-            if not item.photos:
-                item.photos = 'cart.jpg'
-                print('here1')
-            elif item.photos == 'cart.jpg':
-                if photo_file_one == None:
-                    item.photos = 'cart.jpg'
-                else:
-                    item.photos = photo_file_one
-                print('here2')
+                print('passed here6 edit')
+
+        item.photos = photos.photo_one
+       
+        if item.photos:
+            item.photos == photos.photo_one
+    
+        elif not item.photos:
+            item.photos = 'cart.jpg'
+            print('main photo section 1')
+        
+        elif item.photos == 'cart.jpg':
+            if photo_file_one == None:
+                item.photos == 'cart.jpg'
+                print('main photo section 3')
+            elif photo_file_one:
+                item.photos == photo_file_one
             else:
-                item.photos = photo_file_one
-                print(photo_file_one)     
+                item.photos == photo_file_one
+                print('main photo section 4')
+        else:
+            item.photos == photo_file_one
+            print('main photo section 5')  
+            
         item.title = form.title.data
         item.description = form.description.data
         item.category_type = form.category.data
-        # if not item.photos:
-        #     item.photos = 'cart.jpg'
-        #     print('here1')
-        # elif item.photos == 'cart.jpg':
-        #     if photo_file_one == None:
-        #         item.photos = 'cart.jpg'
-        #     else:
-        #         item.photos = photo_file_one
-        #     print('here2')
-        # else:
-        #     item.photos = photo_file_one
-        #     print(photo_file_one)
+   
         db.session.add(photos)
         db.session.add(item)
-        print(f"Item ID is {item.id}")
-        
         db.session.commit()
 
         item.generate_slug()
 
         flash("Successfully updated!", 'success')
-        # return redirect(url_for('.each_item', item_id=item.id))
         return redirect(url_for('.each_slug_post', slug=item.slug))
     
     form.title.data = item.title
     form.category.data = item.category_type
     form.description.data = item.description 
-    # img_file = url_for('static', filename='uploads/' + item.photos)
-    
-    # if not photos:
-    #     p_form.photo_one.data = 'cart.jpg'
-    #     p_form.photo_two.data = 'cart.jpg'
-    #     p_form.photo_three.data = 'cart.jpg'
-    # else:
-    #     p_form.photo_one.data = photos.photo_one
-    #     p_form.photo_two.data = photos.photo_two
-    #     p_form.photo_three.data = photos.photo_three
-    # print(photos.photo_one)
-    # p_form.photo_one.data = request.files.get(photos.photo_one)
-    # p_form.photo_two.data = photos.photo_two.data
-    # p_form.photo_three.data = photos.photo_three.data
+ 
 
     if photos:
         p_form.photo_one_name.data = photos.photo_one
+        print(photos.photo_one)
         p_form.photo_two_name.data = photos.photo_two
+        print(photos.photo_two)
         p_form.photo_three_name.data = photos.photo_three
+        print(photos.photo_three)
     else:
         p_form.photo_one.data = None
+        print(f'else {photos.photo_one}')
         p_form.photo_two.data = None
+        print(f'else {photos.photo_two}')
         p_form.photo_three.data = None
+        print(f'else {photos.photo_three}')
         
     return render_template("main/edit-post.html", form=form, p_form=p_form, item=item, year=YEAR)
 
@@ -650,38 +698,62 @@ def edit_post(item_id):
 def delete_all_photos(item_id):
     item = Post.query.filter_by(id=item_id).first()
     photos = Photo.query.filter_by(post_id=item.id)
+
+    bucket_name = current_app.config['S3_BUCKET_NAME']
+    bucket_path = current_app.config['S3_BUCKET_PATH']
+    s3 = boto3.resource('s3')  
+    s3_bucket = s3.Bucket(bucket_name)
+    s3_client = boto3.client('s3')
+    # s3.meta.client.upload_file(photos_path, bucket_name, photos_fn)
+
     for p in photos:
         print(p.photo_one)
         if p.photo_one:
             photo1_path = os.path.join('app/static/uploads', p.photo_one)
+            # photo1_path_s3 = os.path.join(bucket_path, p.photo_one)
             print(photo1_path)
+            # print(photo1_path_s3)
+            print(s3_bucket)
+            # if os.path.exists(photo1_path) and os.path.exists(photo1_path_s3):
             if os.path.exists(photo1_path):
                 if photo1_path == os.path.join('app/static/uploads', 'cart.jpg'):
                     pass
-                    print("here 1")
+                    print("here 1 delete")
                 else:
                     os.remove(photo1_path)
-                    print("here 2")
+                    print("here 2 delete static")
+                    s3_client.delete_object(Bucket=bucket_name, Key=p.photo_one)
+                    print("here 2 delete s3")
             p.photo_one = 'cart.jpg'
             p.photo_one_name = 'default'
             db.session.commit()
         if p.photo_two:
             photo2_path = os.path.join('app/static/uploads', p.photo_two)
+            # photo2_path_s3 = os.path.join(bucket_path, p.photo_two)
             if os.path.exists(photo2_path):
                 if photo2_path == os.path.join('app/static/uploads', 'cart.jpg'):
                     pass
+                    print("here 3 delete")
                 else:
                     os.remove(photo2_path)
+                    print("here 4 delete static")
+                    s3_client.delete_object(Bucket=bucket_name, Key=p.photo_two)
+                    print("here 4 delete s3")
             p.photo_two = 'cart.jpg'
             p.photo_two_name = 'default'
             db.session.commit()
         if p.photo_three:
             photo3_path = os.path.join('app/static/uploads', p.photo_three)
+            # photo3_path_s3 = os.path.join(bucket_path, p.photo_three)
             if os.path.exists(photo3_path):
                 if photo3_path == os.path.join('app/static/uploads', 'cart.jpg'):
                     pass
+                    print("here 5 delete")
                 else:
                     os.remove(photo3_path)
+                    print("here 6 delete static")
+                    s3_client.delete_object(Bucket=bucket_name, Key=p.photo_three)
+                    print("here 6 delete s3")
             p.photo_three = 'cart.jpg'
             p.photo_three_name = 'default'
             db.session.commit()
@@ -730,12 +802,20 @@ def delete_post(item_id):
     print(f'Photo1_Path is:{photo1_path}')
     print(f'Photo2_Path is:{photo2_path}')
     print(f'Photo3_Path is:{photo3_path}')
+
+    bucket_name = current_app.config['S3_BUCKET_NAME']
+    bucket_path = current_app.config['S3_BUCKET_PATH']
+    s3 = boto3.resource('s3')  
+    s3_bucket = s3.Bucket(bucket_name)
+    s3_client = boto3.client('s3')
+
     if os.path.exists(photo1_path):
         if photo1_path == os.path.join('app/static/uploads', 'cart.jpg'):
             print("it's default")
             pass
         else:
             os.remove(photo1_path)
+            s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_one)
         print(f'Photo1_Path is:{photo1_path}')
     
     if os.path.exists(photo2_path):
@@ -744,6 +824,7 @@ def delete_post(item_id):
             pass
         else:
             os.remove(photo2_path)
+            s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_two)
         print(f'Photo2_Path is:{photo2_path}')
 
     if os.path.exists(photo3_path):
@@ -752,6 +833,7 @@ def delete_post(item_id):
             pass
         else:
             os.remove(photo3_path)
+            s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_three)
         print(f'Photo3_Path is:{photo3_path}')
 
     Photo.query.filter_by(post_id=item_id).delete()
@@ -761,7 +843,7 @@ def delete_post(item_id):
     send_email(os.getenv('MAIL_USERNAME'), "A post deleted", html)
     
     flash("Selected item is deleted.")
-    return redirect(url_for("main.user", username=current_user.username, year=YEAR))
+    return redirect(url_for("main.user", username=current_user.username))
     
 
 @main.route('/item/<int:item_id>/reply/<int:message_id>', methods=['GET', 'POST'])
