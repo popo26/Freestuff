@@ -13,8 +13,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config():
     SECRET_KEY = os.getenv("SECRET_KEY")
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
-    # or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')\
+    or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
     
     # DATABASE_USER=os.getenv("DATABASE_USER")
     # DATABASE_PASSWORD=os.getenv("DATABASE_PASSWORD")
