@@ -1,12 +1,13 @@
 from . import db, login_manager
+from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin
-from flask import current_app
 from datetime import datetime, timedelta
 from app import create_app
 import hashlib
 import os
 import re
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -94,6 +95,9 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<Post:{}>'.format(self.title)
+
+
+
 
 class Photo(db.Model):
     __tablename__ = 'photos'

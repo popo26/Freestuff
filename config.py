@@ -1,15 +1,11 @@
 import os
 from dotenv import load_dotenv
 import psycopg2
-# from flask_s3 import FlaskS3
 import boto3
 
 load_dotenv()
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
-
-
 
 class Config():
     SECRET_KEY = os.getenv("SECRET_KEY")

@@ -24,8 +24,6 @@ import boto3
 
 load_dotenv()
 
-# UPLOAD_FOLDER = '/static/uploads'
-# ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 YEAR = datetime.datetime.now().year
 

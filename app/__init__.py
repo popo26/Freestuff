@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+# from app.models import Post
 from config import config
 from flask_bootstrap import Bootstrap
 from dotenv import load_dotenv
@@ -11,7 +12,6 @@ from flask_migrate import Migrate, upgrade
 from flask_msearch import Search
 from sqlalchemy import MetaData
 from flask_wtf.csrf import CSRFProtect
-# from flask_s3 import FlaskS3
 import boto3
 
 load_dotenv()
@@ -27,6 +27,7 @@ convention = {
 
 metadata = MetaData(naming_convention=convention)
 db = SQLAlchemy(metadata=metadata)
+
 
 bootstrap=Bootstrap()
 mail = Mail()
@@ -56,10 +57,7 @@ def create_app(config_name = "default"):
     # app.config["UPLOADED_PHOTOS_DEST"] = "static/uploads"
     # app.config["UPLOADED_PHOTOS_DEST"] = os.path.join(app.config['S3_BUCKET_PATH'], 'static/uploads')
     app.config['S3_BUCKET_NAME'] = os.getenv('S3_BUCKET_NAME')
-    # s3 = FlaskS3(app)
-
     
-    # s3.init_app(app)
     bootstrap.init_app(app)
     mail.init_app(app)
     db.init_app(app)
@@ -71,10 +69,8 @@ def create_app(config_name = "default"):
 
     app.app_context().push()
 
-    # from flask_migrate import upgrade
-    # upgrade()
-    # from app.models import Role
-    # Role.insert_roles()
+    with app.app_context():
+        db.create_all()
    
    #When creating a new db below 3 lines need to be commented since it cannot access models
     # from app.models import Post
@@ -82,6 +78,8 @@ def create_app(config_name = "default"):
     # search.create_index(Post, update=True)
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)
+
+    search.create_index(update=True)
     
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
@@ -113,16 +111,7 @@ def create_app(config_name = "default"):
         from app.models import Role
         Role.insert_roles()
 
-        # from app.models import Post
-        # search.create_index(Post)
-        # search.create_index(Post, update=True)
-        # search.create_index(delete=True)
-        # search.create_index(Post, delete=True)
-
     return app
-
-
-
 
 
 def current_app(config_name="testing"):
