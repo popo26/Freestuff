@@ -7,6 +7,5 @@ dev_setup.sh
 *.jpg
 *.jpeg
 *.pdf
-/uploads/*
 .indexes/*
 .pytest_cache

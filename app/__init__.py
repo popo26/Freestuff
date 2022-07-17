@@ -42,8 +42,6 @@ s3 = boto3.client(
 )
 
 
-
-
 def create_app(config_name = "default"):
     app = Flask(__name__)
     
@@ -73,16 +71,14 @@ def create_app(config_name = "default"):
 
     app.app_context().push()
 
-    # db.create_all()
-
     # from flask_migrate import upgrade
     # upgrade()
     # from app.models import Role
     # Role.insert_roles()
    
    #When creating a new db below 3 lines need to be commented since it cannot access models
-    # from app.models import Post
-    # search.create_index(Post)
+    from app.models import Post
+    search.create_index(Post)
     # search.create_index(Post, update=True)
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)
