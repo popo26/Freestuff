@@ -81,6 +81,7 @@ def create_app(config_name = "default"):
 
     search.create_index(update=True)
     
+    
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
     app.register_blueprint(main_blueprint)
