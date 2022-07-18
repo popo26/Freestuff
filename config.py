@@ -10,9 +10,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config():
     SECRET_KEY = os.getenv("SECRET_KEY")
     #.replace for heroku deployment
-    # SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL').replace('postgres://', 'postgresql://', 1)\
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL').replace('postgres://', 'postgresql://', 1)
     # or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    # SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
     # or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
         
     SQLALCHEMY_TRACK_MODIFICATIONS = False
