@@ -43,8 +43,6 @@ s3 = boto3.client(
     aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
 )
 
-
-
 def create_app(config_name = "default"):
     app = Flask(__name__)
     
@@ -81,7 +79,13 @@ def create_app(config_name = "default"):
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)
 
-    search.create_index(update=True)
+    # search.create_index(update=True)
+    from whoosh.writing import LockError, AsyncWriter
+    try:
+        myindex = search.create_index(update=True)
+    except LockError:
+        with AsyncWriter(myindex) as writer:
+            writer.create_index(update=True)
              
 
     from .main import main as main_blueprint
