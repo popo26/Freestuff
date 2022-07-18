@@ -85,13 +85,12 @@ def create_app(config_name = "default"):
     from whoosh.writing import AsyncWriter
     from whoosh.index import LockError
     try:
-        myindex = search.create_index(update=True)  
+        search.create_index(update=True)  
     except LockError:
+        myindex = search.create_index(update=True) 
         writer = AsyncWriter(myindex)
         writer.create_index(update=True)
 
-   
-    
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
     app.register_blueprint(main_blueprint)
