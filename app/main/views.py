@@ -1,9 +1,6 @@
-from base64 import b64encode
 import datetime
 from operator import or_
-import smtplib
 import secrets
-from turtle import title
 from PIL import Image
 from flask import render_template, flash, redirect, request, url_for, current_app, session, send_file
 from flask_login import login_required, current_user
@@ -16,12 +13,11 @@ from ..models import Permission, Category, Message, Photo
 from app import config
 from app.email import send_email
 from config import Config
-import os, json, boto3
+import os
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from base64 import b64encode
-# from flask_msearch import Search
 import boto3
 
 
