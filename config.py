@@ -12,8 +12,8 @@ class Config():
     #.replace for heroku deployment
     # SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL').replace('postgres://', 'postgresql://', 1)\
     # or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')\
-    or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    # or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
         
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WHOOSH_BASE = "whoosh"
