@@ -13,7 +13,7 @@ from flask_msearch import Search
 from sqlalchemy import MetaData
 from flask_wtf.csrf import CSRFProtect
 import boto3
-import time
+
 
 load_dotenv()
 
@@ -69,8 +69,8 @@ def create_app(config_name = "default"):
     
     app.app_context().push()
 
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
    
    #When creating a new db below 3 lines need to be commented since it cannot access models
     # from app.models import Post
