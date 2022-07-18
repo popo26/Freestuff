@@ -85,7 +85,7 @@ def create_app(config_name = "default"):
     from whoosh.writing import AsyncWriter
     from whoosh.index import LockError
     try:
-        search.create_index(update=True)  
+        myindex = search.create_index(update=True)  
     except LockError:
         myindex = search.create_index(update=True)  
         writer = AsyncWriter(myindex, delay=0.25)
