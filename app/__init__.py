@@ -13,6 +13,7 @@ from flask_msearch import Search
 from sqlalchemy import MetaData
 from flask_wtf.csrf import CSRFProtect
 import boto3
+import time
 # from whoosh.writing import AsyncWriter
 
 load_dotenv()
@@ -84,14 +85,12 @@ def create_app(config_name = "default"):
     # search.create_index(update=True)
     from whoosh.writing import AsyncWriter, BufferedWriter
     from whoosh.index import LockError
+    writer = None
     try:
         search.create_index(update=True)  
     except LockError:
-        myindex = search.create_index(update=True)  
-        # writer = AsyncWriter(myindex, delay=0.25)
-        # writer.create_index(update=True)
-        writer = BufferedWriter(myindex, period=60, limit=10)
-        writer.create_index(update=True)
+        time.sleep(0.25)
+        return writer
 
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
