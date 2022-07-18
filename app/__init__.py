@@ -14,7 +14,6 @@ from sqlalchemy import MetaData
 from flask_wtf.csrf import CSRFProtect
 import boto3
 import time
-# from whoosh.writing import AsyncWriter
 
 load_dotenv()
 
@@ -82,8 +81,21 @@ def create_app(config_name = "default"):
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)
 
-    search.create_index(update=True)
-        
+    # search.create_index(update=True)
+    from whoosh.writing import AsyncWriter
+    from whoosh import index
+    from whoosh.index import LockError
+
+    try:
+        search.create_index(update=True)
+    except LockError:
+        if not os.path.exists("indexdir"):
+            os.mkdir("indexdir")
+        myindex = index.create_in('indexdir')
+        writer = AssertionError(myindex)
+        writer.create_index(update=True)
+
+       
 
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
