@@ -73,13 +73,13 @@ def create_app(config_name = "default"):
         db.create_all()
    
    #When creating a new db below 3 lines need to be commented since it cannot access models
-    # from app.models import Post
+    from app.models import Post
     # search.create_index(Post)
-    # search.create_index(Post, update=True)
+    search.create_index(Post, update=True)
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)
 
-    search.create_index(update=True)
+    # search.create_index(update=True)
 
              
     from .main import main as main_blueprint
