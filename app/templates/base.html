@@ -131,13 +131,12 @@
       </div>
 
       <div class="form-div1">
-        <form class="d-flex" method="GET" action="{{ url_for('main.search')}}">
+          <form class="d-flex" method="POST" action="{{ url_for('main.search')}}">
+            {{ form.hidden_tag() }}
           <div class="seach-field-div">
             <input class="form-control me-2" name="query" type="search" placeholder="Search" aria-label="Search">
           </div>
-          <!-- <div class="search_button"> -->
           <button class="btn btn-light button-custom btn-lg" type="submit">Search</button>
-          <!-- </div> -->
         </form>
       </div>
       <!-- </div>  -->

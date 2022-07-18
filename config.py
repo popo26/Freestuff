@@ -16,7 +16,7 @@ class Config():
     # or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
         
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    WHOOSH_BASE = "whoosh"
+    # WHOOSH_BASE = "whoosh"
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
@@ -30,10 +30,10 @@ class Config():
     APP_MAIL_SENDER = f"FreeStuff Admin <{APP_ADMIN}>"
 
     #With Whoosh
-    MSEARCH_INDEX_NAME = 'msearch'
-    MSEARCH_BACKEND = 'whoosh'
-    MSEARCH_PRIMARY_KEY = 'id'
-    MSEARCH_ENABLE = True
+    # MSEARCH_INDEX_NAME = 'msearch'
+    # MSEARCH_BACKEND = 'whoosh'
+    # MSEARCH_PRIMARY_KEY = 'id'
+    # MSEARCH_ENABLE = True
 
     #With Elasticsearch
     # MSEARCH_BACKEND = 'elasticsearch'

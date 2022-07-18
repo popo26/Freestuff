@@ -105,3 +105,7 @@ class ContactGiverForm(FlaskForm):
 class ReplyForm(FlaskForm):
     description = TextAreaField('Reply message goes here.', validators=[DataRequired()], render_kw={'rows':'10'})
     submit = SubmitField("Reply")
+
+class SearchForm(FlaskForm):
+    query = StringField("Query", validators=[DataRequired()])
+    submit = SubmitField('Submit')

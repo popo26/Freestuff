@@ -76,7 +76,7 @@ class Category:
 
 class Post(db.Model):
     __tablename__ = 'posts'
-    __searchable__ = ['title', 'description']
+    # __searchable__ = ['title', 'description']
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     description = db.Column(db.Text)

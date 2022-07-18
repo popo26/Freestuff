@@ -1,11 +1,13 @@
 from base64 import b64encode
 import datetime
+from operator import or_
 import smtplib
 import secrets
+from turtle import title
 from PIL import Image
 from flask import render_template, flash, redirect, request, url_for, current_app, session, send_file
 from flask_login import login_required, current_user
-from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, ReplyForm, PhotoForm
+from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, ReplyForm, PhotoForm, SearchForm
 from . import main
 from app.models import User, Post
 from app import db
@@ -19,8 +21,10 @@ from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from base64 import b64encode
-from flask_msearch import Search
+# from flask_msearch import Search
 import boto3
+
+
 
 load_dotenv()
 
@@ -88,31 +92,64 @@ def index():
                             # img=img,
                             )
 
-@main.route("/search")
-def search():
-    
-    keyword = request.args.get('query')
-    results = Post.query.msearch(keyword, fields=['title','description']).all()
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
-    print(results)
+# @main.route("/search")
+# def search():
+   
+#     keyword = request.args.get('query')
+#     results = Post.query.msearch(keyword, fields=['title','description']).all()
+#     # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+#     photos_path = current_app.config['S3_BUCKET_PATH']
+#     print(results)
 
-    #pagination seems to be working?
-    page = request.args.get('page', 1, type=int)
-    pagination = \
-         Post.query.msearch(keyword, fields=['title','description']).paginate(
-            page,
-            per_page=current_app.config['POSTS_PER_PAGE'],
-            error_out=False
-        )
-    posts = pagination.items
-    return render_template('main/search.html', 
-                            results=results, 
-                            keyword=keyword,
-                            pagination=pagination, 
-                            posts=posts,
-                            photos_path = photos_path,
-                            year=YEAR)
+#     #pagination seems to be working?
+#     page = request.args.get('page', 1, type=int)
+#     pagination = \
+#          Post.query.msearch(keyword, fields=['title','description']).paginate(
+#             page,
+#             per_page=current_app.config['POSTS_PER_PAGE'],
+#             error_out=False
+#         )
+#     posts = pagination.items
+#     return render_template('main/search.html', 
+#                             results=results, 
+#                             keyword=keyword,
+#                             pagination=pagination, 
+#                             posts=posts,
+#                             photos_path = photos_path,
+#                             year=YEAR)
+
+@main.context_processor
+def base():
+    form = SearchForm()
+    return dict(form=form, year=YEAR) 
+
+@main.route("/search", methods=['POST'])
+def search():
+    form = SearchForm()
+    if form.validate_on_submit():        
+        post_query = form.query.data
+        results = db.session.query(Post).filter(or_(Post.title.ilike('%' + post_query + '%'), \
+                                                (Post.description.ilike('%' + post_query + '%')))).all()
+       
+        photos_path = current_app.config['S3_BUCKET_PATH']
+
+        page = request.args.get('page', 1, type=int)
+        pagination = \
+            db.session.query(Post).filter \
+                (or_(Post.title.ilike('%' + post_query + '%'), \
+                (Post.description.ilike('%' + post_query + '%')))).paginate(
+                page,
+                per_page=current_app.config['POSTS_PER_PAGE'],
+                error_out=False
+            )
+        posts = pagination.items
+        return render_template('main/search.html', 
+                                results=results, 
+                                keyword=post_query,
+                                pagination=pagination, 
+                                posts=posts,
+                                photos_path = photos_path,
+                                year=YEAR)
 
 
 @main.route("/home-living")
