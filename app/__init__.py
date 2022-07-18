@@ -82,13 +82,15 @@ def create_app(config_name = "default"):
     # search.create_index(Post, delete=True)
 
     # search.create_index(update=True)
-    from whoosh.writing import AsyncWriter
+    from whoosh.writing import AsyncWriter, BufferedWriter
     from whoosh.index import LockError
     try:
         myindex = search.create_index(update=True)  
     except LockError:
-        myindex = search.create_index(update=True)  
-        writer = AsyncWriter(myindex, delay=0.25)
+        # myindex = search.create_index(update=True)  
+        # writer = AsyncWriter(myindex, delay=0.25)
+        # writer.create_index(update=True)
+        writer = BufferedWriter(myindex, period=60, limit=10)
         writer.create_index(update=True)
 
     from .main import main as main_blueprint
