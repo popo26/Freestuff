@@ -13,6 +13,7 @@ from flask_msearch import Search
 from sqlalchemy import MetaData
 from flask_wtf.csrf import CSRFProtect
 import boto3
+# from whoosh.writing import AsyncWriter
 
 load_dotenv()
 
@@ -43,6 +44,7 @@ s3 = boto3.client(
 )
 
 
+
 def create_app(config_name = "default"):
     app = Flask(__name__)
     
@@ -66,7 +68,7 @@ def create_app(config_name = "default"):
     migrate.init_app(app, db)
     search.init_app(app)
     csrf.init_app(app)
-
+    
     app.app_context().push()
 
     with app.app_context():
@@ -79,8 +81,10 @@ def create_app(config_name = "default"):
     # search.create_index(delete=True)
     # search.create_index(Post, delete=True)
 
-    search.create_index(update=True)
-    
+    # search.create_index(update=True)
+    myindex=search.create_index(update=True)  
+    from whoosh.writing import AsyncWriter
+    writer = AsyncWriter(myindex)
     
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
