@@ -9,3 +9,6 @@ dev_setup.sh
 *.pdf
 .indexes/*
 .pytest_cache
+*.deb
+*.rpm
+*.sha512

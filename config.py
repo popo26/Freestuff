@@ -10,10 +10,10 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config():
     SECRET_KEY = os.getenv("SECRET_KEY")
     #.replace for heroku deployment
-    # SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL').replace('postgres://', 'postgresql://', 1)\
-    # or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')\
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL').replace('postgres://', 'postgresql://', 1)\
     or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
+    # SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')\
+    # or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
         
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WHOOSH_BASE = "whoosh"
@@ -29,10 +29,18 @@ class Config():
     APP_MAIL_SUBJECT_PREFIX = "FreeStuff - "
     APP_MAIL_SENDER = f"FreeStuff Admin <{APP_ADMIN}>"
 
+    #With Whoosh
     MSEARCH_INDEX_NAME = 'msearch'
     MSEARCH_BACKEND = 'whoosh'
     MSEARCH_PRIMARY_KEY = 'id'
     MSEARCH_ENABLE = True
+
+    #With Elasticsearch
+    # MSEARCH_BACKEND = 'elasticsearch'
+    # MSEARCH_PRIMARY_KEY = 'id'
+    # MSEARCH_ENABLE = True
+    # ELASTICSEARCH = {"hosts": ["https://127.0.0.1:9200"]}              
+
 
     POSTS_PER_PAGE = 12  
 
