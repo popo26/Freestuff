@@ -82,9 +82,9 @@ def create_app(config_name = "default"):
     # search.create_index(Post, delete=True)
 
     # search.create_index(update=True)
-    myindex=search.create_index(update=True)  
+    index=search.create_index(update=True)  
     from whoosh.writing import AsyncWriter
-    writer = AsyncWriter(myindex)
+    writer = AsyncWriter(index)
     
     from .main import main as main_blueprint
     from .auth import auth as auth_blueprint
