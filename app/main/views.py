@@ -95,6 +95,7 @@ def search():
     results = Post.query.msearch(keyword, fields=['title','description']).all()
     # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
     photos_path = current_app.config['S3_BUCKET_PATH']
+    print(results)
 
     #pagination seems to be working?
     page = request.args.get('page', 1, type=int)
