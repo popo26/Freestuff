@@ -50,9 +50,9 @@ def register():
         email = request.form['email']
         token = s.dumps(email, salt=os.getenv("SALTIES"))
         link = url_for('auth.confirm', token=token, _external=True)
-        html = render_template('mail/confirm.html', link=link)
+        html = render_template('mail/confirm.html', user=user, link=link)
         send_email(user.email, "Please confirm the link below.", html)
-
+        flash('Please check your mailbox for the confirmation email. Check Spam folder as well!')
         return redirect(url_for('auth.unconfirmed'))
 
     return render_template("auth/register.html", form=form, year=YEAR)

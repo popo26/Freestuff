@@ -1,6 +1,6 @@
-<h4>Hi, {{ giver.username }}</h4>
+<h4>Hi, {{ asker.username }}</h4>
 
-<p>An user {{ current_user.username }} has quesion about {{ item.title }}.</p>
+<p>An user {{ item.giver.username }} has replied to your question about {{ item.title }}.</p>
 <p>You can reply by clicking below link.</p>
 <p><a href="{{ link }}">{{ item.title }}</a></p>
 <br>

@@ -55,9 +55,7 @@ def download_image(resource):
 def index():
     posts = Post.query.all()
     posts_count = Post.query.count()
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
-
+    
     #Pagination
     page = request.args.get('page', 1, type=int)
     pagination = \
@@ -71,7 +69,6 @@ def index():
                             posts=posts, 
                             pagination=pagination,
                             posts_count = posts_count,
-                            photos_path = photos_path,
                             )
 
 @main.context_processor
@@ -88,8 +85,6 @@ def search():
         results = db.session.query(Post).filter(or_(Post.title.ilike('%' + post_query + '%'), \
                                                 (Post.description.ilike('%' + post_query + '%')))).all()
        
-        photos_path = current_app.config['S3_BUCKET_PATH']
-
         page = request.args.get('page', 1, type=int)
         pagination = \
             db.session.query(Post).filter \
@@ -105,7 +100,6 @@ def search():
                                 keyword=post_query,
                                 pagination=pagination, 
                                 posts=posts,
-                                photos_path = photos_path,
                                 )
 
 
@@ -114,9 +108,7 @@ def home_living():
     items = Post.query.filter_by(category_type=Category.HOME_LIVING)
     category="Home&Living"
     page = request.args.get('page', 1, type=int)
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
-
+   
     pagination = \
         Post.query.filter_by(category_type=Category.HOME_LIVING).paginate(
             page,
@@ -129,7 +121,6 @@ def home_living():
                             pagination=pagination,
                             posts=posts,
                             category=category,
-                            photos_path = photos_path,
                             )
 
 @main.route("/kitchen")
@@ -137,8 +128,6 @@ def kitchen():
     items = Post.query.filter_by(category_type=Category.KITCHEN)
     category="Kitchen"
     page = request.args.get('page', 1, type=int)
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
 
     pagination = \
         Post.query.filter_by(category_type=Category.KITCHEN).paginate(
@@ -152,16 +141,13 @@ def kitchen():
                             pagination=pagination,
                             posts=posts,
                             category=category,
-                            photos_path = photos_path,
                             )
 @main.route("/baby")
 def baby():
     items = Post.query.filter_by(category_type=Category.BABY)
     category="Baby"
     page = request.args.get('page', 1, type=int)
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
-
+    
     pagination = \
         Post.query.filter_by(category_type=Category.BABY).paginate(
             page,
@@ -174,7 +160,6 @@ def baby():
                             pagination=pagination,
                             posts=posts,
                             category=category,
-                            photos_path = photos_path,
                             )
 
 @main.route("/books")
@@ -182,8 +167,6 @@ def books():
     items = Post.query.filter_by(category_type=Category.BOOKS)
     category="Books"
     page = request.args.get('page', 1, type=int)
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
 
     pagination = \
         Post.query.filter_by(category_type=Category.BOOKS).paginate(
@@ -197,7 +180,6 @@ def books():
                             pagination=pagination,
                             posts=posts,
                             category=category,
-                            photos_path = photos_path,
                             )
 
 @main.route("/craft")
@@ -205,8 +187,6 @@ def craft():
     items = Post.query.filter_by(category_type=Category.CRAFT)
     category="Craft"
     page = request.args.get('page', 1, type=int)
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
 
     pagination = \
         Post.query.filter_by(category_type=Category.CRAFT).paginate(
@@ -220,7 +200,6 @@ def craft():
                             pagination=pagination,
                             posts=posts,
                             category=category,
-                            photos_path = photos_path,
                             )
 
 @main.route("/electronics")
@@ -228,8 +207,6 @@ def electronics():
     items = Post.query.filter_by(category_type=Category.ELECTRONICS)
     category="Electronics"
     page = request.args.get('page', 1, type=int)
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
 
     pagination = \
         Post.query.filter_by(category_type=Category.ELECTRONICS).paginate(
@@ -243,7 +220,6 @@ def electronics():
                             pagination=pagination,
                             posts=posts,
                             category=category,
-                            photos_path = photos_path,
                             )
 
 @main.route("/pets")
@@ -251,8 +227,6 @@ def pets():
     items = Post.query.filter_by(category_type=Category.PETS)
     category="Pets"
     page = request.args.get('page', 1, type=int)
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
 
     pagination = \
         Post.query.filter_by(category_type=Category.PETS).paginate(
@@ -266,7 +240,6 @@ def pets():
                             pagination=pagination,
                             posts=posts,
                             category=category,
-                            photos_path = photos_path,
                             )
 
 @main.route("/clothing")
@@ -274,8 +247,6 @@ def clothing():
     items = Post.query.filter_by(category_type=Category.CLOTHING)
     category="Clothing"
     page = request.args.get('page', 1, type=int)
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
 
     pagination = \
         Post.query.filter_by(category_type=Category.CLOTHING).paginate(
@@ -289,7 +260,6 @@ def clothing():
                             pagination=pagination,
                             posts=posts,
                             category=category,
-                            photos_path = photos_path,
                             )
 
 @main.route("/bathroom")
@@ -297,8 +267,6 @@ def bathroom():
     items = Post.query.filter_by(category_type=Category.BATHROOM)
     category="Bathroom"
     page = request.args.get('page', 1, type=int)
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
 
     pagination = \
         Post.query.filter_by(category_type=Category.BATHROOM).paginate(
@@ -312,7 +280,6 @@ def bathroom():
                             pagination=pagination,
                             posts=posts,
                             category=category,
-                            photos_path = photos_path,
                             )
 
 @main.route("/toys")
@@ -320,8 +287,6 @@ def toys():
     items = Post.query.filter_by(category_type=Category.TOYS)
     category="Toys"
     page = request.args.get('page', 1, type=int)
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
 
     pagination = \
         Post.query.filter_by(category_type=Category.TOYS).paginate(
@@ -335,7 +300,6 @@ def toys():
                             pagination=pagination,
                             posts=posts,
                             category=category,
-                            photos_path = photos_path,
                             )
 
 @main.route("/jewellery")
@@ -343,8 +307,6 @@ def jewellery():
     items = Post.query.filter_by(category_type=Category.JEWELLERY)
     category="Jewellery"
     page = request.args.get('page', 1, type=int)
-    # photos_path = os.path.join(current_app.root_path, '/static/uploads/')
-    photos_path = current_app.config['S3_BUCKET_PATH']
 
     pagination = \
         Post.query.filter_by(category_type=Category.JEWELLERY).paginate(
@@ -358,7 +320,6 @@ def jewellery():
                             pagination=pagination,
                             posts=posts,
                             category=category,
-                            photos_path = photos_path,
                             )
 
 
@@ -474,7 +435,6 @@ def edit_post(item_id):
     p_form = PhotoForm()
     item = Post.query.filter_by(id=item_id).first()
     photos = Photo.query.filter_by(post_id=item_id).first()
-    print(f"Item is {item}")
 
     bucket_name = current_app.config['S3_BUCKET_NAME']
     bucket_path = current_app.config['S3_BUCKET_PATH']
@@ -488,13 +448,10 @@ def edit_post(item_id):
         if p_form.photo_one.data\
             or p_form.photo_two.data\
             or p_form.photo_three.data:
-            print(f'p_form.photo_one.data {p_form.photo_one.data}')
-            print(f'photos.photo_one {photos.photo_one}')
 
             if p_form.photo_one.data == None\
                 and photos.photo_one:
-                 print('pass for photo1')
-                 pass
+                pass
 
             elif p_form.photo_one.data\
                  and p_form.photo_one.data != photos.photo_one\
@@ -504,7 +461,6 @@ def edit_post(item_id):
                 p_form.photo_one = photo_file_one
                 photos.photo_one = photo_file_one
                 photos.photo_one_name = photo_file_one
-                print('you are here')
             
             elif p_form.photo_one.data\
                  and p_form.photo_one.data != photos.photo_one\
@@ -516,17 +472,14 @@ def edit_post(item_id):
                 p_form.photo_one = photo_file_one
                 photos.photo_one = photo_file_one
                 photos.photo_one_name = photo_file_one
-                print('passed here1 edit')
 
             else:
                 photo_file_one = None
                 p_form.photo_one = photo_file_one
-                print('else for photo one')
 
             if p_form.photo_two.data == None\
                 and photos.photo_two:
-                 print('pass for photo2')
-                 pass
+                pass
 
             elif p_form.photo_two.data\
                  and p_form.photo_two.data != photos.photo_two\
@@ -536,7 +489,6 @@ def edit_post(item_id):
                 p_form.photo_two = photo_file_two
                 photos.photo_two = photo_file_two
                 photos.photo_two_name = photo_file_two
-                print('you are here for photo 2')
                 
             elif p_form.photo_two.data\
                  and p_form.photo_two.data != photos.photo_two\
@@ -544,7 +496,6 @@ def edit_post(item_id):
                 old_photo_two_path = os.path.join('app/static/uploads', photos.photo_two)
                 os.remove(old_photo_two_path)
                 s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_two) 
-                print('passed here2 edit') 
                 photo_file_two = save_photos(p_form.photo_two.data)
                 p_form.photo_two = photo_file_two
                 photos.photo_two = photo_file_two
@@ -553,12 +504,10 @@ def edit_post(item_id):
             else:
                 photo_file_two = None
                 p_form.photo_two = photo_file_two
-                print('passed here3 edit')
 
             if p_form.photo_three.data == None\
                 and photos.photo_three:
-                 print('pass for photo3')
-                 pass
+                pass
 
             elif p_form.photo_three.data\
                  and p_form.photo_three.data != photos.photo_three\
@@ -575,16 +524,14 @@ def edit_post(item_id):
                 old_photo_three_path = os.path.join('app/static/uploads', photos.photo_three)
                 os.remove(old_photo_three_path)
                 s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_three) 
-                print('passed here4 edit')
                 photo_file_three = save_photos(p_form.photo_three.data)
                 p_form.photo_three = photo_file_three
                 photos.photo_three = photo_file_three
                 photos.photo_three_name = photo_file_three
-                print('passed here5 edit')
+                
             else:
                 photo_file_three = None
                 p_form.photo_three = photo_file_three
-                print('passed here6 edit')
 
         item.photos = photos.photo_one
        
@@ -593,20 +540,16 @@ def edit_post(item_id):
     
         elif not item.photos:
             item.photos = 'cart.jpg'
-            print('main photo section 1')
         
         elif item.photos == 'cart.jpg':
             if photo_file_one == None:
                 item.photos == 'cart.jpg'
-                print('main photo section 3')
             elif photo_file_one:
                 item.photos == photo_file_one
             else:
                 item.photos == photo_file_one
-                print('main photo section 4')
         else:
             item.photos == photo_file_one
-            print('main photo section 5')  
             
         item.title = form.title.data
         item.description = form.description.data
@@ -628,18 +571,12 @@ def edit_post(item_id):
 
     if photos:
         p_form.photo_one_name.data = photos.photo_one
-        print(photos.photo_one)
         p_form.photo_two_name.data = photos.photo_two
-        print(photos.photo_two)
         p_form.photo_three_name.data = photos.photo_three
-        print(photos.photo_three)
     else:
         p_form.photo_one.data = None
-        print(f'else {photos.photo_one}')
         p_form.photo_two.data = None
-        print(f'else {photos.photo_two}')
         p_form.photo_three.data = None
-        print(f'else {photos.photo_three}')
         
     return render_template("main/edit-post.html", form=form, p_form=p_form, item=item)
 
@@ -656,38 +593,27 @@ def delete_all_photos(item_id):
     s3_client = boto3.client('s3')
 
     for p in photos:
-        print(p.photo_one)
         if p.photo_one:
             photo1_path = os.path.join('app/static/uploads', p.photo_one)
-            # photo1_path_s3 = os.path.join(bucket_path, p.photo_one)
-            print(photo1_path)
-            # print(photo1_path_s3)
-            print(s3_bucket)
-            # if os.path.exists(photo1_path) and os.path.exists(photo1_path_s3):
+            
             if os.path.exists(photo1_path):
                 if photo1_path == os.path.join('app/static/uploads', 'cart.jpg'):
                     pass
-                    print("here 1 delete")
                 else:
                     os.remove(photo1_path)
-                    print("here 2 delete static")
                     s3_client.delete_object(Bucket=bucket_name, Key=p.photo_one)
-                    print("here 2 delete s3")
             p.photo_one = 'cart.jpg'
             p.photo_one_name = 'default'
             db.session.commit()
         if p.photo_two:
             photo2_path = os.path.join('app/static/uploads', p.photo_two)
-            # photo2_path_s3 = os.path.join(bucket_path, p.photo_two)
+        
             if os.path.exists(photo2_path):
                 if photo2_path == os.path.join('app/static/uploads', 'cart.jpg'):
                     pass
-                    print("here 3 delete")
                 else:
                     os.remove(photo2_path)
-                    print("here 4 delete static")
                     s3_client.delete_object(Bucket=bucket_name, Key=p.photo_two)
-                    print("here 4 delete s3")
             p.photo_two = 'cart.jpg'
             p.photo_two_name = 'default'
             db.session.commit()
@@ -697,12 +623,9 @@ def delete_all_photos(item_id):
             if os.path.exists(photo3_path):
                 if photo3_path == os.path.join('app/static/uploads', 'cart.jpg'):
                     pass
-                    print("here 5 delete")
                 else:
                     os.remove(photo3_path)
-                    print("here 6 delete static")
                     s3_client.delete_object(Bucket=bucket_name, Key=p.photo_three)
-                    print("here 6 delete s3")
             p.photo_three = 'cart.jpg'
             p.photo_three_name = 'default'
             db.session.commit()
@@ -724,10 +647,7 @@ def delete_post(item_id):
     photo1_path = os.path.join('app/static/uploads', photos.photo_one)
     photo2_path = os.path.join('app/static/uploads', photos.photo_two)
     photo3_path = os.path.join('app/static/uploads', photos.photo_three)
-    print(f'Photo1_Path is:{photo1_path}')
-    print(f'Photo2_Path is:{photo2_path}')
-    print(f'Photo3_Path is:{photo3_path}')
-
+    
     bucket_name = current_app.config['S3_BUCKET_NAME']
     bucket_path = current_app.config['S3_BUCKET_PATH']
     s3 = boto3.resource('s3')  
@@ -736,30 +656,24 @@ def delete_post(item_id):
 
     if os.path.exists(photo1_path):
         if photo1_path == os.path.join('app/static/uploads', 'cart.jpg'):
-            print("it's default")
             pass
         else:
             os.remove(photo1_path)
             s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_one)
-        print(f'Photo1_Path is:{photo1_path}')
     
     if os.path.exists(photo2_path):
         if photo2_path == os.path.join('app/static/uploads', 'cart.jpg'):
-            print("it's default")
             pass
         else:
             os.remove(photo2_path)
             s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_two)
-        print(f'Photo2_Path is:{photo2_path}')
 
     if os.path.exists(photo3_path):
         if photo3_path == os.path.join('app/static/uploads', 'cart.jpg'):
-            print("it's default")
             pass
         else:
             os.remove(photo3_path)
             s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_three)
-        print(f'Photo3_Path is:{photo3_path}')
 
     Photo.query.filter_by(post_id=item_id).delete()
     Post.query.filter_by(id=item_id).delete()
@@ -797,6 +711,11 @@ def reply(item_id, message_id):
             current_user.question_received = 0
         db.session.add(current_user)
         db.session.commit()
+
+        link = url_for('main.each_slug_post', _external=True, slug=item.slug)
+        html = render_template('mail/user_answer_received.html', asker=original_message.asker, link=link, item=item)
+        send_email(original_message.asker.email, "You received an answer!", html)
+        flash(f'We sent an email to notify {original_message.asker.username}.')
         return redirect(url_for('main.each_slug_post', slug=item.slug, message_id=message.id))
     
     return render_template('main/reply.html', item=item, form=form)
@@ -882,7 +801,7 @@ def check_messages(username):
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
     page = request.args.get('page', 1, type=int)
-    photos_path = os.path.join(current_app.root_path, '/static/uploads/')
+   
     pagination = \
         Post.query.filter_by(giver=user).paginate(
             page,
@@ -894,7 +813,6 @@ def user(username):
                             user=user, 
                             pagination=pagination,
                             posts=posts,
-                            photos_path=photos_path,
                             )
 
 @main.route("/edit-profile", methods=['GET', 'POST'])
