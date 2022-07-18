@@ -88,7 +88,7 @@ def create_app(config_name = "default"):
         search.create_index(update=True)  
     except LockError:
         myindex = search.create_index(update=True) 
-        writer = AsyncWriter(myindex)
+        writer = AsyncWriter(myindex, delay=0.25)
         writer.create_index(update=True)
 
     from .main import main as main_blueprint
