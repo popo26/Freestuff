@@ -7,7 +7,7 @@
 {% block page_content %}
 
 <div class="index-div">
-  <!-- {{ posts|length }} doesn't work after applying pagination -->
+ 
   <h3>Currently we have {{ posts_count }} posts. </h3>
   {% if posts %}
   {% for post in posts|sort(reverse=True, attribute='timestamp') %}

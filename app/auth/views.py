@@ -1,10 +1,9 @@
-
 from flask import render_template, redirect, url_for, flash, request
 import datetime
 from . import auth
 import smtplib
 import os
-from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from flask_mail import Mail, Message
 from app import mail
 from app.auth.forms import LoginForm, RegistrationForm

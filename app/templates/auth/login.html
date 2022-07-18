@@ -8,7 +8,7 @@
 {% block page_content %}
 <div class="form-div2">
 <form class='forms' method="POST" novalidate>
-    <!-- {{ wtf.quick_form(form) }} -->
+   
     {{ form.hidden_tag() }}
 
     <div class="mb-3">
@@ -38,7 +38,7 @@
         {{ form.remember_me.label }} 
       </div>
       
-      <button type="submit" class="btn btn-primary btn-lg button-custom">Login</button>
+      <button type="submit" class="btn btn-secondary btn-lg button-custom">Login</button>
 
     </form>
 

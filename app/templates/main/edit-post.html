@@ -10,8 +10,7 @@
 <h1>Edit Your Post "<strong>{{ item.title }}</strong>"</h1>
 
 <form method="POST" enctype=multipart/form-data novalidate>
-    <!-- {{ wtf.quick_form(form) }}
-    {{ wtf.quick_form(p_form) }} -->
+   
     {{ form.hidden_tag() }}
     {{ p_form.hidden_tag() }}
     

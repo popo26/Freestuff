@@ -10,7 +10,7 @@
 {% block page_content %}
 {{ moment.include_moment() }}
 
-<!-- <div class="page-header"> -->
+
   <div class="profile-header profile-div">
 
     <h1>{{ user.username }}</h1>
@@ -43,8 +43,7 @@
       </table>
     </div>
   </div>
-  <!-- <hr class="profile-hr"> -->
-<!-- </div> -->
+
 
 <div class="profile-buttons">
 {% if user == current_user %}

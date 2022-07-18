@@ -1,7 +1,7 @@
 from flask import render_template
 from . import main
 
-@main.app_errorhandler(403) #change app.errorhandler to main.app_errorhandler so this error handlers can handle errors globally
+@main.app_errorhandler(403) 
 def forbidden(e):
     error_title = "Forbidden"
     error_msg = "You shouldn't be here!"

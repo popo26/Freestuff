@@ -11,12 +11,10 @@
     <h1>This is about <strong>{{ item.title }}</strong>.</h1>
 <form method="POST">
 
-    <!-- {{ wtf.quick_form(form) }} -->
-
     {{ form.hidden_tag() }}
 
     <div class="mb-3">
-        <!-- {{form.description.label}} -->
+        
         {{form.description(class="form-control")}}
 
         {% if form.description.errors %}

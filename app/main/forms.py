@@ -1,15 +1,10 @@
-from tokenize import String
-from typing import Text
-from flask import session, request
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, SubmitField, TextAreaField, SelectField, BooleanField, MultipleFileField
+from wtforms import StringField, SubmitField, TextAreaField, SelectField, BooleanField
 from app.models import Category
-from wtforms.validators import DataRequired, EqualTo, ValidationError, Regexp, Length, Email
+from wtforms.validators import DataRequired, ValidationError, Length, Email
 from .. models import User
 from flask_login import current_user, login_user
-from sqlalchemy import exc
-import sqlalchemy
 from app import db
 
 

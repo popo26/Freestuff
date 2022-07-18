@@ -11,17 +11,14 @@ class LoginForm(FlaskForm):
 
 class RegistrationForm(FlaskForm):
     email = StringField('Email',
-                        # [validators.Length(1,64)],   #Issue with how to apply validators.
-                        # [validators.Email()],        #Issue with how to apply validators.
                         [validators.DataRequired()])
                                    
     username = StringField('Username', 
-        # [validators.Length(1, 64)],                   #Issue with how to apply validators.
-        validators=[
-        DataRequired(),
-        Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
-                   'Usernames must have only letters, numbers, dots, or underscores',
-        )])
+                            validators=[
+                            DataRequired(),
+                            Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+                                    'Usernames must have only letters, numbers, dots, or underscores',
+                            )])
     password = PasswordField('Password', validators=[
         DataRequired(),
         EqualTo('password_confirm', message='Passwords do not match.'

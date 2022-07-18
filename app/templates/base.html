@@ -61,13 +61,13 @@
         </a>
         </li>
         <li class="nav-item">
-          <!-- <a class="nav-link" href="#">Features</a> -->
+         
           <a class="nav-link" href="{{ url_for('main.user', username=current_user.username) }}">
             Profile
         </a>
         </li>
         <li class="nav-item">
-          <!-- <a class="nav-link" href="#">Pricing</a> -->
+          
           <a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a>
         </li>
       </ul>
@@ -96,10 +96,7 @@
   <div class="content-div">
     <div class="container">
       {% for msg in get_flashed_messages() %}
-      <!-- <div class="alert alert-secondary" role="alert">
-        <button type="button" class="done" data-dismiss="alert">&times;</button>
-        {{ msg }}
-      </div> -->
+    
       <div class="alert alert-success alert-dismissible" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         {{ msg }}
@@ -139,7 +136,7 @@
           <button class="btn btn-light button-custom btn-lg" type="submit">Search</button>
         </form>
       </div>
-      <!-- </div>  -->
+      
 
       <div class="post-new-item-div">
         {% if current_user.is_authenticated %}
