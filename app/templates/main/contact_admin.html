@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}{{super()}}Contact Admin{% endblock %}
+{% block category %}{% endblock %}
+
+{% block page_content %}
+<div class="contact-giver-div">
+
+   <h1>Message to FreeStuff Admin</h1>
+<form class='forms' method="POST" novalidate>
+
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+
+      {{form.title.label()}}
+      {{form.title(class="form-control")}}
+
+      {% if form.title.errors %}
+      {% for error in form.title.errors %}
+      <span class="text-danger">{{ error }}</span><br>
+      {% endfor %}
+      {% endif %}
+      </div>
+
+      <div class="mb-3">
+      {{form.description.label()}}
+      {{form.description(class="form-control")}}
+
+      {% if form.description.errors %}
+      {% for error in form.description.errors %}
+      <span class="text-danger">{{ error }}</span><br>
+      {% endfor %}
+      {% endif %}
+    </div>
+
+      <button type="submit" class="btn btn-secondary btn-lg button-custom">Send</button>
+    </form>
+</div>
+{% endblock %}
+

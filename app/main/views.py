@@ -1,10 +1,11 @@
 import datetime
+import smtplib
 from operator import or_
 import secrets
 from PIL import Image
 from flask import render_template, flash, redirect, request, url_for, current_app, session, send_file
 from flask_login import login_required, current_user
-from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, ReplyForm, PhotoForm, SearchForm
+from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, ReplyForm, PhotoForm, SearchForm, ContactAdminForm
 from . import main
 from app.models import User, Post
 from app import db
@@ -770,7 +771,7 @@ def contact_giver(item_id):
         send_email(item.giver.email, "You received a question!", html)
         flash("successfully submitted!")
         return redirect(url_for("main.each_slug_post", slug=item.slug))
-
+   
     return render_template("main/contact-giver.html", form=form, item=item)
 
 
@@ -866,4 +867,32 @@ def admin_edit_profile(id):
     form.username.data = user.username
     form.email.data = user.email
     return render_template("main/admin_edit_profile.html", form=form, user=user)
+
+@login_required
+@main.route('/contact_admin', methods=['GET', 'POST'])
+def contact_admin():
+    form = ContactAdminForm()
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            name = current_user.username
+            email = current_user.email
+            title = request.form['title']
+            description = request.form['description']
+
+            with smtplib.SMTP("smtp.gmail.com") as connection:
+                connection.starttls()
+                connection.login(os.getenv('MAIL_USERNAME'), os.getenv('MAIL_PASSWORD'))
+                connection.sendmail(
+                    from_addr= email, 
+                    to_addrs=os.getenv('MAIL_USERNAME'), 
+                    msg=f'Subject:Received a message about "{title}"\n\n{description}\nfrom: {name}')
+                flash("Successfully submitted!")
+
+            next = request.args.get("next")
+            if next is None or not next.startswith("/"):
+                next = url_for('main.index')
+            return redirect(next)
+    
+    return render_template("main/contact_admin.html", form=form, user=current_user)
 

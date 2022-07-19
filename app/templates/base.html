@@ -61,13 +61,16 @@
         </a>
         </li>
         <li class="nav-item">
-         
           <a class="nav-link" href="{{ url_for('main.user', username=current_user.username) }}">
             Profile
         </a>
         </li>
         <li class="nav-item">
-          
+          <a class="nav-link" href="{{ url_for('main.contact_admin') }}">
+            Contact Freestuff
+        </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a>
         </li>
       </ul>
