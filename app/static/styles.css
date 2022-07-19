@@ -385,7 +385,7 @@ a:hover {
 /* LEFT BUBBLE */
 p.bubble {
 	position: relative;
-	width: 50%;
+	width: 60%;
 	text-align: center;
 	line-height: 1.4em;
 	margin: 0 auto 5% 0;
@@ -425,7 +425,7 @@ p.speech:after {
 
 p.bubble.right {
 	position: relative;
-	width: 50%;
+	width: 60%;
 	text-align: center;
 	line-height: 1.4em;
 	margin: 0 0 4% auto;
