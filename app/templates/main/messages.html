@@ -33,11 +33,12 @@
 {% if current_user.question_answered > 0 %}
 
 {% for q in posted_questions|sort(reverse=True, attribute='timestamp')  %}
- 
-    <h4>Message received "<strong>{{ q.description }}</strong>" <span>
-       
-        <a class='message-tag' href="{{ url_for('main.each_slug_post', slug=q_slug )}}">See the message</a></span></h4>
 
+    <h4>Message received "<strong>{{ q.description }}</strong>" <span>
+    <a class='message-tag' href="{{ url_for('main.each_slug_post', slug=q.get_slug_for_post_related_to_message() )}}">
+        See the message</a></span></h4>
+        
+        
 {% endfor %}
 
 {% elif current_user.question_answered == 0 %}

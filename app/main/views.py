@@ -783,17 +783,12 @@ def check_messages(username):
     posted_questions = Message.query.filter(Message.user_id==current_user.id, 
                                             Message.replied==True, 
                                             Message.read==False).all()
-        
-    for q in posted_questions:
-        post = Post.query.filter_by(id = q.post_id).first()
-        q_slug = post.slug
-
+     
     return render_template("main/messages.html", 
                             posts=posts, 
                             username=current_user.username, 
                             messages=messages, 
                             posted_questions=posted_questions,
-                            q_slug=q_slug,
                             )
     
 

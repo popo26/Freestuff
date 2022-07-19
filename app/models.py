@@ -1,7 +1,7 @@
 from . import db, login_manager
 from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin, AnonymousUserMixin
+from flask_login import UserMixin, AnonymousUserMixin, current_user
 from datetime import datetime, timedelta
 from app import create_app
 import hashlib
@@ -200,6 +200,11 @@ class Message(db.Model):
     read = db.Column(db.Boolean, default=False)
     answered_user = db.Column(db.Integer, default=0)
     answered_user2 = db.Column(db.String(64), index=True, default=0)
+
+    def get_slug_for_post_related_to_message(self):
+        post = Post.query.filter_by(id = self.post_id).first()
+        return post.slug
+
    
     
 login_manager.anonymous_user = AnonymousUser
