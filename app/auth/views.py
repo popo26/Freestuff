@@ -36,9 +36,9 @@ def login():
             
             return redirect(url_for('auth.login'))
 
-        elif current_app.models.AnonymousUser:
-            login_user(user, remember=form.remember_me.data, force=True)
-            return redirect(url_for('auth.unconfirmed'))
+        # elif current_app.models.AnonymousUser:
+        #     login_user(user, remember=form.remember_me.data, force=True)
+        #     return redirect(url_for('auth.unconfirmed'))
 
         login_user(user, remember=remember_me)
         
@@ -88,7 +88,7 @@ def before_request():
             return redirect(url_for('auth.unconfirmed'))
         
         elif current_user.confirmed ==False\
-            and current_user == AnonymousUser\
+            and current_user.is_anonymous\
             and request.endpoint \
             and request.blueprint != 'auth'\
             and request.endpoint != 'static':
