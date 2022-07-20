@@ -63,9 +63,9 @@ def create_app(config_name = "default"):
     app.config['S3_BUCKET_NAME'] = os.getenv('S3_BUCKET_NAME')
     # app.config['SESSION_COOKIE_SECURE'] = False
     # app.config['WTF_CSRF_ENABLED'] = True
-    # app.config['WTF_CSRF_SECRET_KEY'] = os.getenv('SECRET_KEY') or \
-    # 'abc123ced456'
-    app.config['WTF_CSRF_SSL_STRICT'] = False
+    app.config['WTF_CSRF_SECRET_KEY'] = os.getenv('SECRET_KEY') or \
+    'abc123ced456'
+    # app.config['WTF_CSRF_SSL_STRICT'] = False
     
     bootstrap.init_app(app)
     mail.init_app(app)
@@ -73,7 +73,6 @@ def create_app(config_name = "default"):
     login_manager.init_app(app)
     moment.init_app(app)
     migrate.init_app(app, db)
-    # search.init_app(app)
     csrf.init_app(app)
     
     app.app_context().push()
