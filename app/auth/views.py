@@ -34,7 +34,7 @@ def login():
             flash("User info can't be found. Please register first.")
             return redirect(url_for('auth.login'))
         login_user(user, remember=remember_me)
-        user.ping()
+        
         next = request.args.get("next")
 
         if next is None or not next.startswith("/"):
@@ -73,6 +73,7 @@ def logout():
 @auth.before_app_request
 def before_request():
     if current_user.is_authenticated:
+        current_user.ping()
         if not current_user.confirmed\
             and request.endpoint \
             and request.blueprint != 'auth'\
@@ -82,7 +83,7 @@ def before_request():
 @auth.route('/confirm/<token>')
 def confirm(token):
     try:
-        email=s.loads(token, salt=os.getenv("SALTIES"), max_age=60)
+        email=s.loads(token, salt=os.getenv("SALTIES"), max_age=30)
     except SignatureExpired:
         return "The token is expired"
     user = User.query.filter_by(email=email).first_or_404()
