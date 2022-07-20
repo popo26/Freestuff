@@ -84,7 +84,7 @@ def before_request():
 
         
         if current_user.confirmed ==False\
-            and current_user.is_anonymous\
+            and current_user.is_active == False\
             and request.endpoint \
             and request.blueprint != 'auth'\
             and request.endpoint != 'static':
