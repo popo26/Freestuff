@@ -62,9 +62,9 @@ def create_app(config_name = "default"):
     # app.config["UPLOADED_PHOTOS_DEST"] = os.path.join(app.config['S3_BUCKET_PATH'], 'static/uploads')
     app.config['S3_BUCKET_NAME'] = os.getenv('S3_BUCKET_NAME')
     app.config['SESSION_COOKIE_SECURE'] = False
-    app.config['WTF_CSRF_ENABLED'] = True
-    app.config['WTF_CSRF_SECRET_KEY'] = os.getenv('SECRET_KEY') or \
-    'abc123ced456'
+    # app.config['WTF_CSRF_ENABLED'] = True
+    # app.config['WTF_CSRF_SECRET_KEY'] = os.getenv('SECRET_KEY') or \
+    # 'abc123ced456'
     
     bootstrap.init_app(app)
     mail.init_app(app)
