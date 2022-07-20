@@ -61,6 +61,7 @@ def create_app(config_name = "default"):
     # app.config["UPLOADED_PHOTOS_DEST"] = "static/uploads"
     # app.config["UPLOADED_PHOTOS_DEST"] = os.path.join(app.config['S3_BUCKET_PATH'], 'static/uploads')
     app.config['S3_BUCKET_NAME'] = os.getenv('S3_BUCKET_NAME')
+    app.config['SESSION_COOKIE_SECURE'] = False
     
     bootstrap.init_app(app)
     mail.init_app(app)
