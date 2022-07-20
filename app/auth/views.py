@@ -32,6 +32,8 @@ def login():
         
         if not user:
             flash("User info can't be found. Please register first.")
+            print(current_user)
+            print(current_user.is_anonymou)
             return redirect(url_for('auth.login'))
         login_user(user, remember=remember_me)
         
@@ -82,6 +84,7 @@ def before_request():
             print(request.endpoint)
             print(request.blueprint)
             print(request.endpoint != 'static')
+            print(current_user)
             
             return redirect(url_for('auth.unconfirmed'))
 
