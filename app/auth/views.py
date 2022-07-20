@@ -8,7 +8,7 @@ from flask_mail import Mail, Message
 from app import mail
 from app.auth.forms import LoginForm, RegistrationForm
 from flask_login import login_required, login_user, logout_user, current_user
-from app.models import User
+from app.models import User, AnonymousUser
 from ..import db, login_manager
 from ..email import send_email
 
@@ -80,9 +80,14 @@ def before_request():
             and request.endpoint \
             and request.blueprint != 'auth'\
             and request.endpoint != 'static':
-
-            login_user(current_user, force=True)
-            
+            return redirect(url_for('auth.unconfirmed'))
+        
+        elif current_user.confirmed ==False\
+            and current_user == AnonymousUser\
+            and request.endpoint \
+            and request.blueprint != 'auth'\
+            and request.endpoint != 'static':
+    
             print(request.endpoint)
             print(request.blueprint)
             print(request.endpoint != 'static')
