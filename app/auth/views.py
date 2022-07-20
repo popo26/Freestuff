@@ -24,6 +24,7 @@ def login():
         email_entered = form.email.data
         user = User.query.filter_by(email=email_entered).first()
         remember_me = True if request.form.get("remember_me") else False
+        user.ping()
         
         if not user:
             flash("User info can't be found. Please register first.")
