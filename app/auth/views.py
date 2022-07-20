@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, current_app
 import datetime
 from . import auth
 import smtplib
@@ -36,7 +36,7 @@ def login():
             
             return redirect(url_for('auth.login'))
 
-        elif not user.confirmed and not user:
+        elif current_app.models.AnonymousUser:
             login_user(user, remember=form.remember_me.data, force=True)
             return redirect(url_for('auth.unconfirmed'))
 
