@@ -33,9 +33,8 @@ def login():
         if not user:
             flash("User info can't be found. Please register first.")
             return redirect(url_for('auth.login'))
-        else: 
-            user.ping()
         login_user(user, remember=remember_me)
+        user.ping()
         next = request.args.get("next")
 
         if next is None or not next.startswith("/"):
