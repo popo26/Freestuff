@@ -75,7 +75,7 @@ def create_app(config_name = "default"):
     migrate.init_app(app, db)
     csrf.init_app(app)
     
-    app.app_context().push()
+    # app.app_context().push()
 
     with app.app_context():
         db.create_all()
