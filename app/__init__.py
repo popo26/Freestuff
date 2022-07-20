@@ -65,6 +65,7 @@ def create_app(config_name = "default"):
     # app.config['WTF_CSRF_ENABLED'] = True
     # app.config['WTF_CSRF_SECRET_KEY'] = os.getenv('SECRET_KEY') or \
     # 'abc123ced456'
+    app.config['WTF_CSRF_SSL_STRICT'] = False
     
     bootstrap.init_app(app)
     mail.init_app(app)
