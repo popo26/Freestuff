@@ -76,7 +76,7 @@ def logout():
 def before_request():
     if current_user.is_authenticated:
         current_user.ping()
-        if not current_user.confirmed\
+        if not current_user.confirmed or current_user.is_active==False\
             and request.endpoint \
             and request.blueprint != 'auth'\
             and request.endpoint != 'static':
