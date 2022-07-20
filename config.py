@@ -28,20 +28,7 @@ class Config():
     APP_ADMIN = os.getenv("APP_ADMIN")
     APP_MAIL_SUBJECT_PREFIX = "FreeStuff - "
     APP_MAIL_SENDER = f"FreeStuff Admin <{APP_ADMIN}>"
-
-    #With Whoosh
-    # MSEARCH_INDEX_NAME = 'msearch'
-    # MSEARCH_BACKEND = 'whoosh'
-    # MSEARCH_PRIMARY_KEY = 'id'
-    # MSEARCH_ENABLE = True
-
-    #With Elasticsearch
-    # MSEARCH_BACKEND = 'elasticsearch'
-    # MSEARCH_PRIMARY_KEY = 'id'
-    # MSEARCH_ENABLE = True
-    # ELASTICSEARCH = {"hosts": ["https://127.0.0.1:9200"]}              
-
-
+      
     POSTS_PER_PAGE = 12  
 
     # UPLOAD_FOLDER = os.path.join(basedir, "/static/uploads")

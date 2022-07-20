@@ -60,6 +60,13 @@ a:hover {
 
 /* base.html */
 
+.logo-img {
+	border-radius: 100%;
+	width:60px;
+	height:auto;
+	margin-top:0;
+}
+
 .content-div {
     text-align: center;
     width: 90%;
@@ -71,6 +78,7 @@ a:hover {
 	color: white;
 	font-size: xx-large;
 	font-weight: bolder;
+	padding-top:14px;
 }
 
 .nav-custom:hover {
@@ -79,7 +87,14 @@ a:hover {
 	font-weight: bolder;
 }
 
+
 .navbar-toggler {
+	color:#fff;
+	background-color: chartreuse;
+	
+}
+
+.navbar-toggler-icon {
 	color:#fff;
 }
 
