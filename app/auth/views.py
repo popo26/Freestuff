@@ -81,13 +81,9 @@ def logout():
 def before_request():
     if current_user.is_authenticated:
         current_user.ping()
-        if not current_user.confirmed\
-            and request.endpoint \
-            and request.blueprint != 'auth'\
-            and request.endpoint != 'static':
-            return redirect(url_for('auth.unconfirmed'))
+
         
-        elif current_user.confirmed ==False\
+        if current_user.confirmed ==False\
             and current_user.is_anonymous\
             and request.endpoint \
             and request.blueprint != 'auth'\
@@ -98,6 +94,12 @@ def before_request():
             print(request.endpoint != 'static')
             print(current_user)
             
+            return redirect(url_for('auth.unconfirmed'))
+
+        elif not current_user.confirmed\
+            and request.endpoint \
+            and request.blueprint != 'auth'\
+            and request.endpoint != 'static':
             return redirect(url_for('auth.unconfirmed'))
 
 @auth.route('/confirm/<token>')
