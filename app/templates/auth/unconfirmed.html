@@ -1,15 +1,42 @@
 {% extends 'base.html' %}
 
+{% block title %}{{super()}}Unconfirmed Account{% endblock %}
+{% block navbar %}{% endblock %}
+
+
+{% block content %}
+<main>
+<div class="content-div">
+    <div class="container">
+      {% for msg in get_flashed_messages() %}
+    
+      <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        {{ msg }}
+      </div>
+      {% endfor %}
+    </div>
+
 {% block page_content %}
-
+<div class="unconfirmed-div">
 <h1>Welcome to FreeStuff</h1>
-
-<p>You have not yet confirmed your accounts.</p>
 <br>
-<p>We would love for you to join our community. Before you do, however, you'll need to confirm your account with us first.</p>
-<p>Please check your inbox, and look for an email with a confirmation link.</p>
-<p>If you need a new one, no problem. Just <a href="{{ url_for('auth.resend_confirmation')}}">click here</a> and we'll send you a new one.</p>
-
+<br>
+<h4>Hi, {{current_user.username}}!</h4>
+<h4>You have <span style="color:chartreuse;">not yet confirmed</span> your account.</h4>
+<h4>We would love for you to join our community. Before you do, however, you'll need to confirm your account with us first.</h4>
+<h4>Please check your inbox, and look for an email with a confirmation link.</h4>
+<h4>If you need a new one, no problem. 
+    Just <a class="confirmation-resend-link" href="{{ url_for('auth.resend_confirmation')}}">click here</a> and we'll send you a new one.</h4>
+<br>
 <br>
 <h3>From FreeStuff Admin Team</h3>
+
+</div>
+{% endblock %}
+</main>
+{% block pagination %}{% endblock %}
+<footer>
+  <p>Copyright {{ year }} FreeStuff</p>
+</footer>
 {% endblock %}

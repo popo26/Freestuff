@@ -568,6 +568,29 @@ p.speech.right:after {
 	margin:auto;
 }
 
+/* unconfirmed.html */
+
+.unconfirmed-div {
+	text-align: center;
+	width:80%;
+	margin:200px auto auto auto;
+}
+
+.unconfirmed-div h4 {
+	line-height: 30px;
+}
+
+.unconfirmed-div h1 {
+	font-size:xx-large;
+}
+
+.confirmation-resend-link {
+	color:chartreuse;
+}
+
+.confirmation-resend-link:hover {
+	color:purple;
+}
 
 
 

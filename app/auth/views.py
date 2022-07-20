@@ -14,7 +14,12 @@ from ..email import send_email
 
 
 s = URLSafeTimedSerializer(os.getenv('DANGEROUS_SECRET'))
-YEAR = datetime.datetime.now().year
+
+
+@auth.context_processor
+def base():
+    YEAR = datetime.datetime.now().year
+    return dict(year=YEAR) 
 
 @auth.route('/login', methods=["GET", 'POST'])
 def login():
@@ -24,11 +29,12 @@ def login():
         email_entered = form.email.data
         user = User.query.filter_by(email=email_entered).first()
         remember_me = True if request.form.get("remember_me") else False
-        user.ping()
         
         if not user:
             flash("User info can't be found. Please register first.")
             return redirect(url_for('auth.login'))
+        else: 
+            user.ping()
         login_user(user, remember=remember_me)
         next = request.args.get("next")
 
@@ -36,7 +42,7 @@ def login():
             next = url_for('main.index')
         return redirect(next)
 
-    return render_template("auth/login.html", form=form, year=YEAR)
+    return render_template("auth/login.html", form=form)
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
@@ -56,7 +62,7 @@ def register():
         flash('Please check your mailbox for the confirmation email. Check Spam folder as well!')
         return redirect(url_for('auth.unconfirmed'))
 
-    return render_template("auth/register.html", form=form, year=YEAR)
+    return render_template("auth/register.html", form=form)
 
 @auth.route("/logout")
 @login_required
@@ -77,7 +83,7 @@ def before_request():
 @auth.route('/confirm/<token>')
 def confirm(token):
     try:
-        email=s.loads(token, salt=os.getenv("SALTIES"), max_age=180)
+        email=s.loads(token, salt=os.getenv("SALTIES"), max_age=60)
     except SignatureExpired:
         return "The token is expired"
     user = User.query.filter_by(email=email).first_or_404()
@@ -92,7 +98,7 @@ def confirm(token):
         send_email(user.email, "Welcome to FreeStuff!", html, user=user)
         html = render_template('mail/admin_new_user.html', user=current_user)
         send_email(os.getenv('MAIL_USERNAME'), f"Notification: A new user({user.username}) is added", html, user=user)
-        flash("Now you can login now!")
+        flash("Now you can login!")
     return redirect(url_for('auth.login'))
 
 @auth.route('/unconfirmed')
@@ -105,9 +111,9 @@ def unconfirmed():
 def resend_confirmation():
     token = s.dumps(current_user.email, salt=os.getenv("SALTIES"))
     link = url_for('auth.confirm', token=token, _external=True)
-    html = render_template('mail/confirm.html', link=link)
+    html = render_template('mail/confirm.html', link=link, user=current_user)
     send_email(current_user.email, "Reconfirm link sent below.", html)
-    flash("Confirmation link has been resent, Please check your mailbox.")
+    flash("Confirmation link has been resent, Please check your mailbox, especially Spam folder.")
     return redirect(url_for('auth.unconfirmed'))
                 
 
