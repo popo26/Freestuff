@@ -36,7 +36,7 @@ def login():
             
             return redirect(url_for('auth.login'))
 
-        elif not user.confirmed:
+        elif not user.confirmed and not user:
             login_user(user, remember=form.remember_me.data, force=True)
             return redirect(url_for('auth.unconfirmed'))
 
