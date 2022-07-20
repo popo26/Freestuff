@@ -7,7 +7,7 @@
 {% block page_content %}
 <div class="contact-giver-div">
 
-   <h1>This is about <strong>{{ item.title }}</strong> posted by <strong>{{ item.giver.username }}</strong></h1>
+   <h1><strong style="color:chartreuse;">{{ item.title }}</strong> posted by <strong>{{ item.giver.username }}</strong></h1>
 <form class='forms' method="POST">
 
     {{ form.hidden_tag() }}
