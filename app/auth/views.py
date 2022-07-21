@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, current_app
+from flask import render_template, redirect, session, url_for, flash, request, current_app
 import datetime
 from . import auth
 import smtplib
@@ -37,11 +37,12 @@ def login():
             return redirect(url_for('auth.login'))
 
         login_user(user, remember=remember_me)
-        
+        session['logged_in'] = True
         next = request.args.get("next")
 
         if next is None or not next.startswith("/"):
             next = url_for('main.index')
+            session['logged_in'] = True
         return redirect(next)
 
     return render_template("auth/login.html", form=form)
@@ -97,13 +98,17 @@ def confirm(token):
         user.confirmed = True
         db.session.add(user)
         db.session.commit()
+        print(user.is_authenticated)
         link = url_for('main.index', _external=True)
         html = render_template('mail/user_welcome.html', user=current_user, link=link)
         send_email(user.email, "Welcome to FreeStuff!", html, user=user)
         html = render_template('mail/admin_new_user.html', user=current_user)
         send_email(os.getenv('MAIL_USERNAME'), f"Notification: A new user({user.username}) is added", html, user=user)
         flash("Now you can login!")
+        print(user.is_authenticated)
+        session['logged_in'] = False
     return redirect(url_for('auth.login'))
+    # return redirect(url_for('main.index'))
 
 @auth.route('/unconfirmed')
 def unconfirmed():

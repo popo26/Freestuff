@@ -195,7 +195,7 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text, index=True)
     timestamp = db.Column(db.DateTime, index = True, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id', ondelete='CASCADE'))
     reply = db.Column(db.Boolean, default=False)
     replied = db.Column(db.Boolean, default=False)
@@ -206,9 +206,7 @@ class Message(db.Model):
     def get_slug_for_post_related_to_message(self):
         post = Post.query.filter_by(id = self.post_id).first()
         return post.slug
-
-   
-    
+ 
 login_manager.anonymous_user = AnonymousUser
 
 
