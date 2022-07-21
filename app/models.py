@@ -61,6 +61,8 @@ class User(UserMixin, db.Model):
     # def email_hash(self):
     #     return hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
 
+  
+
 class Category:
     HOME_LIVING = 1
     KITCHEN = 2
@@ -213,5 +215,8 @@ login_manager.anonymous_user = AnonymousUser
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+
 
 

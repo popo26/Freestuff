@@ -21,6 +21,7 @@ def base():
     YEAR = datetime.datetime.now().year
     return dict(year=YEAR) 
 
+
 @auth.route('/login', methods=["GET", 'POST'])
 def login():
     form = LoginForm()
@@ -30,8 +31,6 @@ def login():
         user = User.query.filter_by(email=email_entered).first()
         remember_me = True if request.form.get("remember_me") else False
         
-        # if not user and user.is_anonymous and not user.confirmed:
-        #     return redirect(url_for('auth.unconfirmed'))
         if not user:
             flash("User info can't be found. Please register first.")
             print(f'Current user is {current_user}.')
@@ -108,8 +107,6 @@ def confirm(token):
 
 @auth.route('/unconfirmed')
 def unconfirmed():
-    # if current_user.is_anonymous and current_user.confirmed==False:
-    #     return redirect(url_for('auth.unconfirmed'))
     if current_user.is_anonymous or current_user.confirmed:
         return redirect(url_for('main.index'))
     return render_template('auth/unconfirmed.html')
