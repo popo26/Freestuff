@@ -33,7 +33,6 @@ def login():
         if not user:
             flash("User info can't be found. Please register first.")
             print(current_user)
-            login_user(user, remember=form.remember_me.data, force=True)
             return redirect(url_for('auth.login'))
 
         # elif current_app.models.AnonymousUser:
@@ -77,7 +76,7 @@ def logout():
     flash("You've been logged out. Good Bye!")
     return redirect(url_for('main.index'))
 
-@auth.before_app_request
+@auth.before_app_request.request_loader
 def before_request():
     if current_user.is_authenticated:
         current_user.ping()
