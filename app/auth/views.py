@@ -32,12 +32,8 @@ def login():
         
         if not user:
             flash("User info can't be found. Please register first.")
-            print(current_user)
+            print(f'Current user is {current_user}.')
             return redirect(url_for('auth.login'))
-
-        # elif current_app.models.AnonymousUser:
-        #     login_user(user, remember=form.remember_me.data, force=True)
-        #     return redirect(url_for('auth.unconfirmed'))
 
         login_user(user, remember=remember_me)
         
@@ -76,24 +72,12 @@ def logout():
     flash("You've been logged out. Good Bye!")
     return redirect(url_for('main.index'))
 
-@auth.before_app_request.request_loader
+@auth.before_app_request
 def before_request():
     if current_user.is_authenticated:
         current_user.ping()
-        if current_user.confirmed ==False\
-            and current_user.is_active == False\
-            and request.endpoint \
-            and request.blueprint != 'auth'\
-            and request.endpoint != 'static':
-    
-            print(request.endpoint)
-            print(request.blueprint)
-            print(request.endpoint != 'static')
-            print(current_user)
-            
-            return redirect(url_for('auth.unconfirmed'))
-
-        elif not current_user.confirmed\
+     
+        if not current_user.confirmed\
             and request.endpoint \
             and request.blueprint != 'auth'\
             and request.endpoint != 'static':
