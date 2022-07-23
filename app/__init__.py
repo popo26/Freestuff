@@ -13,6 +13,7 @@ from flask_migrate import Migrate, upgrade
 from sqlalchemy import MetaData
 from flask_wtf.csrf import CSRFProtect
 import boto3
+from datetime import timedelta
 
 
 
@@ -36,6 +37,9 @@ mail = Mail()
 moment = Moment()
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
+login_manager.login_message = "Please login first."
+login_manager.refresh_view = 'auth.login'
+login_manager.needs_refresh_message = "You need to login again."
 # search = Search()
 csrf = CSRFProtect()
 s3 = boto3.client(
@@ -43,8 +47,6 @@ s3 = boto3.client(
     aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
     aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
 )
-
-
 
 
 def create_app(config_name = "default"):
@@ -66,6 +68,8 @@ def create_app(config_name = "default"):
     # app.config['WTF_CSRF_SECRET_KEY'] = os.getenv('SECRET_KEY') or \
     # 'abc123ced456'
     # app.config['WTF_CSRF_SSL_STRICT'] = False
+    app.config["REMEMBER_COOKIE_DURATION"] = timedelta(seconds=21600) #6hours RememberMe not working yet
+    # app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(seconds=21600)
     
     bootstrap.init_app(app)
     mail.init_app(app)
@@ -131,7 +135,7 @@ def current_app(config_name="testing"):
     login_manager.init_app(app)
     moment.init_app(app)
     migrate.init_app(app, db)
-    search.init_app(app)
+    # search.init_app(app)
 
     app.app_context().push()
     

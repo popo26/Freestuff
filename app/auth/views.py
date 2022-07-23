@@ -6,11 +6,12 @@ import os
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from flask_mail import Mail, Message
 from app import mail
-from app.auth.forms import LoginForm, RegistrationForm
-from flask_login import login_required, login_user, logout_user, current_user
+from app.auth.forms import LoginForm, RegistrationForm, RequestResetForm, ResetPasswordForm
+from flask_login import login_required, login_user, logout_user, current_user, fresh_login_required
 from app.models import User, AnonymousUser
 from ..import db, login_manager
 from ..email import send_email
+
 
 
 s = URLSafeTimedSerializer(os.getenv('DANGEROUS_SECRET'))
@@ -21,6 +22,9 @@ def base():
     YEAR = datetime.datetime.now().year
     return dict(year=YEAR) 
 
+# @auth.before_request
+# def make_session_permanent():
+#     session.permanent = True
 
 @auth.route('/login', methods=["GET", 'POST'])
 def login():
@@ -29,21 +33,28 @@ def login():
     if form.validate_on_submit():
         email_entered = form.email.data
         user = User.query.filter_by(email=email_entered).first()
-        remember_me = True if request.form.get("remember_me") else False
-        
+        print(user.verify_password(form.password.data))
+
         if not user:
             flash("User info can't be found. Please register first.")
             print(f'Current user is {current_user}.')
             return redirect(url_for('auth.login'))
 
-        login_user(user, remember=remember_me)
-        session['logged_in'] = True
-        next = request.args.get("next")
-
-        if next is None or not next.startswith("/"):
-            next = url_for('main.index')
+        if user and user.verify_password(form.password.data):
+            remember_me = True if request.form.get("remember_me") else False
+        
+            login_user(user, remember=remember_me)
+            print(form.remember_me.data)
             session['logged_in'] = True
-        return redirect(next)
+            next = request.args.get("next")
+
+            if next is None or not next.startswith("/"):
+                next = url_for('main.index')
+                session['logged_in'] = True
+            return redirect(next)
+
+        else:
+            flash("Login Unsuccessful. Please check email and passsword.")
 
     return render_template("auth/login.html", form=form)
 
@@ -106,9 +117,10 @@ def confirm(token):
         send_email(os.getenv('MAIL_USERNAME'), f"Notification: A new user({user.username}) is added", html, user=user)
         flash("Now you can login!")
         print(user.is_authenticated)
+        #Need this when user uses reconfirmation link
         session['logged_in'] = False
     return redirect(url_for('auth.login'))
-    # return redirect(url_for('main.index'))
+    
 
 @auth.route('/unconfirmed')
 def unconfirmed():
@@ -124,6 +136,65 @@ def resend_confirmation():
     send_email(current_user.email, "Reconfirm link sent below.", html)
     flash("Confirmation link has been resent, Please check your mailbox, especially Spam folder.")
     return redirect(url_for('auth.unconfirmed'))
+
+
+
+@auth.route('/reset_password', methods=['GET', 'POST'])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+
+        # token = s.dumps(user.username, salt=os.getenv("SALTIES"))
+        token = user.get_reset_token()
+        link = url_for('auth.reset_token', token=token, _external=True)
+        html = render_template('mail/password_reset.html', link=link, user=current_user)
+        send_email(user.email, "Please see Password Reset link below.", html)
+        flash("An email has been sent with instructions to reset your password. Please check your mailbox, especially Spam folder.")
+        return redirect(url_for('auth.login'))
+
+    return render_template('auth/reset_request.html', form=form)
+
+@auth.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('main.index'))
+    user = User.verify_reset_token(token)
+    print(user)
+    print(current_user)
+    if user is None:
+        flash('That is an invalid or expired token')
+        return redirect(url_for('auth.reset_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user=User.query.filter_by(username=user.username).first()
+        print(user)
+        # user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your password has been updated. Now you can login')
+        return redirect(url_for('auth.login'))
+    return render_template('auth/reset_token.html', form=form)
+
+@auth.route('/password_reset', methods=['GET', 'POST'])
+@fresh_login_required #Work in progress
+# @login_required
+def reset_password():
+    
+    form = ResetPasswordForm()
+    user=User.query.filter_by(username=current_user.username).first()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your password has been updated!')
+        return redirect(url_for('main.user', username=user.username))
+    return render_template('auth/reset_password.html', form=form)
+  
+
                 
 
 

@@ -4,8 +4,9 @@ from operator import or_
 import secrets
 from PIL import Image
 from flask import render_template, flash, redirect, request, url_for, current_app, session, send_file
-from flask_login import login_required, current_user
-from app.main.forms import AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, PostForm, ReplyForm, PhotoForm, SearchForm, ContactAdminForm
+from flask_login import login_required, current_user, fresh_login_required
+from app.main.forms import (AdminLevelEditProfileForm, ContactGiverForm, EditProfileForm, 
+                            PostForm, ReplyForm, PhotoForm, SearchForm, ContactAdminForm)
 from . import main
 from app.models import User, Post
 from app import db
@@ -354,7 +355,8 @@ def each_slug_post(slug):
     
 
 @main.route("/post-new-item", methods=['GET', "POST"])
-@login_required
+@fresh_login_required
+# @login_required
 def post_new_item():
     form = PostForm()
     p_form = PhotoForm()
@@ -430,7 +432,8 @@ def post_new_item():
 
 
 @main.route("/item/<int:item_id>/edit-post", methods=['GET', 'POST'])
-@login_required
+@fresh_login_required
+# @login_required
 def edit_post(item_id):
     form = PostForm()
     p_form = PhotoForm()
@@ -582,7 +585,8 @@ def edit_post(item_id):
     return render_template("main/edit-post.html", form=form, p_form=p_form, item=item)
 
 @main.route('/delete/<int:item_id>/photo', methods=["GET", "POST"])
-@login_required
+@fresh_login_required
+# @login_required
 def delete_all_photos(item_id):
     item = Post.query.filter_by(id=item_id).first()
     photos = Photo.query.filter_by(post_id=item.id)
@@ -640,7 +644,8 @@ def delete_all_photos(item_id):
 
 
 @main.route('/item/<int:item_id>/delete', methods=['GET', 'POST'])
-@login_required
+@fresh_login_required
+# @login_required
 def delete_post(item_id):
     photos = Photo.query.filter_by(post_id=item_id).first()
     

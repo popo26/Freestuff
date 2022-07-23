@@ -7,6 +7,7 @@ from app import create_app
 import hashlib
 import os
 import re
+from itsdangerous import SignatureExpired, URLSafeTimedSerializer as Serializer
 
 
 class User(UserMixin, db.Model):
@@ -60,6 +61,40 @@ class User(UserMixin, db.Model):
     #Check if can be used for saved emails
     # def email_hash(self):
     #     return hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
+
+    def get_reset_token(self):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        # return s.dumps({"id":self.id}).decode('utf-8')
+        return s.dumps({"user_id":self.id})
+ 
+        
+
+    @staticmethod
+    # def verify_reset_token(token):
+    #     s = Serializer(current_app.config['SECRET_KEY'])
+    #     try:
+    #         user_id = s.loads(token)['user_id']
+    #     except:
+    #         return None
+    #     return User.query.get(user_id)
+
+    def verify_reset_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token, max_age=30)['user_id']
+        except SignatureExpired:
+            return "The token link is expired"
+        except:
+            return None
+        return User.query.get(user_id)
+
+    # try:
+    #     email=s.loads(token, salt=os.getenv("SALTIES"), max_age=30)
+    # except SignatureExpired:
+    #     return "The token is expired"
+    # user = User.query.filter_by(email=email).first_or_404()
+
+
 
   
 
@@ -195,7 +230,7 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.Text, index=True)
     timestamp = db.Column(db.DateTime, index = True, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'))#not working when i use db.session.delete
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id', ondelete='CASCADE'))
     reply = db.Column(db.Boolean, default=False)
     replied = db.Column(db.Boolean, default=False)

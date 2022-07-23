@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}{{super()}}Request Password Reset{% endblock %}
+
+
+{% block category %}{% endblock %}
+{% block page_content %}
+<div class="form-div2">
+    
+<form class='forms' method="POST" novalidate>
+   
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{form.email.label}}
+        {{form.email(class="form-control")}}
+
+        {% if form.email.errors %}
+        {% for error in form.email.errors %}
+        <span class="text-danger">{{ error }}</span><br>
+        {% endfor %}
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-secondary btn-lg button-custom">Request Reset Password</button>
+
+    </form>
+
+</div>
+{% endblock  %}  

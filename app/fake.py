@@ -4,6 +4,7 @@ from . import db
 from .models import User, Post, Photo
 from random import randint
 import string
+from werkzeug.security import generate_password_hash
 
 def users(count=20):
     fake = Faker()
@@ -11,7 +12,7 @@ def users(count=20):
     while i < count:
         u = User(email=fake.email(),
                  username = fake.user_name(),
-                 password_hash = "test",
+                 password_hash = generate_password_hash('test'),
                  confirmed=True,
                  name=fake.name(),
                  location=fake.city(),

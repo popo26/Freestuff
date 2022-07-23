@@ -42,6 +42,9 @@
 
     </form>
 
+    
+    <p class="new-user"><a href="{{ url_for('auth.reset_request') }}">Forgot Password?</a></p>
+
     <p class="new-user">New User? <a href="{{ url_for('auth.register')}}">Click here to register</a></p>
 </div>
 {% endblock  %}  
