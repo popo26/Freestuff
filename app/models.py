@@ -81,11 +81,11 @@ class User(UserMixin, db.Model):
     def verify_reset_token(token):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            user_id = s.loads(token, max_age=30)['user_id']
+            user_id = s.loads(token, max_age=3600)['user_id']
         except SignatureExpired:
             return "The token link is expired"
-        except:
-            return None
+        # except:
+        #     return None
         return User.query.get(user_id)
 
     # try:

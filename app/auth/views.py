@@ -99,7 +99,7 @@ def before_request():
 @auth.route('/confirm/<token>')
 def confirm(token):
     try:
-        email=s.loads(token, salt=os.getenv("SALTIES"), max_age=30)
+        email=s.loads(token, salt=os.getenv("SALTIES"), max_age=300)
     except SignatureExpired:
         return "The token is expired"
     user = User.query.filter_by(email=email).first_or_404()
@@ -151,7 +151,7 @@ def reset_request():
         token = user.get_reset_token()
         link = url_for('auth.reset_token', token=token, _external=True)
         html = render_template('mail/password_reset.html', link=link, user=current_user)
-        send_email(user.email, "Please see Password Reset link below.", html)
+        send_email(user.email, "Please find the Password Reset link below.", html)
         flash("An email has been sent with instructions to reset your password. Please check your mailbox, especially Spam folder.")
         return redirect(url_for('auth.login'))
 
