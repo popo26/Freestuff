@@ -138,12 +138,15 @@ a:hover {
 	background-color: #333;
 	border-style:ridge;
 	color: white;
+	font-weight: bold;
+	border-width: medium;
 }
 
 .button-custom:hover {
 	background-color: #333;
-	color:white;
+	color:chartreuse;
 	border-color: chartreuse;
+	font-weight: bold;
 }
 
 .post-button {
@@ -292,6 +295,38 @@ a:hover {
 	font-weight: bolder;
 }
 
+.edit-button {
+	background-color: chartreuse;
+	color:#333;
+	border-width:medium;
+	border-color:chartreuse;
+	font-weight:bold;
+}
+
+.edit-button:hover {
+	background-color: #333;
+	color:chartreuse;
+	border-width:medium;
+	border-color:chartreuse;
+	font-weight:bold;
+}
+
+.delete-button {
+	border-color: red;
+	border-width:medium;
+	background-color: red;
+	font-weight: bold;
+	color:white;
+}
+
+.delete-button:hover {
+	border-color: red;
+	border-width:medium;
+	background-color: black;
+	color:red;
+	font-weight:bold;
+}
+
 /* .giver-reply {
     text-align: right;
 } */
@@ -343,6 +378,22 @@ a:hover {
 .profile-buttons{
 	margin-top:3rem;
 	margin-bottom:3rem;
+}
+
+.reset-password-button {
+	background-color: chartreuse;
+	color: #333;
+	font-weight: bold;
+	border-color: chartreuse;
+	border-width:medium;
+}
+
+.reset-password-button:hover {
+	background-color: black;
+	color: chartreuse;
+	font-weight: bold;
+	border-width:medium;
+	border-color: black;
 }
 
 /* post-new-item.html */

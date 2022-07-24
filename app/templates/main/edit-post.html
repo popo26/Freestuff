@@ -30,7 +30,7 @@
       </div>
 
       <div class="mb-3">
-        <div><a href="{{ url_for('main.delete_all_photos', item_id=item.id)}}"><button type="button" class="btn btn-danger">Delete All Photos</button></a></div>
+        <div><a href="{{ url_for('main.delete_all_photos', item_id=item.id)}}"><button type="button" class="btn btn-danger delete-button">Delete All Photos</button></a></div>
         {{p_form.photo_one.label}}
         {{p_form.photo_one_name(class="form-control", disabled=disabled, placeholder='No photo uploaded yet')}}
         {{p_form.photo_one(class="form-control")}}

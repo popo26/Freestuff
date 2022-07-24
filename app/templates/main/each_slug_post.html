@@ -53,9 +53,9 @@
             class="btn btn-secondary btn-lg button-custom">Contact {{ post.giver.username }}</button></a>
     {% endif %}
     {% if current_user == post.giver or current_user.is_administrator() %}
-    <a href="{{ url_for('main.edit_post', item_id=post.id) }}"><button type="button" class="btn btn-warning">Edit
+    <a href="{{ url_for('main.edit_post', item_id=post.id) }}"><button type="button" class="btn btn-warning edit-button">Edit
             Post</button></a>
-    <a href="{{ url_for('main.delete_post', item_id=post.id) }}"><button type="button" class="btn btn-danger">Delete
+    <a href="{{ url_for('main.delete_post', item_id=post.id) }}"><button type="button" class="btn btn-danger delete-button">Delete
             Post</button></a>
     {% endif %}
 </div>
