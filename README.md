@@ -12,7 +12,7 @@ FreeStuff is a simple and intuitive app that provides a place to exchange unwant
 1. Once clone or download this code, [create a virtualenv](https://docs.python.org/3/library/venv.html).
 2. Acticate the virtualenv.
 3. From terminal, install all the requirements with `pip install -r requirements.txt`.
-4. Set up [AWS S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html)
+4. Set up [AWS S3 bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html). Fill related sections in the `.env_example` file.
 5. I use [python-dotenv](https://pypi.org/project/python-dotenv/) to access environment variables.
 6. Use `.env_example` file to populate settings required for python-dotenv above(see following instructions for environment variables to add).
 7. SECRET_KEY, DANGEROUS_SECRET, and SALTIES need whatever keys you enter. e.g. SECRET_KEY=asidfwieidf;askjwiejfasdjfwiejfaskdljfawioejfadkjf.
