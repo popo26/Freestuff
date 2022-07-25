@@ -809,26 +809,12 @@ def contact_giver(item_id):
 def check_messages(username):
     messages = Message.query.filter(Message.replied==False)
     posts = Post.query.filter_by(giver=current_user)  
-    posted_questions = Message.query.filter(Message.user_id==current_user.id, 
+    posted_questions = Message.query.filter(Message.answered_user==current_user.id, 
+                                            Message.reply==True,
                                             Message.replied==True, 
                                             Message.read==False)
 
-    # for m in messages:
-    #     if current_user.question_received > 0 :
-    #         print(m)
-    #         if not m:
-    #             current_user.question_received - 1
-    #             db.session.add(current_user)
-    #             db.session.commit()
-
-    # for q in posted_questions:
-    #     if current_user.question_answered > 0:
-    #         print(q)
-    #         if not q:
-    #             current_user.question_answered - 1
-    #             db.session.add(current_user)
-    #             db.session.commit()
-
+   
     return render_template("main/messages.html", 
                             posts=posts, 
                             username=current_user.username, 
