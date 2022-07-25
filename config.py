@@ -16,7 +16,7 @@ class Config():
     # or 'sqlite:///' + os.path.join(basedir, "dev.sqlite")
         
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    # WHOOSH_BASE = "whoosh"
+    # WHOOSH_BASE = "whoosh" #For flask-msearch
 
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587
@@ -31,7 +31,6 @@ class Config():
       
     POSTS_PER_PAGE = 12  
 
-    # UPLOAD_FOLDER = os.path.join(basedir, "/static/uploads")
     UPLOAD_FOLDER = os.getenv('S3_BUCKET_PATH')
     ALLOWED_EXTENSIONS = {'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 

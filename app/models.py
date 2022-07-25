@@ -58,26 +58,17 @@ class User(UserMixin, db.Model):
     def is_administrator(self):
         return self.can(Permission.ADMIN)
 
-    #Check if can be used for saved emails
+    #Check if can be used for saved emails #Future idea
     # def email_hash(self):
     #     return hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
 
     def get_reset_token(self):
         s = Serializer(current_app.config['SECRET_KEY'])
-        # return s.dumps({"id":self.id}).decode('utf-8')
         return s.dumps({"user_id":self.id})
  
         
 
     @staticmethod
-    # def verify_reset_token(token):
-    #     s = Serializer(current_app.config['SECRET_KEY'])
-    #     try:
-    #         user_id = s.loads(token)['user_id']
-    #     except:
-    #         return None
-    #     return User.query.get(user_id)
-
     def verify_reset_token(token):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
@@ -88,15 +79,7 @@ class User(UserMixin, db.Model):
             return None
         return User.query.get(user_id)
 
-    # try:
-    #     email=s.loads(token, salt=os.getenv("SALTIES"), max_age=30)
-    # except SignatureExpired:
-    #     return "The token is expired"
-    # user = User.query.filter_by(email=email).first_or_404()
 
-
-
-  
 
 class Category:
     HOME_LIVING = 1
@@ -113,7 +96,7 @@ class Category:
 
 class Post(db.Model):
     __tablename__ = 'posts'
-    # __searchable__ = ['title', 'description']
+    # __searchable__ = ['title', 'description'] for flask-msearch
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100))
     description = db.Column(db.Text)
@@ -132,8 +115,6 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<Post:{}>'.format(self.title)
-
-
 
 
 class Photo(db.Model):
@@ -207,7 +188,6 @@ class Role(db.Model):
             # see if role is already in table
             role = Role.query.filter_by(name=r).first()
             if role is None:
-                # it's not so make a new one
                 role = Role(name=r)
             role.reset_permissions()
             # add whichever permissions the role needs

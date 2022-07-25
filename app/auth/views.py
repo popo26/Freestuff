@@ -33,18 +33,15 @@ def login():
     if form.validate_on_submit():
         email_entered = form.email.data
         user = User.query.filter_by(email=email_entered).first()
-        # print(user.verify_password(form.password.data))
 
         if not user:
             flash("User info can't be found. Please register first.")
-            print(f'Current user is {current_user}.')
             return redirect(url_for('auth.login'))
 
         if user and user.verify_password(form.password.data):
             remember_me = True if request.form.get("remember_me") else False
         
             login_user(user, remember=remember_me)
-            print(form.remember_me.data)
             session['logged_in'] = True
             next = request.args.get("next")
 
@@ -109,14 +106,12 @@ def confirm(token):
         user.confirmed = True
         db.session.add(user)
         db.session.commit()
-        print(user.is_authenticated)
         link = url_for('main.index', _external=True)
         html = render_template('mail/user_welcome.html', user=current_user, link=link)
         send_email(user.email, "Welcome to FreeStuff!", html, user=user)
         html = render_template('mail/admin_new_user.html', user=current_user)
         send_email(os.getenv('MAIL_USERNAME'), f"Notification: A new user({user.username}) is added", html, user=user)
         flash("Now you can login!")
-        print(user.is_authenticated)
         #Need this when user uses reconfirmation link
         session['logged_in'] = False
     return redirect(url_for('auth.login'))
@@ -162,16 +157,13 @@ def reset_token(token):
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     user = User.verify_reset_token(token)
-    print(user)
-    print(current_user)
+    
     if user is None:
         flash('That is an invalid or expired token')
         return redirect(url_for('auth.reset_request'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
         user=User.query.filter_by(username=user.username).first()
-        print(user)
-        # user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()

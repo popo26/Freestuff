@@ -689,20 +689,15 @@ def delete_post(item_id):
             posted_user.question_received -= 1
             if posted_user.question_received < 0:
                 posted_user.question_received = 0
-            print(f'posted_user {posted_user.username}')
             db.session.add(posted_user)
             db.session.commit()
-            print(f'posted_user question_received count {posted_user.question_received}')
         if m.read == False and m.reply==True:
             answered_user = User.query.filter_by(id=m.answered_user).first()
             answered_user.question_answered -= 1 
             if answered_user.question_received < 0:
                 answered_user.question_received = 0
-            print(f'answered_user {answered_user.username}')
             db.session.add(answered_user)
-            db.session.commit()
-            print(f'answered_user question_answered count {answered_user.question_answered}')
-       
+            db.session.commit()       
 
     Photo.query.filter_by(post_id=item_id).delete()
     Post.query.filter_by(id=item_id).delete()

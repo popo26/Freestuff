@@ -32,7 +32,7 @@ class AdminLevelEditProfileForm(FlaskForm):
     username = StringField("Username", validators=[Length(0,64)])
     email = StringField("Email", validators=[DataRequired(), Email()])
     confirmed = BooleanField("Confirmed User?")
-    role = SelectField("Role", coerce=int, choices=[(1, 'User'), (2, 'Administrator')]) #deal with it later
+    role = SelectField("Role", coerce=int, choices=[(1, 'User'), (2, 'Administrator')])
     name = StringField("Name", validators=[Length(0,64)])
     location = StringField('Location', validators=[Length(0,64)])
     bio = TextAreaField("Bio")

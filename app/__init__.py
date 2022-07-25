@@ -52,7 +52,7 @@ s3 = boto3.client(
 def create_app(config_name = "default"):
     app = Flask(__name__)
     
-    # migrate = Migrate(app, db, render_as_batch=True)
+    # migrate = Migrate(app, db, render_as_batch=True) For SQLite
     migrate = Migrate(app, db)
         
     app.config.from_object(config[config_name])
@@ -60,14 +60,8 @@ def create_app(config_name = "default"):
    
     UPLOAD_FOLDER = "static/uploads"
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    # app.config["UPLOADED_PHOTOS_DEST"] = "static/uploads"
-    # app.config["UPLOADED_PHOTOS_DEST"] = os.path.join(app.config['S3_BUCKET_PATH'], 'static/uploads')
     app.config['S3_BUCKET_NAME'] = os.getenv('S3_BUCKET_NAME')
     app.config['SESSION_COOKIE_SECURE'] = False
-    # app.config['WTF_CSRF_ENABLED'] = False
-    # app.config['WTF_CSRF_SECRET_KEY'] = os.getenv('SECRET_KEY') or \
-    # 'abc123ced456'
-    # app.config['WTF_CSRF_SSL_STRICT'] = False
     app.config["REMEMBER_COOKIE_DURATION"] = timedelta(seconds=21600) #6hours RememberMe not working yet
     # app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(seconds=21600)
     
@@ -79,8 +73,6 @@ def create_app(config_name = "default"):
     migrate.init_app(app, db)
     csrf.init_app(app)
     
-    # app.app_context().push()
-
     with app.app_context():
         db.create_all()
    
@@ -105,6 +97,7 @@ def create_app(config_name = "default"):
     
     from flask_migrate import upgrade
 
+    #Not working at the moment
     @app.cli.command()
     def deploy():
         """ Run deployment tasks """
@@ -135,7 +128,6 @@ def current_app(config_name="testing"):
     login_manager.init_app(app)
     moment.init_app(app)
     migrate.init_app(app, db)
-    # search.init_app(app)
 
     app.app_context().push()
     
