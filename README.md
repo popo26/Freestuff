@@ -29,7 +29,7 @@ FreeStuff is a simple and intuitive app that provides a place to exchange unwant
 - `from app.models import Role, User, Post, Photo`
 2. Set roles. By default, all users are set to User(not Administrator).
 - `Role.insert_roles()`
-3. Add sample users and posts.
+3. Add sample users and posts. By default, password is set to 'test'.
 - `fake.users(20)`
 - `fake.posts(30)`
 - `exit()`
