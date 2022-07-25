@@ -18,6 +18,8 @@ FreeStuff is a simple and intuitive app that provides a place to exchange unwant
 7. If you don't have PostgreSQL installed on your computer, please refer to this [page](https://www.postgresql.org/docs/current/installation.html). e.g. DATABASE_URL=postgresql://*your_db_username*:*your_db_password*@localhost:5432/*your_db_name*
 8. I use gmail for MAIL_USERNAME in .env_example. MAIL_PASSWORD uses App Password, which is different from your normal gmail password.
    Please find instructions for how to generate [App Password](https://support.google.com/mail/answer/185833?hl=en).
+9. The email address set for MAIL_USERNAME will be your admin email address.
+10. Not necessary but I use [PGAdmin](https://www.pgadmin.org/) to see PostgreSQL data in GUI.
 
 ## Database setup:
 
@@ -25,7 +27,7 @@ FreeStuff is a simple and intuitive app that provides a place to exchange unwant
 - `flask shell`
 - `from app import db, fake`
 - `from app.models import Role, User, Post, Photo`
-2. Set roles.
+2. Set roles. By default, all users are set to User(not Administrator).
 - `Role.insert_roles()`
 3. Add sample users and posts.
 - `fake.users(20)`
@@ -45,7 +47,7 @@ FreeStuff is a simple and intuitive app that provides a place to exchange unwant
 
 ## Hightlights:
 1. There are 2 search methods - Category search & Keyword search.
-2. Only registered users are allowed to see members' profiles, sending and receiving messages about a post, and contacting FreeStuff admin.
+2. Only registered users are allowed to see member profiles, sending and receiving messages about a post, and contacting FreeStuff admin.
 3. Password reset is availiable by sending reset link at login screen or after an user logs in at Profile page.
 4. Admin is allowed to edit user profiles and user posts in the site.
 5. A new user needs to confirm a token email before login first time.
