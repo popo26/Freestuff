@@ -1,7 +1,7 @@
 <h4>Hi, {{ asker.username }}</h4>
 
-<p>An user {{ item.giver.username }} has replied to your question about {{ item.title }}.</p>
-<p>You can reply by clicking below link.</p>
+<p>The user <strong>{{ item.giver.username }}</strong> has replied to your question about "{{ item.title }}".</p>
+<p>Please find the answer by clicking below link.</p>
 <p><a href="{{ link }}">{{ item.title }}</a></p>
 <br>
 <h4>Happy day!</h4>

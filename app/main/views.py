@@ -681,6 +681,29 @@ def delete_post(item_id):
             os.remove(photo3_path)
             s3_client.delete_object(Bucket=bucket_name, Key=photos.photo_three)
 
+    post = Post.query.filter_by(id=item_id).first()
+    related_messages = Message.query.filter(Message.post_id==post.id)
+    for m in related_messages:
+        if m.replied == False and m.reply == False:
+            posted_user = User.query.filter_by(id=current_user.id).first()
+            posted_user.question_received -= 1
+            if posted_user.question_received < 0:
+                posted_user.question_received = 0
+            print(f'posted_user {posted_user.username}')
+            db.session.add(posted_user)
+            db.session.commit()
+            print(f'posted_user question_received count {posted_user.question_received}')
+        if m.read == False and m.reply==True:
+            answered_user = User.query.filter_by(id=m.answered_user).first()
+            answered_user.question_answered -= 1 
+            if answered_user.question_received < 0:
+                answered_user.question_received = 0
+            print(f'answered_user {answered_user.username}')
+            db.session.add(answered_user)
+            db.session.commit()
+            print(f'answered_user question_answered count {answered_user.question_answered}')
+       
+
     Photo.query.filter_by(post_id=item_id).delete()
     Post.query.filter_by(id=item_id).delete()
     db.session.commit()
@@ -707,6 +730,7 @@ def reply(item_id, message_id):
        
         original_message = Message.query.filter_by(id=message_id).first()
         original_message.replied = True
+        original_message.read = True
         message.answered_user = original_message.asker.id
         message.answered_user2 = original_message.asker.username
         db.session.add(message)
@@ -787,8 +811,24 @@ def check_messages(username):
     posts = Post.query.filter_by(giver=current_user)  
     posted_questions = Message.query.filter(Message.user_id==current_user.id, 
                                             Message.replied==True, 
-                                            Message.read==False).all()
-     
+                                            Message.read==False)
+
+    # for m in messages:
+    #     if current_user.question_received > 0 :
+    #         print(m)
+    #         if not m:
+    #             current_user.question_received - 1
+    #             db.session.add(current_user)
+    #             db.session.commit()
+
+    # for q in posted_questions:
+    #     if current_user.question_answered > 0:
+    #         print(q)
+    #         if not q:
+    #             current_user.question_answered - 1
+    #             db.session.add(current_user)
+    #             db.session.commit()
+
     return render_template("main/messages.html", 
                             posts=posts, 
                             username=current_user.username, 

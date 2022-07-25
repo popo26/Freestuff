@@ -33,7 +33,7 @@ def login():
     if form.validate_on_submit():
         email_entered = form.email.data
         user = User.query.filter_by(email=email_entered).first()
-        print(user.verify_password(form.password.data))
+        # print(user.verify_password(form.password.data))
 
         if not user:
             flash("User info can't be found. Please register first.")

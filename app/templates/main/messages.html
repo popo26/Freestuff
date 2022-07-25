@@ -19,6 +19,7 @@
                 
                 <a class='message-tag' href="{{ url_for('main.each_slug_post', slug=p.slug)}}">See the question</a>
             </h4>
+
             {% endif %}
         {% endfor %}
     {% endfor %}
@@ -30,15 +31,14 @@
 
 <div class="answer-received-div">
 <h1>Answers Received.</h1>
-{% if current_user.question_answered > 0 %}
+{% if current_user.question_answered > 0  and posts %}
 
 {% for q in posted_questions|sort(reverse=True, attribute='timestamp')  %}
 
     <h4>Message received "<strong>{{ q.description }}</strong>" <span>
     <a class='message-tag' href="{{ url_for('main.each_slug_post', slug=q.get_slug_for_post_related_to_message() )}}">
         See the message</a></span></h4>
-        
-        
+ 
 {% endfor %}
 
 {% elif current_user.question_answered == 0 %}
