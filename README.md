@@ -20,6 +20,7 @@ FreeStuff is a simple and intuitive app that provides a place to exchange unwant
    Please find instructions for how to generate [App Password](https://support.google.com/mail/answer/185833?hl=en).
 9. The email address set for MAIL_USERNAME will be your admin email address.
 10. Not necessary but I use [PGAdmin](https://www.pgadmin.org/) to see PostgreSQL data in GUI.
+11. rename `.env_example` to `.env`.
 
 ## Database setup:
 
